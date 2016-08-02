@@ -112,7 +112,8 @@ $X_{\lambda_i}(\omega_i), Y(\omega_i)$, for $\omega_i \in \Omega$ and known
 values $\lambda_i$ of the nuisance parameter. Our goal is to learn a function
 $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal Y}$ of parameters $\theta_f$
 (e.g., a neural network-based classifier if ${\cal Y}$ is a finite set of
-classes) minimizing  a loss ${\cal L}_f(\theta_f)$, with the constraint that $f(X_\lambda ;
+classes) and minimizing  a loss ${\cal L}_f(\theta_f)$. In addition, we require
+the constraint that $f(X_\lambda ;
 \theta_f)$ should be robust to the value of the nuisance parameter $\lambda$ --
 which remains unknown at test time. More specifically, we aim at building $f$
 such that in the ideal case
@@ -157,10 +158,10 @@ predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
 particular, we pit $f$ against an adversary regression model $r(\cdot ;
 \theta_r) : \mathbb{R} \mapsto \mathbb{R}$ of parameters $\theta_r$ and
 associated loss ${\cal L}_r(\theta_r)$, taking as input realizations of $f(X_\lambda; \theta_f)$
-and producing as output a prediction $\smash{\hat\lambda} = r(f(X_\lambda); \theta_f)$
-of the nuisance parameter. If $f(X_\lambda; \theta_f)$ varies with $\lambda$,
+and producing as output predictions $\smash{\hat\lambda} = r(f(X_\lambda); \theta_f)$
+of the nuisance parameter. If $f(X_\lambda(\omega); \theta_f)$ varies with $\lambda$,
 then the corresponding correlation can be captured by $r$. By contrast, if
-$f(X_\lambda; \theta_f)$ is invariant with $\lambda$ as we require, then $r$
+$f(X_\lambda(\omega); \theta_f)$ is invariant with $\lambda$ as we require, then $r$
 should perform poorly. Training $f$ such that it minimizes the performance of $r$
 should therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}.
 
@@ -176,6 +177,7 @@ and finding the saddle point $\smash{\hat\theta_f}, \smash{\hat\theta_r}$ such t
     \smash{\hat\theta_r} &= \arg \max_{\theta_r} E(\smash{\hat\theta_f}, \theta_r).
 \end{align}
 
+\glnote{Explain this can be done simply using SGD.}
 \glnote{What are the necessary conditions on ${\cal L}_r$ to imply
 Eqn.~\ref{eqn:criterion} at the saddle point? We should clarify and prove that
 formally! There may also be assumptions required on the learning problem itself.}
