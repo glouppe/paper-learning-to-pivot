@@ -97,23 +97,23 @@ respect to systematic uncertainties.}
 
 Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
 sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
-Let consider the multivariate random variables $X_\lambda: \Omega \mapsto \mathbb{R}^p$
-and $Y: \Omega \mapsto {\cal Y}$, where $X_\lambda$ depends on a nuisance
-parameter $\lambda$ encoding for systematic uncertainties in its probability
-distribution. That is, $X_\lambda$ and $Y$ induce together the joint probability
-distribution $p(X_\lambda,Y)$. For training, let further assume a finite set $\{
- \lambda_i, x_i, y_i, \}_{i=1}^N$ of realizations $X_{\lambda_i}(\omega_i),
-Y(\omega_i)$, for $\omega_i \in \Omega$ and known values $\lambda_i$ of the
-nuisance parameter. Our goal is to learn a function $f : \mathbb{R}^p \mapsto
-{\cal Y}$ (e.g., a classifier if ${\cal Y}$ is a finite set of classes)
-minimizing the expected value of a loss $L(Y, f(X_{\lambda}))$, with the constraint that
-$f(X_\lambda)$ should be robust to the value of the nuisance parameter
-$\lambda$ -- which remains unknown at test time. More specifically, we aim at building $f$ such that in the ideal case
-\begin{equation}\label{eqn1}
-f(X_{\lambda_i}(\omega)) = f(X_{\lambda_j}(\omega))
-\end{equation}
-for any sample $\omega \in
-\Omega$ and any $\lambda_i, \lambda_j$ pair of values of the nuisance parameter.
+Let consider the multivariate random variables $X_\lambda: \Omega \mapsto
+\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_\lambda$ depends on a
+nuisance parameter $\lambda$ whose values define the family of its systematic uncertainties.
+That is, $X_\lambda$ and $Y$ induce together
+a joint probability distribution written as $p(X,Y|\lambda)$, where the
+conditional on $\lambda$ denotes $X_\lambda$. For training, let further assume a
+finite set $\{ \lambda_i, x_i, y_i, \}_{i=1}^N$ of realizations
+$X_{\lambda_i}(\omega_i), Y(\omega_i)$, for $\omega_i \in \Omega$ and known
+values $\lambda_i$ of the nuisance parameter. Our goal is to learn a function $f :
+\mathbb{R}^p \mapsto {\cal Y}$ (e.g., a classifier if ${\cal Y}$ is a finite set
+of classes) minimizing the expected value of a loss $L(Y, f(X_{\lambda}))$, with
+the constraint that $f(X_\lambda)$ should be robust to the value of the nuisance
+parameter $\lambda$ -- which remains unknown at test time. More specifically, we
+aim at building $f$ such that in the ideal case \begin{equation}\label{eqn1}
+f(X_{\lambda_i}(\omega)) = f(X_{\lambda_j}(\omega)) \end{equation} for any
+sample $\omega \in \Omega$ and any $\lambda_i, \lambda_j$ pair of values of the
+nuisance parameter.
 
 Since we do not have training tuples $(X_{\lambda_i}(\omega),
 X_{\lambda_j}(\omega))$ (for the same unknown $\omega$), we propose instead to
@@ -126,8 +126,8 @@ distribution of $f(X_\lambda)$ is invariant with respect to the nuisance
 parameter $\lambda$. Note that a function $f$ for which Eqn.~\ref{eqn1} is
 true necessarily satisfies Eqn.~\ref{eqn2}. The converse is however in
 general not true, since the sets of samples $\{ \omega | f(X_{\lambda_i}(\omega)) = y \}$
-and $\{ \omega' | f(X_{\lambda_j}(\omega)) = y \}$ do not need to be the same
-for the equality to hold. \glnote{Yet, in practice, this criterion is often good enough.}
+and $\{ \omega' | f(X_{\lambda_j}(\omega')) = y \}$ do not need to be the same
+for the equality to hold. \glnote{This criterion is still adequate for most purposes.}
 
 \section{Method}
 \label{sec:method}
