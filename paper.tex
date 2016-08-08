@@ -90,9 +90,7 @@ against Systematic Uncertainty}
 \glnote{We want to build an accurate classifier whose output remains invariant with
 respect to systematic uncertainties.}
 % https://www.slac.stanford.edu/econf/C030908/papers/TUAT004.pdf
-\glnote{Motivate the criterion: allow to derive guarantees no matter $\lambda$,
-while $f$ may otherwise be good or very bad depending on the nuisance if trained
-on the mixture. E.g. to form hypothesis to be later confirmed by data.}
+\glnote{Motivate the criterion (which may not be obvious for the ML crowd).}
 
 
 
@@ -123,7 +121,7 @@ sample $\omega \in \Omega$ and any $\lambda_i, \lambda_j$ pair of values of the
 nuisance parameter.
 
 Since we do not have training tuples $(X_{\lambda_i}(\omega),
-X_{\lambda_j}(\omega))$ (for the same unknown $\omega$), we propose instead to
+X_{\lambda_j}(\omega))$ (for the same unknown $\omega$) \glnote{Actually we do, as discussed with Michael!}, we propose instead to
 solve the closely related problem of finding a predictive function $f$ such that
 \begin{equation}\label{eqn:criterion}
     P(\{ \omega | f(X_{\lambda_i}(\omega) ; \theta_f) = y \} ) = P( \{ \omega' | f(X_{\lambda_j}(\omega') ; \theta_f) = y\}) \text{ for all $y \in {\cal Y}$}.
@@ -181,6 +179,7 @@ that we optimize by finding the saddle point $(\smash{\hat\theta_f}, \smash{\hat
     \smash{\hat\theta_r} &= \arg \max_{\theta_r} E(\smash{\hat\theta_f}, \theta_r).
 \end{align}
 
+\glnote{Expand the equation to make it clearer that $f$ is plugged into $r$.}
 \glnote{Explain this can be done simply using SGD.}
 \glnote{What are the necessary conditions on ${\cal L}_r$ to imply
 Eqn.~\ref{eqn:criterion} at the saddle point? We should clarify and prove that
