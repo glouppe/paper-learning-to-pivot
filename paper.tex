@@ -90,7 +90,7 @@ against Systematic Uncertainty}
 \glnote{We want to build an accurate classifier whose output remains invariant with
 respect to systematic uncertainties.}
 % https://www.slac.stanford.edu/econf/C030908/papers/TUAT004.pdf
-\glnote{Motivate the criterion (which may not be obvious for the ML crowd).}
+\glnote{Motivate the criterion (which may not be obvious for the ML crowd). See pivotal quantity motivation.}
 
 
 
@@ -101,7 +101,7 @@ Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
 sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
 Let consider the multivariate random variables $X_\lambda: \Omega \mapsto
 \mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_\lambda$ depends on a
-nuisance parameter $\lambda \in \mathbb{R}$ whose values define a continuously
+nuisance parameter $\lambda \in \Lambda \subseteq \mathbb{R}$ whose values define a
 parameterized family of its systematic uncertainties. That is, $X_\lambda$ and
 $Y$ induce together a joint probability distribution $p(X,Y|\lambda)$, where the
 conditional on $\lambda$ denotes $X_\lambda$. For training, let further assume a
@@ -121,23 +121,18 @@ sample $\omega \in \Omega$ and any $\lambda_i, \lambda_j$ pair of values of the
 nuisance parameter.
 
 Since we do not have training tuples $(X_{\lambda_i}(\omega),
-X_{\lambda_j}(\omega))$ (for the same unknown $\omega$) \glnote{Actually we do, as discussed with Michael!}, we propose instead to
+X_{\lambda_j}(\omega))$ (for the same unknown $\omega$), we propose instead to
 solve the closely related problem of finding a predictive function $f$ such that
 \begin{equation}\label{eqn:criterion}
     P(\{ \omega | f(X_{\lambda_i}(\omega) ; \theta_f) = y \} ) = P( \{ \omega' | f(X_{\lambda_j}(\omega') ; \theta_f) = y\}) \text{ for all $y \in {\cal Y}$}.
 \end{equation}
-In words, we are looking for a predictive function $f$ such that  the
-distribution of $f(X_\lambda; \theta_f)$ is invariant with respect to the nuisance
-parameter $\lambda$. Note that a function $f$ for which Eqn.~\ref{eqn:criterion-true} is
+In words, we are looking for a predictive function $f$ which is a pivotal quantity with respect to the nuisance parameter.
+That is, such that  the
+distribution of $f(X_\lambda; \theta_f)$ is invariant with respect to $\lambda$. Note that a function $f$ for which Eqn.~\ref{eqn:criterion-true} is
 true necessarily satisfies Eqn.~\ref{eqn:criterion}. The converse is however in
 general not true, since the sets of samples $\{ \omega | f(X_{\lambda_i}(\omega); \theta_f) = y \}$
 and $\{ \omega' | f(X_{\lambda_j}(\omega'); \theta_f) = y \}$ do not need to be the same
 for the equality to hold.
-
-\glnote{An alternative objective, but which leads to something
-significantly different, is to aim at getting the best model adapted
-to the unknown $\lambda$, possibly using predictive information from
-regions of the input space affected by the nuisance parameter.}
 
 
 \section{Method}
@@ -157,9 +152,9 @@ towards the real distribution $p_X$.
 
 In this work, we repurpose adversarial training as a means to regularize the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
-particular, we pit $f$ against an adversary regression model $r(\cdot ;
-\theta_r) : \mathbb{R} \mapsto \mathbb{R}$ of parameters $\theta_r$ and
-associated loss ${\cal L}_r(\theta_r)$. This regressor takes as input realizations of $f(X_\lambda; \theta_f)$
+particular, we pit $f$ against an adversary model $r(\cdot ;
+\theta_r) : \mathbb{R} \mapsto \Lambda$ of parameters $\theta_r$ and
+associated loss ${\cal L}_r(\theta_r)$. This model takes as input realizations of $f(X_\lambda; \theta_f)$
 and produces as output predictions $\smash{\hat\lambda} = r(f(X_\lambda; \theta_f))$
 of the nuisance parameter. If $p(f(X_\lambda; \theta_f))$ varies with $\lambda$,
 then the corresponding correlation can be captured by $r$. By contrast, if
