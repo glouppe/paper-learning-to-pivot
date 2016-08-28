@@ -101,7 +101,7 @@ Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
 sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
 Let consider the multivariate random variables $X_\lambda: \Omega \mapsto
 \mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_\lambda$ depends on a
-nuisance parameter $\lambda \in \Lambda \subseteq \mathbb{R}$ whose values define a
+nuisance parameter $\lambda \in \Lambda$ whose values define a
 parameterized family of its systematic uncertainties. That is, $X_\lambda$ and
 $Y$ induce together a joint probability distribution $p(X,Y|\lambda)$, where the
 conditional on $\lambda$ denotes $X_\lambda$. For training, let further assume a
@@ -123,16 +123,24 @@ nuisance parameter.
 Since we do not have training tuples $(X_{\lambda_i}(\omega),
 X_{\lambda_j}(\omega))$ (for the same unknown $\omega$), we propose instead to
 solve the closely related problem of finding a predictive function $f$ such that
-\begin{equation}\label{eqn:criterion}
+\begin{equation}\label{eqn:criterion-measure}
     P(\{ \omega | f(X_{\lambda_i}(\omega) ; \theta_f) = y \} ) = P( \{ \omega' | f(X_{\lambda_j}(\omega') ; \theta_f) = y\}) \text{ for all $y \in {\cal Y}$}.
 \end{equation}
-In words, we are looking for a predictive function $f$ which is a pivotal quantity with respect to the nuisance parameter.
-That is, such that  the
-distribution of $f(X_\lambda; \theta_f)$ is invariant with respect to $\lambda$. Note that a function $f$ for which Eqn.~\ref{eqn:criterion-true} is
-true necessarily satisfies Eqn.~\ref{eqn:criterion}. The converse is however in
-general not true, since the sets of samples $\{ \omega | f(X_{\lambda_i}(\omega); \theta_f) = y \}$
-and $\{ \omega' | f(X_{\lambda_j}(\omega'); \theta_f) = y \}$ do not need to be the same
+In words, we are looking for a predictive function $f$ which is a pivotal
+quantity \citep{degroot1986probability} with respect to the nuisance parameter.
+That is, such that  the distribution of $f(X_\lambda; \theta_f)$ is invariant
+with respect to $\lambda$. Note that a function $f$ for which
+Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
+Eqn.~\ref{eqn:criterion-measure}. The converse is however in general not true, since the
+sets of samples $\{ \omega | f(X_{\lambda_i}(\omega); \theta_f) = y \}$ and $\{
+\omega' | f(X_{\lambda_j}(\omega'); \theta_f) = y \}$ do not need to be the same
 for the equality to hold.
+With this distinction, but as only Eqn.~\ref{eqn:criterion-measure} is
+of direct interest in this work, we further simplify notations by denoting
+the pivotal quantity criterion as
+\begin{equation}\label{eqn:criterion}
+    p(f(X ; \theta_f) | \lambda_i ) = p(f(X ; \theta_f) | \lambda_j ) \text{ for all $\lambda_i,\lambda_j \in  \Lambda$}
+\end{equation}.
 
 
 \section{Method}
@@ -150,15 +158,15 @@ samples can be identified by $d$ only by chance. That is, assuming enough
 capacity in $d$ and  $g$, the distribution $p_{g(Z)}$ eventually converges
 towards the real distribution $p_X$.
 
-In this work, we repurpose adversarial training as a means to regularize the
+In this work, we repurpose adversarial training as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
 particular, we pit $f$ against an adversary model $r(\cdot ;
 \theta_r) : \mathbb{R} \mapsto \Lambda$ of parameters $\theta_r$ and
-associated loss ${\cal L}_r(\theta_r)$. This model takes as input realizations of $f(X_\lambda; \theta_f)$
-and produces as output predictions $\smash{\hat\lambda} = r(f(X_\lambda; \theta_f))$
-of the nuisance parameter. If $p(f(X_\lambda; \theta_f))$ varies with $\lambda$,
+associated loss ${\cal L}_r(\theta_r)$. This model takes as input realizations of $f(X; \theta_f)$
+and produces as output estimates $r(f(X; \theta_f)) = \hat{p}(\lambda | f(X; \theta_f)) $
+that $f(X; \theta_f)$ is generated from the nuisance value $\lambda$. If $p(f(X; \theta_f)|\lambda)$ varies with $\lambda$,
 then the corresponding correlation can be captured by $r$. By contrast, if
-$p(f(X_\lambda; \theta_f))$ is invariant with $\lambda$ as we require, then $r$
+$p(f(X; \theta_f)|\lambda)$ is invariant with $\lambda$ as we require, then $r$
 should perform poorly. Training $f$ such that it additionally minimizes the performance of $r$
 therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}.
 
@@ -174,11 +182,14 @@ that we optimize by finding the saddle point $(\smash{\hat\theta_f}, \smash{\hat
     \smash{\hat\theta_r} &= \arg \max_{\theta_r} E(\smash{\hat\theta_f}, \theta_r).
 \end{align}
 
-\glnote{Expand the equation to make it clearer that $f$ is plugged into $r$.}
-\glnote{Explain this can be done simply using SGD.}
-\glnote{What are the necessary conditions on ${\cal L}_r$ to imply
-Eqn.~\ref{eqn:criterion} at the saddle point? We should clarify and prove that
-formally! There may also be assumptions required on the learning problem itself.}
+
+\glnote{Sketch the optimization algoritm}
+
+
+\section{Theoretical results}
+
+\glnote{proof 1: if r optimal and r(f(x)) = 1/N then f is pivotal. [OK]}
+\glnote{proof 2: if Lf can be minimized under the pivotal constraint, then at the saddle point r is such that r(f(x)) = 1/N. [OK]}
 
 \section{Experiments}
 
