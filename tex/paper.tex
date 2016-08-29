@@ -204,12 +204,12 @@ Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
     \For{$t=1$ to $T$}
         \For{$k=1$ to $K$} \Comment{Update $r$}
             \State{Sample minibatch $\{x_m, \lambda_m \}_{m=1}^M$} of size $M$;
-            \State{With $\theta_f$ fixed, update the adversary $r$ by ascending its stochastic gradient
-            $$\nabla_{\theta_r} \sum_{m=1}^M \left[ -\sum_{l=1}^{|\Lambda|} 1(\lambda_m = \lambda_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
+            \State{With $\theta_f$ fixed, update $r$ by ascending its stochastic gradient $\nabla_{\theta_r} E(\theta_f, \theta_r) :=$
+            $$\nabla_{\theta_r} \sum_{m=1}^M \left[ -\sum_{\lambda_l \in \Lambda} 1(\lambda_m = \lambda_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
         \EndFor
         \State{Sample minibatch $\{x_m, y_m, \lambda_m \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
-        \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient
-        $$\nabla_{\theta_f} \sum_{m=1}^M \left[ \sum_{c=1}^{|{\cal Y}|} 1(y_m = y_c) \log f(x_m;\theta_f)_c -\sum_{l=1}^{|\Lambda|} 1(\lambda_m = \lambda_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
+        \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient $\nabla_{\theta_f} E(\theta_f, \theta_r) :=$
+        $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ \sum_{y_c \in {\cal Y}} 1(y_m = y_c) \log f(x_m;\theta_f)_c -\sum_{\lambda_l \in \Lambda} 1(\lambda_m = \lambda_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
     \EndFor
 \end{algorithmic}
 \end{algorithm}
@@ -219,6 +219,21 @@ Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 
 In this section, we show that Algorithm~\ref{alg:adversarial-training} converges
 to a classifier $f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
+Results below are derived in a non-parametric setting, e.g. by assuming
+that both $f$ and $r$ have enough capacity. To simplify the presentation,
+we also assume the uniform prior
+$p(\lambda) = \frac{1}{|\Lambda|}$ for all $\lambda \in \Lambda$, e.g. by
+having the same number of training samples for each modality $\lambda$ of
+the nuisance parameter.
+
+
+\begin{proposition}
+
+Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
+\theta_r)$. If $r(f(x;\theta_f) ; \hat\theta_r )_l = p(\lambda_l| f(X; \theta_f)) = \frac{1}{|\Lambda|}$ for all
+$x$ and all $\lambda_l$, then $f$ is a pivotal quantity.
+
+\end{proposition}
 
 \glnote{proof 1: if r optimal and r(f(x)) = 1/N then f is pivotal. [OK]}
 \glnote{proof 2: if Lf can be minimized under the pivotal constraint, then at the saddle point r is such that r(f(x)) = 1/N. [OK]}
