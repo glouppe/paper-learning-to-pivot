@@ -168,7 +168,7 @@ particular, we pit $f$ against an adversary classifier $r(\cdot ;
 \theta_r) : \mathbb{R} \mapsto \Lambda$ of parameters $\theta_r$ and
 associated loss ${\cal L}_r(\theta_f, \theta_r)$.
 Assuming that $\Lambda$ defines a finite family of nuisance values $\lambda_l$ (for $l=1, \dots, |\Lambda|$),
-this model takes as input realizations of $f(X; \theta_f)$
+this classifier takes as input realizations of $f(X; \theta_f)$, for the current value $\theta_f$ of $f$ parameters,
 and produces as output probability estimates $r(f(X; \theta_f); \theta_r)_l = \hat{p}(\lambda_l| f(X; \theta_f)) $
 that $f(X; \theta_f)$ is generated from the nuisance value $\lambda_l$. If $p(f(X; \theta_f)|\lambda)$ varies with $\lambda$,
 then the corresponding correlation can be captured by $r$. By contrast, if
@@ -190,7 +190,7 @@ that we optimize by finding the saddle point $(\smash{\hat\theta_f}, \smash{\hat
 The adversarial training procedure to obtain $(\smash{\hat\theta_f},
 \smash{\hat\theta_r})$ is formally presented in
 Algorithm~\ref{alg:adversarial-training} in the case of $f$ being a classifier
-and of using the log-loss for both ${\cal L}_f$ and ${\cal L}_r$. The algorithm
+and of the cross-entropy loss for both ${\cal L}_f$ and ${\cal L}_r$. The algorithm
 consists in using stochastic gradient descent alternatively to optimize
 Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 
