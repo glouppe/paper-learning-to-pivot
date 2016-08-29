@@ -166,7 +166,7 @@ In this work, we repurpose adversarial training as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
 particular, we pit $f$ against an adversary classifier $r(\cdot ;
 \theta_r) : \mathbb{R} \mapsto \Lambda$ of parameters $\theta_r$ and
-associated loss ${\cal L}_r(\theta_r)$.
+associated loss ${\cal L}_r(\theta_f, \theta_r)$.
 Assuming that $\Lambda$ defines a finite family of nuisance values $\lambda_l$ (for $l=1, \dots, |\Lambda|$),
 this model takes as input realizations of $f(X; \theta_f)$
 and produces as output probability estimates $r(f(X; \theta_f); \theta_r)_l = \hat{p}(\lambda_l| f(X; \theta_f)) $
@@ -180,7 +180,7 @@ As for generative adversarial networks, we propose to
 train $f$ and $r$ simultaneously, which we carry out by considering
 the value function
 \begin{equation}
-    E(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - {\cal L}_r(\theta_r)
+    E(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - {\cal L}_r(\theta_f, \theta_r)
 \end{equation}
 that we optimize by finding the saddle point $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ such that
 \begin{align}
