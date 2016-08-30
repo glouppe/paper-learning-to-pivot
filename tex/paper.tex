@@ -244,8 +244,7 @@ true conditional distribution of the nuisance $p_{Z|f(X;\theta_f)}$ and
 the approximate conditional distribution of the nuisance
 $p_{r(f(X;\theta_f);\theta_r)|f(X)}$, the optimal parameters $\smash{\hat\theta}_r =
 \arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} L_r(\theta_f,
-\theta_r)$ are therefore such that $p_{Z|f(X;\theta_f)} =
-p_{r(f(X;\theta_f);\hat\theta_r)|f(X)}$.
+\theta_r)$ are therefore such that $p_{r(f(X;\theta_f);\hat\theta_r)|f(X)} = p_{Z|f(X;\theta_f)}$.
 
 In other words, for all $z_l \in {\cal Z}$, we have $r(f(X;\theta_f);\smash{\hat\theta}_r)_l = p(z_l|f(X;\theta_f))$.
 By assumption, $r(f(X;\theta_f);\smash{\hat\theta}_r)_l = \frac{1}{|{\cal Z}|}$,
@@ -273,13 +272,12 @@ $L_f$ and a pivotal quantity.
 
 For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
 \max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} L_r(\theta_f,
-\theta_r)$, in which case $p_{Z|f(X;\theta_f)} =
-p_{r(f(X;\theta_f);\hat\theta_r)|f(X)}$ and $L_r$ reduces to the entropy
+\theta_r)$, in which case $p_{r(f(X;\theta_f);\hat\theta_r)|f(X)} = p_{Z|f(X;\theta_f)}$ and $L_r$ reduces to the entropy
 $H(p_{Z|f(X;\theta_f)})$ of the conditional distribution of the nuisance. The
 value function $E$ can therefore be rewritten as $$E'(\theta_f) = L_f(\theta_f) -
 H(p_{Z|f(X;\theta_f)}).$$  In particular, we have the lower bound $H(p_{Y|X}) -
 \log |{\cal Z}| \leq L_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ where the equality
-holds at $\smash{\hat\theta}_f$ when
+holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f} E'(\theta_f)$ only when
 \begin{itemize}
     \item $\smash{\hat\theta}_f$ corresponds to
     the parameters of an optimal classifier, in which case the log-loss $L_f$
@@ -292,8 +290,7 @@ holds at $\smash{\hat\theta}_f$ when
 \end{itemize}
 Accordingly, the second condition implies that $r(f(X;\smash{\hat\theta}_f) ;
 \smash{\hat\theta}_r )_l = \frac{1}{|{\cal Z}|}$ and therefore that at this
-point, because of Proposition~\ref{prop:1}, $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$, $f$ is both an optimal
-classifier and a pivotal quantity.
+point, because of Proposition~\ref{prop:1}, the optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal quantity.
 \end{proof}
 
 \glnote{We should further discuss that in practice, the equality may never hold.
