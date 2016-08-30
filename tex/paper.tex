@@ -231,13 +231,40 @@ parameter.
 \begin{proposition}
 
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
-\theta_r)$. If $r(f(X;\theta_f) ; \hat\theta_r )_l = p(\lambda_l| f(X; \theta_f)) = \frac{1}{|\Lambda|}$
+\theta_r)$. If $r(f(X;\theta_f) ; \hat\theta_r )_l = \frac{1}{|\Lambda|}$
 for all $\lambda_l$, then $f$ is a pivotal quantity.
 
 \end{proposition}
 
-\glnote{proof 1: if r optimal and r(f(x)) = 1/N then f is pivotal. [OK]}
+\begin{proof}
+
+Let us first recall that the cross-entropy for distributions $p$ and $q$ is
+minimized when $p=q$. For ${\cal L}_r$ defined as the cross-entropy between the
+true conditional distribution of the nuisance $p_{\lambda|f(X;\theta_f)}$ and
+the approximate conditional distribution of the nuisance
+$p_{r(f(X;\theta_f);\theta_r)|f(X)}$, the optimal parameters $\hat\theta_r =
+\arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} L_r(\theta_f,
+\theta_r)$ are therefore such that $p_{\lambda|f(X;\theta_f)} =
+p_{r(f(X;\theta_f);\hat\theta_r)|f(X)}$.
+
+In other words, for all $\lambda_l \in  \Lambda$, we have $r(f(X;\theta_f);\hat\theta_r)_l = p(\lambda_l|f(X;\theta_f))$.
+By assumption, $r(f(X;\theta_f);\hat\theta_r)_l = \frac{1}{|\Lambda|}$,
+and therefore $p(\lambda_l|f(X;\theta_f)) = \frac{1}{|\Lambda|}$.
+Using the Bayes' rule, we write
+\begin{align*}
+    p(f(X;\theta_f)|\lambda_l) &= \frac{ p(\lambda_l|f(X;\theta_f)) p(f(X;\theta_f)) } { p(\lambda_l)} \\
+                               &= \frac{ \tfrac{1}{|\Lambda|} p(f(X;\theta_f)) } { \tfrac{1}{|\Lambda|} } \\
+                               &= p(f(X;\theta_f)),
+\end{align*}
+which holds for all $\lambda_l \in \Lambda$ and implies that $f$ is a pivotal quantity.
+\end{proof}
+
+\begin{proposition}
 \glnote{proof 2: if Lf can be minimized under the pivotal constraint, then at the saddle point r is such that r(f(x)) = 1/N. [OK]}
+\end{proposition}
+
+
+
 
 \section{Experiments}
 
