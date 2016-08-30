@@ -102,48 +102,48 @@ respect to systematic uncertainties.}
 
 Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
 sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
-Let consider the multivariate random variables $X_\lambda: \Omega \mapsto
-\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_\lambda$ depends on a
-nuisance parameter $\lambda \in \Lambda$ whose values define a
-parameterized family of its systematic uncertainties. That is, $X_\lambda$ and
-$Y$ induce together a joint probability distribution $p(X,Y|\lambda)$, where the
-conditional on $\lambda$ denotes $X_\lambda$. For training, let further assume a
-finite set $\{ x_i, y_i, \lambda_i \}_{i=1}^N$ of realizations
-$X_{\lambda_i}(\omega_i), Y(\omega_i)$, for $\omega_i \in \Omega$ and known
-values $\lambda_i$ of the nuisance parameter. Our goal is to learn a function
+Let consider the multivariate random variables $X_z: \Omega \mapsto
+\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence on a
+nuisance parameter $Z$ whose values $z \in {\cal Z}$  define a
+parameterized family of its systematic uncertainties. That is, $X_z$ and
+$Y$ induce together a joint probability distribution $p(X,Y|z)$, where the
+conditional on $z$ denotes $X_z$. For training, let further assume a
+finite set $\{ x_i, y_i, z_i \}_{i=1}^N$ of realizations
+$X_{z_i}(\omega_i), Y(\omega_i)$, for $\omega_i \in \Omega$ and known
+values $z_i$ of the nuisance parameter. Our goal is to learn a function
 $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal Y}$ of parameters $\theta_f$
 (e.g., a neural network-based classifier if ${\cal Y}$ is a finite set of
 classes) and minimizing  a loss ${\cal L}_f(\theta_f)$. In addition, we require
-that $f(X_\lambda ; \theta_f)$ should be robust to the value of the nuisance parameter $\lambda$ --
+that $f(X_z ; \theta_f)$ should be robust to the value $z$ of the nuisance parameter  --
 which remains unknown at test time. More specifically, we aim at building $f$
 such that in the ideal case
 \begin{equation}\label{eqn:criterion-true}
-f(X_{\lambda}(\omega) ; \theta_f) = f(X_{\lambda^\prime}(\omega) ; \theta_f)
+f(X_{z}(\omega) ; \theta_f) = f(X_{z^\prime}(\omega) ; \theta_f)
 \end{equation} for all
-samples $\omega \in \Omega$ and all $\lambda, \lambda^\prime$ pairs of values of the
+samples $\omega \in \Omega$ and all $z, z^\prime$ pairs of values of the
 nuisance parameter.
 
-Since we do not have training tuples $(X_{\lambda}(\omega),
-X_{\lambda^\prime}(\omega))$ (for the same unknown $\omega$), we propose instead to
+Since we do not have training tuples $(X_{z}(\omega),
+X_{z^\prime}(\omega))$ (for the same unknown $\omega$), we propose instead to
 solve the closely related problem of finding a predictive function $f$ such that
 \begin{equation}\label{eqn:criterion-measure}
-    P(\{ \omega | f(X_{\lambda}(\omega) ; \theta_f) = y \} ) = P( \{ \omega' | f(X_{\lambda^\prime}(\omega') ; \theta_f) = y\}) \text{ for all $y \in {\cal Y}$}.
+    P(\{ \omega | f(X_{z}(\omega) ; \theta_f) = y \} ) = P( \{ \omega' | f(X_{z^\prime}(\omega') ; \theta_f) = y\}) \text{ for all $y \in {\cal Y}$}.
 \end{equation}
 In words, we are looking for a predictive function $f$ which is a pivotal
 quantity \citep{degroot1986probability} with respect to the nuisance parameter.
-That is, such that  the distribution of $f(X_\lambda; \theta_f)$ is invariant
-with respect to the value of $\lambda$. Note that a function $f$ for which
+That is, such that  the distribution of $f(X_z; \theta_f)$ is invariant
+with respect to the value $z$ of the nuisance. Note that a function $f$ for which
 Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
 Eqn.~\ref{eqn:criterion-measure}. The converse is however in general not true, since the
-sets of samples $\{ \omega | f(X_{\lambda}(\omega); \theta_f) = y \}$ and $\{
-\omega' | f(X_{\lambda^\prime}(\omega'); \theta_f) = y \}$ do not need to be the same
+sets of samples $\{ \omega | f(X_{z}(\omega); \theta_f) = y \}$ and $\{
+\omega' | f(X_{z^\prime}(\omega'); \theta_f) = y \}$ do not need to be the same
 for the equality to hold.
 In order to simplify notations,
 and as only Eqn.~\ref{eqn:criterion-measure} is
 of direct interest in this work, we denote from here on
 the pivotal quantity criterion as
 \begin{equation}\label{eqn:criterion}
-    p(f(X ; \theta_f) | \lambda ) = p(f(X ; \theta_f) | \lambda^\prime ) \text{ for all $\lambda,\lambda^\prime \in  \Lambda$.}
+    p(f(X ; \theta_f) | z ) = p(f(X ; \theta_f) | z^\prime ) \text{ for all $z,z^\prime \in  {\cal Z}$.}
 \end{equation}
 
 
@@ -165,14 +165,14 @@ towards the real distribution $p_X$.
 In this work, we repurpose adversarial training as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
 particular, we pit $f$ against an adversary classifier $r(\cdot ;
-\theta_r) : \mathbb{R} \mapsto \Lambda$ of parameters $\theta_r$ and
+\theta_r) : \mathbb{R} \mapsto {\cal Z}$ of parameters $\theta_r$ and
 associated loss ${\cal L}_r(\theta_f, \theta_r)$.
-Assuming that $\Lambda$ defines a finite family of nuisance values $\lambda_l$ (for $l=1, \dots, |\Lambda|$),
+Assuming that ${\cal Z}$ defines a finite family of nuisance values $z_l$ (for $l=1, \dots, |{\cal Z}|$),
 this classifier takes as input realizations of $f(X; \theta_f)$, for the current value $\theta_f$ of $f$ parameters,
-and produces as output probability estimates $r(f(X; \theta_f); \theta_r)_l = \hat{p}(\lambda_l| f(X; \theta_f)) $
-that $f(X; \theta_f)$ is generated from the nuisance value $\lambda_l$. If $p(f(X; \theta_f)|\lambda)$ varies with $\lambda$,
+and produces as output probability estimates $r(f(X; \theta_f); \theta_r)_l = \hat{p}(z_l| f(X; \theta_f)) $
+that $f(X; \theta_f)$ is generated from the nuisance value $z_l$. If $p(f(X; \theta_f)|z)$ varies with $z$,
 then the corresponding correlation can be captured by $r$. By contrast, if
-$p(f(X; \theta_f)|\lambda)$ is invariant with $\lambda$, as we require, then $r$
+$p(f(X; \theta_f)|z)$ is invariant with $z$, as we require, then $r$
 should perform poorly and be close to random guessing. Training $f$ such that it additionally minimizes the performance of $r$
 therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}.
 
@@ -196,20 +196,20 @@ Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 
 \begin{algorithm}
 \caption{Adversarial training of a classifier $f$ against an adversary $r$.\\
-{\it Inputs:} training data $\{ x_i, y_i, \lambda_i \}_{i=1}^N$\\
+{\it Inputs:} training data $\{ x_i, y_i, z_i \}_{i=1}^N$\\
 {\it Outputs:} $\smash{\hat\theta_f}, \smash{\hat\theta_r}$\\
 {\it Hyper-parameters:} Number $T$ of training iterations, Number $K$ of gradient steps to update $r$.}
 \label{alg:adversarial-training}
 \begin{algorithmic}[1]
     \For{$t=1$ to $T$}
         \For{$k=1$ to $K$} \Comment{Update $r$}
-            \State{Sample minibatch $\{x_m, \lambda_m \}_{m=1}^M$} of size $M$;
+            \State{Sample minibatch $\{x_m, z_m \}_{m=1}^M$} of size $M$;
             \State{With $\theta_f$ fixed, update $r$ by ascending its stochastic gradient $\nabla_{\theta_r} E(\theta_f, \theta_r) :=$
-            $$\nabla_{\theta_r} \sum_{m=1}^M \left[\sum_{\lambda_l \in \Lambda} 1(\lambda_m = \lambda_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
+            $$\nabla_{\theta_r} \sum_{m=1}^M \left[\sum_{z_l \in {\cal Z}} 1(z_m = z_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
         \EndFor
-        \State{Sample minibatch $\{x_m, y_m, \lambda_m \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
+        \State{Sample minibatch $\{x_m, y_m, z_m \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
         \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient $\nabla_{\theta_f} E(\theta_f, \theta_r) :=$
-        $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\sum_{y_c \in {\cal Y}} 1(y_m = y_c) \log f(x_m;\theta_f)_c  +\sum_{\lambda_l \in \Lambda} 1(\lambda_m = \lambda_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
+        $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\sum_{y_c \in {\cal Y}} 1(y_m = y_c) \log f(x_m;\theta_f)_c  +\sum_{z_l \in {\cal Z}} 1(z_m = z_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
     \EndFor
 \end{algorithmic}
 \end{algorithm}
@@ -222,17 +222,17 @@ Algorithm~\ref{alg:adversarial-training}, the procedure converges to a
 classifier $f$ which is a pivotal quantity in the sense of
 Eqn.~\ref{eqn:criterion}. Results below are derived in a non-parametric setting,
 by assuming that both $f$ and $r$ have enough capacity. To simplify the
-presentation, we also assume the uniform prior $p(\lambda) =
-\frac{1}{|\Lambda|}$ for all $\lambda \in \Lambda$, e.g. by having the same
-number of training samples for each modality $\lambda$ of the nuisance
+presentation, we also assume the uniform prior $p(z) =
+\frac{1}{|{\cal Z}|}$ for all $z \in {\cal Z}$, e.g. by having the same
+number of training samples for each modality $z$ of the nuisance
 parameter.
 
 
 \begin{proposition}
 
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
-\theta_r)$. If $r(f(X;\theta_f) ; \hat\theta_r )_l = \frac{1}{|\Lambda|}$
-for all $\lambda_l$, then $f$ is a pivotal quantity.
+\theta_r)$. If $r(f(X;\theta_f) ; \hat\theta_r )_l = \frac{1}{|{\cal Z}|}$
+for all $z_l$, then $f$ is a pivotal quantity.
 
 \end{proposition}
 
@@ -240,23 +240,23 @@ for all $\lambda_l$, then $f$ is a pivotal quantity.
 
 Let us first recall that the cross-entropy for distributions $p$ and $q$ is
 minimized when $p=q$. For ${\cal L}_r$ defined as the cross-entropy between the
-true conditional distribution of the nuisance $p_{\lambda|f(X;\theta_f)}$ and
+true conditional distribution of the nuisance $p_{Z|f(X;\theta_f)}$ and
 the approximate conditional distribution of the nuisance
 $p_{r(f(X;\theta_f);\theta_r)|f(X)}$, the optimal parameters $\hat\theta_r =
 \arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} L_r(\theta_f,
-\theta_r)$ are therefore such that $p_{\lambda|f(X;\theta_f)} =
+\theta_r)$ are therefore such that $p_{Z|f(X;\theta_f)} =
 p_{r(f(X;\theta_f);\hat\theta_r)|f(X)}$.
 
-In other words, for all $\lambda_l \in  \Lambda$, we have $r(f(X;\theta_f);\hat\theta_r)_l = p(\lambda_l|f(X;\theta_f))$.
-By assumption, $r(f(X;\theta_f);\hat\theta_r)_l = \frac{1}{|\Lambda|}$,
-and therefore $p(\lambda_l|f(X;\theta_f)) = \frac{1}{|\Lambda|}$.
+In other words, for all $z_l \in {\cal Z}$, we have $r(f(X;\theta_f);\hat\theta_r)_l = p(z_l|f(X;\theta_f))$.
+By assumption, $r(f(X;\theta_f);\hat\theta_r)_l = \frac{1}{|{\cal Z}|}$,
+and therefore $p(z_l|f(X;\theta_f)) = \frac{1}{|{\cal Z}|}$.
 Using the Bayes' rule, we write
 \begin{align*}
-    p(f(X;\theta_f)|\lambda_l) &= \frac{ p(\lambda_l|f(X;\theta_f)) p(f(X;\theta_f)) } { p(\lambda_l)} \\
-                               &= \frac{ \tfrac{1}{|\Lambda|} p(f(X;\theta_f)) } { \tfrac{1}{|\Lambda|} } \\
-                               &= p(f(X;\theta_f)),
+    p(f(X;\theta_f)|z_l) &= \frac{ p(z_l|f(X;\theta_f)) p(f(X;\theta_f)) } { p(z_l)} \\
+                         &= \frac{ \tfrac{1}{|{\cal Z}|} p(f(X;\theta_f)) } { \tfrac{1}{|{\cal Z}|} } \\
+                         &= p(f(X;\theta_f)),
 \end{align*}
-which holds for all $\lambda_l \in \Lambda$ and implies that $f$ is a pivotal quantity.
+which holds for all $z_l \in {\cal Z}$ and implies that $f$ is a pivotal quantity.
 \end{proof}
 
 \begin{proposition}
@@ -271,7 +271,7 @@ which holds for all $\lambda_l \in \Lambda$ and implies that $f$ is a pivotal qu
 \section{Related work}
 
 \glnote{Similar to domain adaptation, but with infinitely many domains,
-as parameterized by $\lambda$, also related to transfer learning.}
+as parameterized by $Z$, also related to transfer learning.}
 
 \section{Conclusions}
 
