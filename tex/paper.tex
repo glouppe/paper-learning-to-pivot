@@ -1,17 +1,8 @@
 \documentclass{article}
 
-% if you need to pass options to natbib, use, e.g.:
 \PassOptionsToPackage{numbers, compress}{natbib}
-% before loading nips_2016
-%
-% to avoid loading the natbib package, add option nonatbib:
-% \usepackage[nonatbib]{nips_2016}
 
 \usepackage[final]{nips_2016}
-
-% to compile a camera-ready version, add the [final] option, e.g.:
-% \usepackage[final]{nips_2016}
-
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
 \usepackage{hyperref}       % hyperlinks
@@ -20,7 +11,6 @@
 \usepackage{amsfonts}       % blackboard math symbols
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
-
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -28,7 +18,6 @@
 \usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{color}
-
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
@@ -37,10 +26,6 @@
 \title{Adversarial Training of Neural Networks\\
 against Systematic Uncertainty}
 
-% The \author macro works with any number of authors. There are two
-% commands used to separate the names and addresses of multiple
-% authors: \And and \AND.
-%
 % Using \And between authors leaves it to LaTeX to determine where to
 % break the lines. Using \AND forces a line break at that point. So,
 % if LaTeX puts 3 of 4 authors names on the first line, and the last
@@ -51,26 +36,10 @@ against Systematic Uncertainty}
   Gilles Louppe \\
   New York University\\
   \texttt{g.louppe@nyu.edu} \\
-  %% examples of more authors
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \AND
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
-  %% \texttt{email} \\
-  %% \And
-  %% Coauthor \\
-  %% Affiliation \\
-  %% Address \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
   %% \texttt{email} \\
 }
 
@@ -79,12 +48,16 @@ against Systematic Uncertainty}
 \newtheorem{proposition}[theorem]{Proposition}
 
 \begin{document}
-% \nipsfinalcopy is no longer used
 
 \maketitle
 
+% ==============================================================================
+
 \begin{abstract}
 \end{abstract}
+
+
+% ==============================================================================
 
 \section{Introduction}
 
@@ -95,6 +68,7 @@ respect to systematic uncertainties.}
 % https://www.slac.stanford.edu/econf/C030908/papers/TUAT004.pdf
 \glnote{Motivate the criterion (which may not be obvious for the ML crowd). See pivotal quantity motivation.}
 
+% ==============================================================================
 
 
 \section{Problem statement}
@@ -146,6 +120,8 @@ the pivotal quantity criterion as
     p(f(X ; \theta_f) | z ) = p(f(X ; \theta_f) | z^\prime ) \text{ for all $z,z^\prime \in  {\cal Z}$.}
 \end{equation}
 
+
+% ==============================================================================
 
 \section{Method}
 \label{sec:method}
@@ -215,6 +191,8 @@ Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 \end{algorithm}
 
 
+% ==============================================================================
+
 \section{Theoretical results}
 
 In this section, we show that in the setting of
@@ -227,17 +205,13 @@ presentation, we also assume the uniform prior $p(z) =
 number of training samples for each modality $z$ of the nuisance
 parameter.
 
-
 \begin{proposition}\label{prop:1}
-
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
 \theta_r)$. If $r(f(X;\theta_f) ; \hat\theta_r )_l = \frac{1}{|{\cal Z}|}$
 for all $z_l$, then $f$ is a pivotal quantity.
-
 \end{proposition}
 
 \begin{proof}
-
 Let us first recall that the cross-entropy for distributions $p$ and $q$ is
 minimized when $p=q$. For ${\cal L}_r$ defined as the cross-entropy between the
 true conditional distribution of the nuisance $p_{Z|f(X;\theta_f)}$ and
@@ -259,16 +233,13 @@ which holds for all $z_l \in {\cal Z}$ and implies that $f$ is a pivotal quantit
 \end{proof}
 
 \begin{proposition}\label{prop:2}
-
 If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
 for Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar} such that
 $E(\hat\theta_f, \hat\theta_r) = H(p_{Y|X}) - \log |{\cal Z}|$, then
 $f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier  and a pivotal quantity.
-
 \end{proposition}
 
 \begin{proof}
-
 For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
 \max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} L_r(\theta_f,
 \theta_r)$, in which case $p_{r(f(X;\theta_f);\hat\theta_r)|f(X)} = p_{Z|f(X;\theta_f)}$ and $L_r$ reduces to the entropy
@@ -292,20 +263,26 @@ Accordingly, the second condition implies that $r(f(X;\smash{\hat\theta}_f) ;
 point, because of Proposition~\ref{prop:1}, the optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal quantity.
 \end{proof}
 
-\glnote{We should further discuss that in practice, the equality may never hold.
-We should discuss in which circumstances. In such case, the pivotal quantity
-constraint can however be enforced by outweighting the $L_r$ term, resulting in a
-trade-off between classifier optimality and pivotality.}
-
 \begin{proposition}
     \glnote{It remains to prove that the procedure of Algorithm 1
     converges towards that saddle point. The proof should be similar to the proof of convergence in the GAN paper.}
 \end{proposition}
 
+\glnote{We should further discuss that in practice, the equality in Prop 2 may never hold.
+We should discuss in which circumstances. In such case, the pivotal quantity
+constraint can however be enforced by outweighting the $L_r$ term, resulting in a
+trade-off between classifier optimality and pivotality.}
+
 \glnote{This seems to naturally extend to the case where $Z$ takes continuous
 value, where $L_r$ could be a continuous version of the cross-entropy?}
 
+
+% ==============================================================================
+
 \section{Experiments}
+
+
+% ==============================================================================
 
 \section{Related work}
 
@@ -314,7 +291,13 @@ as parameterized by $Z$, also related to transfer learning.}
 
 \glnote{Other applications: removing implicit bias in data (e.g. gender bias).}
 
+
+% ==============================================================================
+
 \section{Conclusions}
+
+
+% ==============================================================================
 
 \subsubsection*{Acknowledgments}
 
