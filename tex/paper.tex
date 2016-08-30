@@ -228,7 +228,7 @@ number of training samples for each modality $z$ of the nuisance
 parameter.
 
 
-\begin{proposition}
+\begin{proposition}\label{prop:1}
 
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
 \theta_r)$. If $r(f(X;\theta_f) ; \hat\theta_r )_l = \frac{1}{|{\cal Z}|}$
@@ -242,13 +242,13 @@ Let us first recall that the cross-entropy for distributions $p$ and $q$ is
 minimized when $p=q$. For ${\cal L}_r$ defined as the cross-entropy between the
 true conditional distribution of the nuisance $p_{Z|f(X;\theta_f)}$ and
 the approximate conditional distribution of the nuisance
-$p_{r(f(X;\theta_f);\theta_r)|f(X)}$, the optimal parameters $\hat\theta_r =
+$p_{r(f(X;\theta_f);\theta_r)|f(X)}$, the optimal parameters $\smash{\hat\theta}_r =
 \arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} L_r(\theta_f,
 \theta_r)$ are therefore such that $p_{Z|f(X;\theta_f)} =
 p_{r(f(X;\theta_f);\hat\theta_r)|f(X)}$.
 
-In other words, for all $z_l \in {\cal Z}$, we have $r(f(X;\theta_f);\hat\theta_r)_l = p(z_l|f(X;\theta_f))$.
-By assumption, $r(f(X;\theta_f);\hat\theta_r)_l = \frac{1}{|{\cal Z}|}$,
+In other words, for all $z_l \in {\cal Z}$, we have $r(f(X;\theta_f);\smash{\hat\theta}_r)_l = p(z_l|f(X;\theta_f))$.
+By assumption, $r(f(X;\theta_f);\smash{\hat\theta}_r)_l = \frac{1}{|{\cal Z}|}$,
 and therefore $p(z_l|f(X;\theta_f)) = \frac{1}{|{\cal Z}|}$.
 Using the Bayes' rule, we write
 \begin{align*}
@@ -259,12 +259,52 @@ Using the Bayes' rule, we write
 which holds for all $z_l \in {\cal Z}$ and implies that $f$ is a pivotal quantity.
 \end{proof}
 
-\begin{proposition}
-\glnote{proof 2: if Lf can be minimized under the pivotal constraint, then at the saddle point r is such that r(f(x)) = 1/N. [OK]}
+\begin{proposition}\label{prop:2}
+
+If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
+for Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar} such that
+$E(\hat\theta_f, \hat\theta_r) = H(p_{Y|X}) - \log |{\cal Z}|$, then
+$f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier with respect to
+$L_f$ and a pivotal quantity.
+
 \end{proposition}
 
+\begin{proof}
 
+For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
+\max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} L_r(\theta_f,
+\theta_r)$, in which case $p_{Z|f(X;\theta_f)} =
+p_{r(f(X;\theta_f);\hat\theta_r)|f(X)}$ and $L_r$ reduces to the entropy
+$H(p_{Z|f(X;\theta_f)})$ of the conditional distribution of the nuisance. The
+value function $E$ can therefore be rewritten as $$E'(\theta_f) = L_f(\theta_f) -
+H(p_{Z|f(X;\theta_f)}).$$  In particular, we have the lower bound $H(p_{Y|X}) -
+\log |{\cal Z}| \leq L_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ where the equality
+holds at $\smash{\hat\theta}_f$ when
+\begin{itemize}
+    \item $\smash{\hat\theta}_f$ corresponds to
+    the parameters of an optimal classifier, in which case the log-loss $L_f$
+    reduces to $H(p_{Y|X})$,
+    \item all
+   outcomes of $Z|f(X;\smash{\hat\theta}_f)$ are equally likely, in which case
+   $p(z_l|f(X;\smash{\hat\theta}_f)) = \frac{1}{|{\cal Z}|}$ for all $z_l \in {\cal
+   Z}$ and $H(p_{Z|f(X;\smash{\hat\theta}_f)}) =
+   -\sum_{z_l \in {\cal Z}} p(z|\smash{\hat\theta}_f) \log  p(z|\smash{\hat\theta}_f) =  -\sum_{z_l \in {\cal Z}} \frac{1}{|{\cal Z}|} \log \frac{1}{|{\cal Z}|} = \log |{\cal Z}|$.
+\end{itemize}
+Accordingly, the second condition implies that $r(f(X;\smash{\hat\theta}_f) ;
+\smash{\hat\theta}_r )_l = \frac{1}{|{\cal Z}|}$ and therefore that at this
+point, because of Proposition~\ref{prop:1}, $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$, $f$ is both an optimal
+classifier and a pivotal quantity.
+\end{proof}
 
+\glnote{We should further discuss that in practice, the equality may never hold.
+We should discuss in which circumstances. In such case, the pivotal quantity
+constraint can however be enforced by outweighting the $L_r$, resulting in a
+trade-off between classifier optimality and pivotality.}
+
+\begin{proposition}
+    \glnote{It remains to prove that the procedure of Algorithm 1
+    converges towards that saddle point. The proof should be similar to the proof of convergence in the GAN paper.}
+\end{proposition}
 
 \section{Experiments}
 
