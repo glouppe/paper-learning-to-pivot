@@ -263,8 +263,7 @@ which holds for all $z_l \in {\cal Z}$ and implies that $f$ is a pivotal quantit
 If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
 for Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar} such that
 $E(\hat\theta_f, \hat\theta_r) = H(p_{Y|X}) - \log |{\cal Z}|$, then
-$f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier with respect to
-$L_f$ and a pivotal quantity.
+$f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier  and a pivotal quantity.
 
 \end{proposition}
 
@@ -281,12 +280,12 @@ holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f} E'(\theta_f)$ only when
 \begin{itemize}
     \item $\smash{\hat\theta}_f$ corresponds to
     the parameters of an optimal classifier, in which case the log-loss $L_f$
-    reduces to $H(p_{Y|X})$,
+    reduces to its minimum value $H(p_{Y|X})$,
     \item all
    outcomes of $Z|f(X;\smash{\hat\theta}_f)$ are equally likely, in which case
    $p(z_l|f(X;\smash{\hat\theta}_f)) = \frac{1}{|{\cal Z}|}$ for all $z_l \in {\cal
    Z}$ and $H(p_{Z|f(X;\smash{\hat\theta}_f)}) =
-   -\sum_{z_l \in {\cal Z}} p(z|\smash{\hat\theta}_f) \log  p(z|\smash{\hat\theta}_f) =  -\sum_{z_l \in {\cal Z}} \frac{1}{|{\cal Z}|} \log \frac{1}{|{\cal Z}|} = \log |{\cal Z}|$.
+   -\sum_{z_l \in {\cal Z}} p(z_l|f(X;\smash{\hat\theta}_f)) \log  p(z_l|f(X;\smash{\hat\theta}_f)) =  -\sum_{z_l \in {\cal Z}} \frac{1}{|{\cal Z}|} \log \frac{1}{|{\cal Z}|} = \log |{\cal Z}|$.
 \end{itemize}
 Accordingly, the second condition implies that $r(f(X;\smash{\hat\theta}_f) ;
 \smash{\hat\theta}_r )_l = \frac{1}{|{\cal Z}|}$ and therefore that at this
