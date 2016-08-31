@@ -150,7 +150,7 @@ that $f(X; \theta_f)$ is generated from the nuisance value $z_l$. If $p(f(X; \th
 then the corresponding correlation can be captured by $r$. By contrast, if
 $p(f(X; \theta_f)|z)$ is invariant with $z$, as we require, then $r$
 should perform poorly and be close to random guessing. Training $f$ such that it additionally minimizes the performance of $r$
-therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}. 
+therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}.
 
 As for generative adversarial networks, we propose to
 train $f$ and $r$ simultaneously, which we carry out by considering
@@ -191,8 +191,8 @@ Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 \end{algorithm}
 
 \glnote{Extension to continuous nuisance parameters: have the adversary $r$
-models the conditional distribution $p(z|f(X;\theta_f))$, e.g. with network
-whose 2 outputs are parameters of a truncated gaussian and optimized such that
+models the conditional distribution $p(z|f(X;\theta_f))$, e.g. with a network
+whose 2 outputs are the parameters of a truncated gaussian and optimized such that
 $p(z|f(X;\theta_f)) \approx N(\mu(f(X;\theta_f);\theta_r), \sigma(f(X;\theta_f);
 \theta_r)$. The associated loss can be the likelihood (or?), which is maximal when the
 approximation is perfect and minimal when the truncated gaussian degenerates to
