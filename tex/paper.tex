@@ -51,15 +51,7 @@
 
 \begin{abstract}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in faucibus
-lacus. Curabitur in viverra neque. Sed nec urna a sem blandit viverra vel a
-eros. Nam a ultrices leo, a aliquet diam. Proin cursus scelerisque leo, ut
-ullamcorper ante auctor et. Nulla odio nisl, molestie eget consectetur quis,
-eleifend id ligula. Cras lobortis egestas justo ac sagittis. In at ligula est.
-Nulla vel eros sapien. Sed bibendum metus quis dignissim scelerisque. Nulla arcu
-lectus, ornare nec vehicula quis, lobortis a mi. Cras scelerisque mauris quam,
-nec viverra ex convallis sit amet. Ut tellus turpis, lobortis sit amet finibus
-sit amet, maximus ac est.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit...
 
 \end{abstract}
 
@@ -147,17 +139,17 @@ towards the real distribution $p_X$.
 
 In this work, we repurpose adversarial training as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
-particular, we pit $f$ against an adversary classifier $r(\cdot ;
-\theta_r) : \mathbb{R} \mapsto {\cal Z}$ of parameters $\theta_r$ and
-associated loss ${\cal L}_r(\theta_f, \theta_r)$.
-Assuming that ${\cal Z}$ defines a finite family of nuisance values $z_l$ (for $l=1, \dots, |{\cal Z}|$),
-this classifier takes as input realizations of $f(X; \theta_f)$, for the current value $\theta_f$ of $f$ parameters,
-and produces as output probability estimates $r(f(X; \theta_f); \theta_r)_l = \hat{p}(z_l| f(X; \theta_f)) $
-that $f(X; \theta_f)$ is generated from the nuisance value $z_l$. If $p(f(X; \theta_f)|z)$ varies with $z$,
-then the corresponding correlation can be captured by $r$. By contrast, if
-$p(f(X; \theta_f)|z)$ is invariant with $z$, as we require, then $r$
-should perform poorly and be close to random guessing. Training $f$ such that it additionally minimizes the performance of $r$
-therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}.
+particular, we pit $f$ against an adversary model $r := p_{\theta_r}(z |
+f(X;\theta_f))$ of parameters $\theta_r$ and associated loss ${\cal
+L}_r(\theta_f, \theta_r)$. This model takes  as input realizations of $f(X;
+\theta_f)$, for the current value $\theta_f$ of $f$ parameters, and produces as
+output probability estimates $p_{\theta_r}(z | f(X;\theta_f))$ that $f(X;
+\theta_f)$ is generated from the nuisance value $z$. Intuitively, if $p(f(X; \theta_f)|z)$
+varies with $z$, then the corresponding correlation can be captured by $r$. By
+contrast, if $p(f(X; \theta_f)|z)$ is invariant with $z$, as we require, then
+$r$ should perform poorly and be close to random guessing. Training $f$ such
+that it additionally minimizes the performance of $r$ therefore acts as a
+regularization towards Eqn.~\ref{eqn:criterion}.
 
 As for generative adversarial networks, we propose to
 train $f$ and $r$ simultaneously, which we carry out by considering
@@ -170,12 +162,15 @@ that we optimize by finding the saddle point $(\smash{\hat\theta_f}, \smash{\hat
     \smash{\hat\theta_f} &= \arg \min_{\theta_f} E(\theta_f, \smash{\hat\theta_r}), \label{eqn:min_thetaf} \\
     \smash{\hat\theta_r} &= \arg \max_{\theta_r} E(\smash{\hat\theta_f}, \theta_r) \label{eqn:max_thetar}.
 \end{align}
-The adversarial training procedure to obtain $(\smash{\hat\theta_f},
-\smash{\hat\theta_r})$ is formally presented in
-Algorithm~\ref{alg:adversarial-training} in the case of $f$ being a classifier
-and of the cross-entropy loss for both ${\cal L}_f$ and ${\cal L}_r$. The algorithm
-consists in using stochastic gradient descent alternatively to optimize
-Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
+Without loss of generality, the adversarial training procedure to obtain
+$(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ is formally presented in
+Algorithm~\ref{alg:adversarial-training} in the case of a binary classifier $f :
+\mathbb{R}^p \mapsto [0,1]$ modeling $p(Y=1|X)$. For reasons further explained
+in Section~\ref{sec:theory}, ${\cal L}_f$ (resp. ${\cal L}_r$) is set to the
+expected value of the
+negative log-likelihood of $Y|X$ under $f$ (resp. of $Z|f(X;\theta_f)$ under
+$r$). The optimization algorithm consists in using stochastic gradient descent
+alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 
 \begin{algorithm}[t]
 \caption{Adversarial training of a classifier $f$ against an adversary $r$.\\
@@ -188,98 +183,79 @@ Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
         \For{$k=1$ to $K$} \Comment{Update $r$}
             \State{Sample minibatch $\{x_m, z_m \}_{m=1}^M$} of size $M$;
             \State{With $\theta_f$ fixed, update $r$ by ascending its stochastic gradient $\nabla_{\theta_r} E(\theta_f, \theta_r) :=$
-            $$\nabla_{\theta_r} \sum_{m=1}^M \left[\sum_{z_l \in {\cal Z}} 1(z_m = z_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
+            $$\nabla_{\theta_r} \sum_{m=1}^M \log p_{\theta_r}(z_m|f(x_m;\theta_f))  ;$$}
         \EndFor
         \State{Sample minibatch $\{x_m, y_m, z_m \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
         \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient $\nabla_{\theta_f} E(\theta_f, \theta_r) :=$
-        $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\sum_{y_c \in {\cal Y}} 1(y_m = y_c) \log f(x_m;\theta_f)_c  +\sum_{z_l \in {\cal Z}} 1(z_m = z_l)\log r(f(x_m;\theta_f);\theta_r)_l \right];$$}
+        $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\log p_{\theta_f}(y_m|x_m)  +\log p_{\theta_r}(z_m|f(x_m;\theta_f))  \right],$$
+        \indent where $p_{\theta_f}(y_m|x_m)$ denotes $1(y_m=0)(1-f(x_m;\theta_f)) + 1(y_m=1)f(x_m;\theta_f))$;}
     \EndFor
 \end{algorithmic}
 \end{algorithm}
-
-\glnote{Extension to continuous nuisance parameters: have the adversary $r$
-models the conditional distribution $p(z|f(X;\theta_f))$, e.g. with a network
-whose 2 outputs are the parameters of a truncated gaussian and optimized such that
-$p(z|f(X;\theta_f)) \approx N(\mu(f(X;\theta_f);\theta_r), \sigma(f(X;\theta_f);
-\theta_r)$. The associated loss should be the negative log-likelihood (= cross-entropy), which is maximal when the
-approximation is perfect and minimal when the truncated gaussian degenerates to
-a uniform (when $\sigma$ is large), in which case we should have the guarantee
-that $f$ is pivotal.}
-
-\glnote{This section and theoretical results should be rewritten in such a way
-that categorical and continuous nuisance values are solved under the same
-principled approach.}
 
 
 % ==============================================================================
 
 \section{Theoretical results}
+\label{sec:theory}
 
 In this section, we show that in the setting of
-Algorithm~\ref{alg:adversarial-training}, the procedure converges to a
-classifier $f$ which is a pivotal quantity in the sense of
-Eqn.~\ref{eqn:criterion}. Results below are derived in a non-parametric setting,
-by assuming that both $f$ and $r$ have enough capacity. To simplify the
-presentation, we also assume the uniform prior $p(z) =
-\frac{1}{|{\cal Z}|}$ for all $z \in {\cal Z}$, e.g. by having the same
-number of training samples for each modality $z$ of the nuisance
-parameter.
+Algorithm~\ref{alg:adversarial-training} where ${\cal L}_r$ is set to expected
+value of the negative log-likelihood of $Z|f(X;\theta_f)$ under $r$, the
+procedure converges to a classifier $f$ which is a pivotal quantity in the sense
+of Eqn.~\ref{eqn:criterion}. Propositions below are derived in a non-parametric
+setting, by assuming that both $f$ and $r$ have enough capacity. Results hold
+for a nuisance parameter $Z$ taking either categorical values or continuous values within a
+bounded support.  By abuse of notation, $H(p_Z)$ denotes the differential
+entropy in this latter case. Finally, by construction, we assume the uniform
+prior $p(z)$ over the nuisance values $z \in {\cal Z}$ of the parameter.
 
 \begin{proposition}\label{prop:1}
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
-\theta_r)$. If $r(f(X;\theta_f) ; \hat\theta_r )_l = \frac{1}{|{\cal Z}|}$
-for all $z_l$, then $f$ is a pivotal quantity.
+\theta_r)$. If $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$
+for all $z \in {\cal Z}$, then $f$ is a pivotal quantity.
 \end{proposition}
 
 \begin{proof}
-Let us first recall that the cross-entropy for distributions $p$ and $q$ is
-minimized when $p=q$. For ${\cal L}_r$ defined as the cross-entropy between the
-true conditional distribution of the nuisance $p_{Z|f(X;\theta_f)}$ and
-the approximate conditional distribution of the nuisance
-$p_{r(f(X;\theta_f);\theta_r)|f(X)}$, the optimal parameters $\smash{\hat\theta}_r =
+The optimal parameters $\smash{\hat\theta}_r =
 \arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} L_r(\theta_f,
-\theta_r)$ are therefore such that $p_{r(f(X;\theta_f);\hat\theta_r)|f(X)} = p_{Z|f(X;\theta_f)}$.
-
-In other words, for all $z_l \in {\cal Z}$, we have $r(f(X;\theta_f);\smash{\hat\theta}_r)_l = p(z_l|f(X;\theta_f))$.
-By assumption, $r(f(X;\theta_f);\smash{\hat\theta}_r)_l = \frac{1}{|{\cal Z}|}$,
-and therefore $p(z_l|f(X;\theta_f)) = \frac{1}{|{\cal Z}|}$.
+\theta_r)$ are such that $p_{\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$.
+By assumption, $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$,
+and therefore $p(z|f(X;\theta_f)) = p(z)$.
 Using the Bayes' rule, we write
 \begin{align*}
-    p(f(X;\theta_f)|z_l) &= \frac{ p(z_l|f(X;\theta_f)) p(f(X;\theta_f)) } { p(z_l)} \\
-                         &= \frac{ \tfrac{1}{|{\cal Z}|} p(f(X;\theta_f)) } { \tfrac{1}{|{\cal Z}|} } \\
-                         &= p(f(X;\theta_f)),
+    p(f(X;\theta_f)|z) &= \frac{ p(z|f(X;\theta_f)) p(f(X;\theta_f)) } { p(z)} = p(f(X;\theta_f)),
 \end{align*}
-which holds for all $z_l \in {\cal Z}$ and implies that $f$ is a pivotal quantity.
+which holds for all $z \in {\cal Z}$ and implies that $f$ is a pivotal quantity.
 \end{proof}
 
 \begin{proposition}\label{prop:2}
 If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
 for Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar} such that
-$E(\hat\theta_f, \hat\theta_r) = H(p_{Y|X}) - \log |{\cal Z}|$, then
+$E(\hat\theta_f, \hat\theta_r) = H(p_{Y|X}) - H(p_Z)$, then
 $f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier  and a pivotal quantity.
 \end{proposition}
 
 \begin{proof}
 For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
 \max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} L_r(\theta_f,
-\theta_r)$, in which case $p_{r(f(X;\theta_f);\hat\theta_r)|f(X)} = p_{Z|f(X;\theta_f)}$ and $L_r$ reduces to the entropy
+\theta_r)$, in which case $p_{\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$ and $L_r$ reduces to the entropy
 $H(p_{Z|f(X;\theta_f)})$ of the conditional distribution of the nuisance. The
 value function $E$ can therefore be rewritten as $$E'(\theta_f) = L_f(\theta_f) -
 H(p_{Z|f(X;\theta_f)}).$$  In particular, we have the lower bound $H(p_{Y|X}) -
-\log |{\cal Z}| \leq L_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ where the equality
+H(p_Z) \leq L_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ where the equality
 holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f} E'(\theta_f)$ only when
 \begin{itemize}
     \item $\smash{\hat\theta}_f$ corresponds to
-    the parameters of an optimal classifier, in which case the log-loss $L_f$
+    the parameters of an optimal classifier, in which case the expected negative log-likelihood $L_f$ of $Y|X$
     reduces to its minimum value $H(p_{Y|X})$,
     \item all
    outcomes of $Z|f(X;\smash{\hat\theta}_f)$ are equally likely, in which case
-   $p(z_l|f(X;\smash{\hat\theta}_f)) = \frac{1}{|{\cal Z}|}$ for all $z_l \in {\cal
-   Z}$ and $H(p_{Z|f(X;\smash{\hat\theta}_f)}) =
-   -\sum_{z_l \in {\cal Z}} p(z_l|f(X;\smash{\hat\theta}_f)) \log  p(z_l|f(X;\smash{\hat\theta}_f)) =  -\sum_{z_l \in {\cal Z}} \frac{1}{|{\cal Z}|} \log \frac{1}{|{\cal Z}|} = \log |{\cal Z}|$.
+   $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal
+   Z}$ since we assume a uniform prior by construction. Note that in the continuous case, this bound is also realized
+   by the uniform distribution when the support of $Z$ is bounded.
 \end{itemize}
-Accordingly, the second condition implies that $r(f(X;\smash{\hat\theta}_f) ;
-\smash{\hat\theta}_r )_l = \frac{1}{|{\cal Z}|}$ and therefore that at this
+Accordingly, the second condition implies that $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$ and therefore that at this
 point, because of Proposition~\ref{prop:1}, the optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal quantity.
 \end{proof}
 
