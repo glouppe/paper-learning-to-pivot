@@ -200,15 +200,16 @@ alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 \label{sec:theory}
 
 In this section, we show that in the setting of
-Algorithm~\ref{alg:adversarial-training} where ${\cal L}_r$ is set to expected
-value of the negative log-likelihood of $Z|f(X;\theta_f)$ under $r$, the
-procedure converges to a classifier $f$ which is a pivotal quantity in the sense
-of Eqn.~\ref{eqn:criterion}. Propositions below are derived in a non-parametric
-setting, by assuming that both $f$ and $r$ have enough capacity. Results hold
-for a nuisance parameter $Z$ taking either categorical values or continuous values within a
-bounded support.  By abuse of notation, $H(p_Z)$ denotes the differential
-entropy in this latter case. Finally, by construction, we assume the uniform
-prior $p(z)$ over the nuisance values $z \in {\cal Z}$ of the parameter.
+Algorithm~\ref{alg:adversarial-training} where ${\cal L}_f$ and ${\cal L}_r$ are
+respectively set to expected value of the negative log-likelihood of $Y|X$ under
+$f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
+$f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
+Propositions below are derived in a non-parametric setting, by assuming that
+both $f$ and $r$ have enough capacity. Results hold for a nuisance parameter $Z$
+taking either categorical values or continuous values within a bounded support.
+By abuse of notation, $H(p_Z)$ denotes the differential entropy in this latter
+case. Finally, by construction, we assume the uniform prior $p(z)$ over the
+values $z \in {\cal Z}$ of the nuisance parameter.
 
 \begin{proposition}\label{prop:1}
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
@@ -252,8 +253,8 @@ holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f} E'(\theta_f)$ only when
     \item all
    outcomes of $Z|f(X;\smash{\hat\theta}_f)$ are equally likely, in which case
    $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal
-   Z}$ since we assume a uniform prior by construction. Note that in the continuous case, this bound is also realized
-   by the uniform distribution when the support of $Z$ is bounded.
+   Z}$ since we assume a uniform prior by construction. Note that in the continuous case, the supremum of the differential entropy
+   over continuous distributions of bounded support is also realized by the uniform distribution over that support.
 \end{itemize}
 Accordingly, the second condition implies that $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$ and therefore that at this
 point, because of Proposition~\ref{prop:1}, the optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal quantity.
@@ -273,6 +274,10 @@ trade-off between classifier optimality and pivotality.}
 % ==============================================================================
 
 \section{Experiments}
+
+\glnote{Define the architecture of $r$ when $Z$ is categorical ($r$ is a
+standard classifier) or continuous ($r$ is e.g a 2-output NN such that the
+distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support).}
 
 
 % ==============================================================================
