@@ -23,24 +23,20 @@
 
 \newcommand{\glnote}[1]{\textcolor{red}{[GL: #1]}}
 
-\title{Adversarial Training of Neural Networks\\
-against Systematic Uncertainty}
-
-% Using \And between authors leaves it to LaTeX to determine where to
-% break the lines. Using \AND forces a line break at that point. So,
-% if LaTeX puts 3 of 4 authors names on the first line, and the last
-% on the second line, try using \AND instead of \And before the third
-% author name.
+\title{Adversarial Training against Systematic Uncertainty}
 
 \author{
   Gilles Louppe \\
   New York University\\
   \texttt{g.louppe@nyu.edu} \\
-  % \And
-  % Coauthor \\
-  % Affiliation \\
-  % Address \\
-  %% \texttt{email} \\
+  \And
+  Michael Kagan\\
+  SLAC National Accelerator Laboratory\\
+  \texttt{makagan@slac.stanford.edu}\\
+  \And
+  Kyle Cranmer \\
+  New York University\\
+  \texttt{kyle.cranmer@nyu.edu}
 }
 
 \theoremstyle{plain}
@@ -54,6 +50,17 @@ against Systematic Uncertainty}
 % ==============================================================================
 
 \begin{abstract}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in faucibus
+lacus. Curabitur in viverra neque. Sed nec urna a sem blandit viverra vel a
+eros. Nam a ultrices leo, a aliquet diam. Proin cursus scelerisque leo, ut
+ullamcorper ante auctor et. Nulla odio nisl, molestie eget consectetur quis,
+eleifend id ligula. Cras lobortis egestas justo ac sagittis. In at ligula est.
+Nulla vel eros sapien. Sed bibendum metus quis dignissim scelerisque. Nulla arcu
+lectus, ornare nec vehicula quis, lobortis a mi. Cras scelerisque mauris quam,
+nec viverra ex convallis sit amet. Ut tellus turpis, lobortis sit amet finibus
+sit amet, maximus ac est.
+
 \end{abstract}
 
 
@@ -170,7 +177,7 @@ and of the cross-entropy loss for both ${\cal L}_f$ and ${\cal L}_r$. The algori
 consists in using stochastic gradient descent alternatively to optimize
 Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 
-\begin{algorithm}
+\begin{algorithm}[t]
 \caption{Adversarial training of a classifier $f$ against an adversary $r$.\\
 {\it Inputs:} training data $\{ x_i, y_i, z_i \}_{i=1}^N$\\
 {\it Outputs:} $\smash{\hat\theta_f}, \smash{\hat\theta_r}$\\
@@ -194,10 +201,14 @@ Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 models the conditional distribution $p(z|f(X;\theta_f))$, e.g. with a network
 whose 2 outputs are the parameters of a truncated gaussian and optimized such that
 $p(z|f(X;\theta_f)) \approx N(\mu(f(X;\theta_f);\theta_r), \sigma(f(X;\theta_f);
-\theta_r)$. The associated loss can be the likelihood (or?), which is maximal when the
+\theta_r)$. The associated loss should be the negative log-likelihood (= cross-entropy), which is maximal when the
 approximation is perfect and minimal when the truncated gaussian degenerates to
 a uniform (when $\sigma$ is large), in which case we should have the guarantee
 that $f$ is pivotal.}
+
+\glnote{This section and theoretical results should be rewritten in such a way
+that categorical and continuous nuisance values are solved under the same
+principled approach.}
 
 
 % ==============================================================================
@@ -281,9 +292,6 @@ point, because of Proposition~\ref{prop:1}, the optimal classifier $f(\cdot;\sma
 We should discuss in which circumstances. In such case, the pivotal quantity
 constraint can however be enforced by outweighting the $L_r$ term, resulting in a
 trade-off between classifier optimality and pivotality.}
-
-\glnote{This seems to naturally extend to the case where $Z$ takes continuous
-value, where $L_r$ could be a continuous version of the cross-entropy?}
 
 
 % ==============================================================================
