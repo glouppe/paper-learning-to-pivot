@@ -219,7 +219,7 @@ for all $z \in {\cal Z}$, then $f$ is a pivotal quantity.
 
 \begin{proof}
 The optimal parameters $\smash{\hat\theta}_r =
-\arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} L_r(\theta_f,
+\arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} {\cal L}_r(\theta_f,
 \theta_r)$ are such that $p_{\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$.
 By assumption, $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$,
 and therefore $p(z|f(X;\theta_f)) = p(z)$.
@@ -239,16 +239,16 @@ $f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier  and a pivotal qua
 
 \begin{proof}
 For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
-\max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} L_r(\theta_f,
-\theta_r)$, in which case $p_{\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$ and $L_r$ reduces to the entropy
+\max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} {\cal L}_r(\theta_f,
+\theta_r)$, in which case $p_{\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$ and ${\cal L}_r$ reduces to the entropy
 $H(p_{Z|f(X;\theta_f)})$ of the conditional distribution of the nuisance. The
-value function $E$ can therefore be rewritten as $$E'(\theta_f) = L_f(\theta_f) -
+value function $E$ can therefore be rewritten as $$E'(\theta_f) = {\cal L}_f(\theta_f) -
 H(p_{Z|f(X;\theta_f)}).$$  In particular, we have the lower bound $H(p_{Y|X}) -
-H(p_Z) \leq L_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ where the equality
+H(p_Z) \leq {\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ where the equality
 holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f} E'(\theta_f)$ only when
 \begin{itemize}
     \item $\smash{\hat\theta}_f$ corresponds to
-    the parameters of an optimal classifier, in which case the expected negative log-likelihood $L_f$ of $Y|X$
+    the parameters of an optimal classifier, in which case the expected negative log-likelihood ${\cal L}_f$ of $Y|X$
     reduces to its minimum value $H(p_{Y|X})$,
     \item all
    outcomes of $Z|f(X;\smash{\hat\theta}_f)$ are equally likely, in which case
@@ -267,7 +267,7 @@ point, because of Proposition~\ref{prop:1}, the optimal classifier $f(\cdot;\sma
 
 \glnote{We should further discuss that in practice, the equality in Prop 2 may never hold.
 We should discuss in which circumstances. In such case, the pivotal quantity
-constraint can however be enforced by outweighting the $L_r$ term, resulting in a
+constraint can however be enforced by outweighting the ${\cal L}_r$ term, resulting in a
 trade-off between classifier optimality and pivotality.}
 
 
