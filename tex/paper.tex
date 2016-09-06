@@ -204,12 +204,13 @@ Algorithm~\ref{alg:adversarial-training} where ${\cal L}_f$ and ${\cal L}_r$ are
 respectively set to expected value of the negative log-likelihood of $Y|X$ under
 $f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
 $f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
-Propositions below are derived in a non-parametric setting, by assuming that
-both $f$ and $r$ have enough capacity. Results hold for a nuisance parameter $Z$
-taking either categorical values or continuous values within a bounded support.
-By abuse of notation, $H(p_Z)$ denotes the differential entropy in this latter
-case. Finally, by construction, we require the uniform prior $p(z)$ over the
-values $z \in {\cal Z}$ of the nuisance parameter.
+
+In this setting, the nuisance parameter $Z$ is considered as a random variable,
+for which we require the uniform prior $p(z)$ (for $z$ in ${\cal Z}$).  Results
+hold for a nuisance parameter $Z$ taking either categorical values or continuous
+values within a bounded support. By abuse of notation, $H(p_Z)$ denotes the
+differential entropy in this latter case. Finally, propositions below are derived in a
+non-parametric setting, by assuming that both $f$ and $r$ have enough capacity.
 
 \begin{proposition}\label{prop:1}
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
@@ -279,9 +280,6 @@ and its independence with respect to the nuisance parameter. Setting $\lambda$ t
 value will preferrably enforces $f$ to be pivotal while setting $\lambda$ close to $0$
 will rather constraint $f$ to be optimal.
 
-\glnote{We should make it clearer what {\it classification optimality} means: it
-is with respect to $Y|X=x$  when  $x$ results from $z\sim p_Z, x \sim X_z$.
-This is often strictly different from optimality with respect to $Y|X=x,Z=z$ for the true value $z$.}
 
 % ==============================================================================
 
