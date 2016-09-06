@@ -206,9 +206,11 @@ $f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
 $f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
 
 In this setting, the nuisance parameter $Z$ is considered as a random variable,
-for which we require the uniform prior $p(z)$ (for $z$ in ${\cal Z}$). Importantly,
-classification of $Y$ with respect to $X$ is therefore assumed in the context
-where $Z$ is marginalized out. Results
+for which we require the uniform prior $p(z)$ (for $z$ in ${\cal Z}$).
+Importantly, classification of $Y$ with respect to $X$ is therefore considered
+in the context where $Z$ is marginalized out, which means that the classifier
+minimizing ${\cal L}_f$ is optimal with respect to $Y|X$, but not necessarily
+with $Y|X,Z$. Results
 hold for a nuisance parameter $Z$ taking either categorical values or continuous
 values within a bounded support. By abuse of notation, $H(p_Z)$ denotes the
 differential entropy in this latter case. Finally, propositions below are derived in a
@@ -269,7 +271,7 @@ its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
 updated to improve ${\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$, then $f$
 should converge to a classifier which is both optimal and pivotal, provided such
 a classifier exists. On many problems of interest though, such a classifier may
-not exist because the nuisance parameter directly affects the optimal decision
+not exist because the nuisance parameter directly shapes the decision
 boundary, in which cases the lower bound $H(p_{Y|X}) - H(p_Z) < {\cal
 L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal
 classifier or a pivotal quantity, but not both simultaneously. Accordingly the
@@ -295,6 +297,8 @@ distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support).}
 % ==============================================================================
 
 \section{Related work}
+
+\glnote{Alternative to learning a parameterized classifier for LLR.}
 
 \glnote{Similar to domain adaptation, but with infinitely many domains,
 as parameterized by $Z$, also related to transfer learning.}
