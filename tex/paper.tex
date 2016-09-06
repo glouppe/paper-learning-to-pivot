@@ -260,16 +260,23 @@ Accordingly, the second condition implies that $p_{\theta_r}(z|f(X;\theta_f)) = 
 point, because of Proposition~\ref{prop:1}, the optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal quantity.
 \end{proof}
 
-\begin{proposition}
-    \glnote{It remains to prove that the procedure of Algorithm 1
-    converges towards that saddle point. The proof should be similar to the proof of convergence in the GAN paper.}
-\end{proposition}
-
-\glnote{We should further discuss that in practice, the equality in Prop 2 may never hold.
-We should discuss in which circumstances. In such case, the pivotal quantity
-constraint can however be enforced by outweighting the ${\cal L}_r$ term, resulting in a
-trade-off between classifier optimality and pivotality.}
-
+Proposition~\ref{prop:2} suggests that if at each step of
+Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
+its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
+updated to improve ${\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$, then $f$
+should converge to a classifier which is both optimal and pivotal, provided such
+a classifier exists. On many problems of interest though, such a classifier may
+not exist, in which case the lower bound $H(p_{Y|X}) - H(p_Z) < {\cal
+L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal
+classifier or a pivotal quantity, but not both simultaneously. Accordingly the value
+function $E$ can be rewritten as
+\begin{equation}
+    E_\lambda(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r),
+\end{equation}
+where $\lambda \geq 0$ is a hyper-parameter controlling the trade-off between the performance of $f$
+and its independence with respect to the nuisance parameter. Setting $\lambda$ to a large
+value will preferrably enforces $f$ to be pivotal while setting $\lambda$ to a value close to $0$
+will rather constraint $f$ to be optimal.
 
 % ==============================================================================
 
