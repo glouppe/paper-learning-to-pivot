@@ -3,14 +3,10 @@
 \PassOptionsToPackage{numbers, compress}{natbib}
 
 \usepackage[final]{nips_2016}
-\usepackage[utf8]{inputenc} % allow utf-8 input
-\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
-\usepackage{hyperref}       % hyperlinks
-\usepackage{url}            % simple URL typesetting
-\usepackage{booktabs}       % professional-quality tables
-\usepackage{amsfonts}       % blackboard math symbols
-\usepackage{nicefrac}       % compact symbols for 1/2, etc.
-\usepackage{microtype}      % microtypography
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -205,16 +201,16 @@ respectively set to expected value of the negative log-likelihood of $Y|X$ under
 $f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
 $f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
 
-In this setting, the nuisance parameter $Z$ is considered as a random variable,
-for which we require the uniform prior $p(z)$ (for $z$ in ${\cal Z}$).
+In this setting, the nuisance parameter $Z$ is considered as a random variable of bounded support,
+for which we require the uniform prior $p(z)$ (for $z \in {\cal Z}$).
 Importantly, classification of $Y$ with respect to $X$ is therefore considered
 in the context where $Z$ is marginalized out, which means that the classifier
 minimizing ${\cal L}_f$ is optimal with respect to $Y|X$, but not necessarily
-with $Y|X,Z$. Results
-hold for a nuisance parameter $Z$ taking either categorical values or continuous
-values within a bounded support. By abuse of notation, $H(p_Z)$ denotes the
-differential entropy in this latter case. Finally, propositions below are derived in a
-non-parametric setting, by assuming that both $f$ and $r$ have enough capacity.
+with $Y|X,Z$. Results hold for a nuisance parameter $Z$ taking either
+categorical values or continuous values within a bounded support. By abuse of
+notation, $H(p_Z)$ denotes the differential entropy in this latter case.
+Finally, propositions below are derived in a non-parametric setting, by assuming
+that both $f$ and $r$ have enough capacity.
 
 \begin{proposition}\label{prop:1}
 Let $\theta_f$ be fixed and $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
@@ -274,8 +270,8 @@ a classifier exists. On many problems of interest though, such a classifier may
 not exist because the nuisance parameter directly shapes the decision
 boundary, in which cases the lower bound $H(p_{Y|X}) - H(p_Z) < {\cal
 L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal
-classifier or a pivotal quantity, but not both simultaneously. Accordingly the
-value function $E$ can be rewritten as
+classifier or a pivotal quantity, but not both simultaneously. In this situation, it is natural to rewrite the
+value function $E$  as
 \begin{equation}
     E_\lambda(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r),
 \end{equation}
