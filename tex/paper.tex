@@ -1,0 +1,345 @@
+\documentclass[twocolumn,preprintnumbers,superscriptaddress,nofootinbib,aps,floatfix,letterpaper]{revtex4-1}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\usepackage{bm}
+\usepackage{cancel}
+\usepackage{bbold}
+\usepackage{slashed}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\newcommand{\glnote}[1]{\textcolor{red}{[GL: #1]}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\begin{document}
+
+
+% ==============================================================================
+
+\title{\Large{Adversarial Training against Systematic Uncertainty}}
+\vspace{1cm}
+\author{\small{\bf Gilles Louppe}\thanks{\texttt{g.louppe@nyu.edu}}}
+\affiliation{New York University}
+\author{\small{\bf Michael Kagan}\thanks{\texttt{makagan@slac.stanford.edu}}}
+\affiliation{SLAC National Accelerator Laboratory}
+\author{\small{\bf Kyle Cranmer}\thanks{\texttt{kyle.cranmer@nyu.edu}}}
+\affiliation{New York University}
+
+\begin{abstract}
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo, enim
+vitae facilisis pretium, ligula justo aliquet lectus, non interdum erat lorem et
+nisi. Donec pharetra lectus in magna pellentesque vehicula. Praesent dapibus
+lorem sed enim lacinia, a vestibulum sapien mattis. Sed ornare mollis aliquet.
+Nulla tempor lacinia tortor, in rhoncus augue porta nec. Morbi sed convallis
+nibh, eu hendrerit turpis. Curabitur sit amet rhoncus purus. Curabitur eget
+magna lorem. Phasellus pretium nisi quis est tincidunt, faucibus vulputate augue
+viverra. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a urna a
+ex egestas pulvinar. Curabitur facilisis a dui nec fringilla. Duis bibendum
+fermentum quam. Donec eget urna eget mi placerat malesuada ut et lacus. Nulla ac
+risus scelerisque, congue eros vitae, dignissim risus. Fusce purus ante,
+vulputate sed magna et, varius imperdiet leo.
+
+\end{abstract}
+
+\maketitle
+
+
+% ==============================================================================
+
+\section{Introduction}
+
+\glnote{Distinction between statistical and systematic uncertainty.}
+\glnote{Define nuisance parameters.}
+\glnote{We want to build an accurate classifier whose output remains invariant with
+respect to systematic uncertainties.}
+% https://www.slac.stanford.edu/econf/C030908/papers/TUAT004.pdf
+\glnote{Motivate the criterion (which may not be obvious for the ML crowd). See pivotal quantity motivation.}
+
+
+% ==============================================================================
+
+\section{Problem statement}
+\label{sec:problem}
+
+Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
+sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
+Let consider the multivariate random variables $X_z: \Omega \mapsto
+\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
+on a nuisance parameter $Z$ whose values $z \in {\cal Z}$  define a
+parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
+induce together a joint probability distribution $p(X,Y|z)$, where the
+conditional on $z$ denotes $X_z$. For training, let further assume a finite set $\{
+x_i, y_i, z_i \}_{i=1}^N$ of realizations $X_{z_i}(\omega_i), Y(\omega_i)$, for
+$\omega_i \in \Omega$ and known values $z_i$ of the nuisance parameter. Our goal
+is to learn a function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal Y}$ of
+parameters $\theta_f$ (e.g., a neural network-based classifier if ${\cal Y}$ is
+a finite set of classes) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
+the cross-entropy). In addition, we require that $f(X_z ; \theta_f)$ should be
+robust to the value $z$ of the nuisance parameter  -- which remains unknown at
+test time. More specifically, we aim at building $f$ such that in the ideal case
+\begin{equation}\label{eqn:criterion-true}
+f(X_{z}(\omega) ; \theta_f) = f(X_{z^\prime}(\omega) ; \theta_f)
+\end{equation} for all
+samples $\omega \in \Omega$ and all $z, z^\prime$ pairs of values of the
+nuisance parameter.
+
+Since we do not have training tuples $(X_{z}(\omega),
+X_{z^\prime}(\omega))$ (for the same unknown $\omega$), we propose instead to
+solve the closely related problem of finding a predictive function $f$ such that
+\begin{align}\label{eqn:criterion-measure}
+    &P(\{ \omega | f(X_{z}(\omega) ; \theta_f) = y \} ) \nonumber \\
+    &\indent = P( \{ \omega' | f(X_{z^\prime}(\omega') ; \theta_f) = y\})
+\end{align}
+for all $y \in {\cal Y}$. In words, we are looking for a predictive function $f$
+which is a pivotal quantity \citep{degroot1986probability} with respect to the
+nuisance parameter. That is, such that  the distribution of $f(X_z; \theta_f)$
+is invariant with respect to the value $z$ of the nuisance. Note that a function
+$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
+Eqn.~\ref{eqn:criterion-measure}. In general, the converse is however not true,
+since the sets of samples $\{ \omega | f(X_{z}(\omega); \theta_f) = y \}$ and $\{
+\omega' | f(X_{z^\prime}(\omega'); \theta_f) = y \}$ do not need to be the same
+for the equality to hold. In order to simplify notations, and as only
+Eqn.~\ref{eqn:criterion-measure} is of direct interest in this work, we denote
+from here on the pivotal quantity criterion as
+\begin{equation}\label{eqn:criterion}
+    p(f(X ; \theta_f) | z ) = p(f(X ; \theta_f) | z^\prime )
+\end{equation}
+for all $z,z^\prime \in  {\cal Z}$.
+
+
+% ==============================================================================
+
+\section{Method}
+\label{sec:method}
+
+Adversarial training was first proposed by \citep{goodfellow2014generative} as a
+way to build a generative model capable of producing samples from random noise
+$z \sim p_Z$. More specifically, the authors pit a generative model $g:
+\mathbb{R} \mapsto \mathbb{R}^p$ against an adversary classifier $d :
+\mathbb{R}^p \mapsto \{ 0, 1\}$ whose antagonistic objective is to recognize
+real data $X$ from generated data $g(Z)$. Both models $g$ and $d$ are trained
+simultaneously, in such a way that $g$ learns to produce samples that are
+difficult to identify by $d$, while $d$ incrementally adapts to changes in $g$.
+At the equilibrium, $g$ models a distribution whose samples can be identified by
+$d$ only by chance. That is, assuming enough capacity in $d$ and  $g$, the
+distribution $p_{g(Z)}$ eventually converges towards the real distribution
+$p_X$.
+
+In this work, we repurpose adversarial training as a means to constraint the
+predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
+particular, we pit $f$ against an adversary model $r := p_{\theta_r}(z |
+f(X;\theta_f))$ of parameters $\theta_r$ and associated loss ${\cal
+L}_r(\theta_f, \theta_r)$. This model takes  as input realizations of $f(X;
+\theta_f)$, for the current value $\theta_f$ of $f$ parameters, and produces as
+output probability estimates $p_{\theta_r}(z | f(X;\theta_f))$ that $f(X;
+\theta_f)$ is generated from the nuisance value $z$. Intuitively, if $p(f(X;
+\theta_f)|z)$ varies with $z$, then the corresponding correlation can be
+captured by $r$. By contrast, if $p(f(X; \theta_f)|z)$ is invariant with $z$, as
+we require, then $r$ should perform poorly and be close to random guessing.
+Training $f$ such that it additionally minimizes the performance of $r$
+therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}.
+
+As for generative adversarial networks, we propose to
+train $f$ and $r$ simultaneously, which we carry out by considering
+the value function
+\begin{equation}
+    E(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - {\cal L}_r(\theta_f, \theta_r)
+\end{equation}
+that we optimize by finding the saddle point $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ such that
+\begin{align}
+    \smash{\hat\theta_f} &= \arg \min_{\theta_f} E(\theta_f, \smash{\hat\theta_r}), \label{eqn:min_thetaf} \\
+    \smash{\hat\theta_r} &= \arg \max_{\theta_r} E(\smash{\hat\theta_f}, \theta_r) \label{eqn:max_thetar}.
+\end{align}
+Without loss of generality, the adversarial training procedure to obtain
+$(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ is formally presented in
+Algorithm~\ref{alg:adversarial-training} in the case of a binary classifier $f :
+\mathbb{R}^p \mapsto [0,1]$ modeling $p(Y=1|X)$. For reasons further explained
+in Section~\ref{sec:theory}, ${\cal L}_f$ (resp. ${\cal L}_r$) is set to the
+expected value of the
+negative log-likelihood of $Y|X$ under $f$ (resp. of $Z|f(X;\theta_f)$ under
+$r$). The optimization algorithm consists in using stochastic gradient descent
+alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
+
+\begin{figure*}
+    \begin{minipage}{\linewidth}
+    \begin{algorithm}[H]
+    \caption{Adversarial training of a classifier $f$ against an adversary $r$.}
+
+    \begin{flushleft}
+        {\it Inputs:} training data $\{ x_i, y_i, z_i \}_{i=1}^N$;\\
+        {\it Outputs:} $\smash{\hat\theta_f}, \smash{\hat\theta_r}$;\\
+        {\it Hyper-parameters:} Number $T$ of training iterations,
+                                Number $K$ of gradient steps to update $r$.
+    \end{flushleft}
+
+    \label{alg:adversarial-training}
+    \begin{algorithmic}[1]
+        \For{$t=1$ to $T$}
+            \For{$k=1$ to $K$} \Comment{Update $r$}
+                \State{Sample minibatch $\{x_m, z_m \}_{m=1}^M$} of size $M$;
+                \State{With $\theta_f$ fixed, update $r$ by ascending its stochastic gradient $\nabla_{\theta_r} E(\theta_f, \theta_r) :=$
+                $$\nabla_{\theta_r} \sum_{m=1}^M \log p_{\theta_r}(z_m|f(x_m;\theta_f))  ;$$}
+            \EndFor
+            \State{Sample minibatch $\{x_m, y_m, z_m \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
+            \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient $\nabla_{\theta_f} E(\theta_f, \theta_r) :=$
+            $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\log p_{\theta_f}(y_m|x_m)  +\log p_{\theta_r}(z_m|f(x_m;\theta_f))  \right],$$
+            \indent where $p_{\theta_f}(y_m|x_m)$ denotes $1(y_m=0)(1-f(x_m;\theta_f)) + 1(y_m=1)f(x_m;\theta_f))$;}
+        \EndFor
+    \end{algorithmic}
+    \end{algorithm}
+    \end{minipage}
+\end{figure*}
+
+
+
+% ==============================================================================
+
+\section{Theoretical results}
+\label{sec:theory}
+
+In this section, we show that in the setting of
+Algorithm~\ref{alg:adversarial-training} where ${\cal L}_f$ and ${\cal L}_r$ are
+respectively set to expected value of the negative log-likelihood of $Y|X$ under
+$f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
+$f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
+
+In this setting, the nuisance parameter $Z$ is considered as a random variable
+of bounded support, for which we require the uniform prior $p(z)$ (for $z \in
+{\cal Z}$). Importantly, classification of $Y$ with respect to $X$ is therefore
+considered in the context where $Z$ is marginalized out, which means that the
+classifier minimizing ${\cal L}_f$ is optimal with respect to $Y|X$, but not
+necessarily with $Y|X,Z$. Results hold for a nuisance parameter $Z$ taking
+either categorical values or continuous values within a bounded support. By
+abuse of notation, $H(p_Z)$ denotes the differential entropy in this latter
+case. Finally, propositions below are derived in a non-parametric setting, by
+assuming that both $f$ and $r$ have enough capacity.
+
+\begin{proposition}\label{prop:1}
+Let $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
+\theta_r)$ for fixed $\theta_f$. If $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$
+for all $z \in {\cal Z}$, then $f$ is a pivotal quantity.
+\end{proposition}
+
+\begin{proof}
+The optimal parameters $$\smash{\hat\theta}_r =
+\arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} {\cal L}_r(\theta_f,
+\theta_r)$$ are such that $p_{\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$.
+By assumption, $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$,
+and therefore $p(z|f(X;\theta_f)) = p(z)$.
+Using the Bayes' rule, we write
+\begin{align*}
+    p(f(X;\theta_f)|z) &= \frac{ p(z|f(X;\theta_f)) p(f(X;\theta_f)) } { p(z)}\\
+                       &= p(f(X;\theta_f)),
+\end{align*}
+which holds for all $z \in {\cal Z}$ and implies that $f$ is a pivotal quantity.
+\end{proof}
+
+\begin{proposition}\label{prop:2}
+If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
+for Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar} such that
+$E(\hat\theta_f, \hat\theta_r) = H(p_{Y|X}) - H(p_Z)$, then
+$f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier and a pivotal
+quantity.
+\end{proposition}
+
+\begin{proof}
+
+For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
+\max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} {\cal
+L}_r(\theta_f, \theta_r)$, in which case $p_{\theta_r}(z|f(X;\theta_f)) =
+p(z|f(X;\theta_f))$ and ${\cal L}_r$ reduces to the entropy
+$H(p_{Z|f(X;\theta_f)})$ of the conditional distribution of the nuisance. The
+value function $E$ can therefore be rewritten as $$E'(\theta_f) = {\cal
+L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)}).$$  In particular, we have the lower
+bound $$H(p_{Y|X}) - H(p_Z) \leq {\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$$
+where the equality holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f}
+E'(\theta_f)$ only when
+\begin{itemize}
+    \item $\smash{\hat\theta}_f$ corresponds to
+    the parameters of an optimal classifier, in which case the expected
+    negative log-likelihood ${\cal L}_f$ of $Y|X$ reduces to its minimum
+    value $H(p_{Y|X})$,
+    \item all
+   outcomes of $Z|f(X;\smash{\hat\theta}_f)$ are equally likely, in which case
+   $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal
+   Z}$ since we require a uniform prior by construction. Note that in the
+   continuous case, the supremum of the differential entropy
+   over continuous distributions on the same bounded support is also realized
+   by the uniform distribution over that support.
+\end{itemize}
+Accordingly, the second condition implies that $p_{\theta_r}(z|f(X;\theta_f)) =
+p(z)$ and therefore that at this point, because of Proposition~\ref{prop:1}, the
+optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal quantity.
+
+\end{proof}
+
+Proposition~\ref{prop:2} suggests that if at each step of
+Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
+its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
+updated to improve ${\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$, then $f$
+should converge to a classifier which is both optimal and pivotal, provided such
+a classifier exists. On many problems of interest though, such a classifier may
+not exist because the nuisance parameter directly shapes the decision boundary,
+in which cases the lower bound $H(p_{Y|X}) - H(p_Z) < {\cal L}_f(\theta_f) -
+H(p_{Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal classifier or a
+pivotal quantity, but not both simultaneously. In this situation, it is natural
+to rewrite the value function $E$  as
+\begin{equation}
+    E_\lambda(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r),
+\end{equation}
+where $\lambda \geq 0$ is a hyper-parameter controlling the trade-off between
+the performance of $f$ and its independence with respect to the nuisance
+parameter. Setting $\lambda$ to a large value will preferrably enforces $f$ to
+be pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
+optimal.
+
+
+% ==============================================================================
+
+\section{Experiments}
+
+\glnote{Define the architecture of $r$ when $Z$ is categorical ($r$ is a
+standard classifier) or continuous ($r$ is e.g a 2-output NN such that the
+distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support).}
+
+
+% ==============================================================================
+
+\section{Related work}
+
+\glnote{Alternative to learning a parameterized classifier for LLR.}
+\glnote{Similar to domain adaptation, but with infinitely many domains,
+as parameterized by $Z$, also related to transfer learning.}
+\glnote{Other applications: removing implicit bias in data (e.g. gender bias).}
+
+
+% ==============================================================================
+
+\section{Conclusions}
+
+
+% ==============================================================================
+
+\begin{acknowledgments}
+The authors would like to thank...
+\end{acknowledgments}
+
+
+% ==============================================================================
+
+\bibliography{bibliography.bib}
+
+\end{document}
