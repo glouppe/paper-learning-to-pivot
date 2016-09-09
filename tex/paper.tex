@@ -1,4 +1,4 @@
-\documentclass[twocolumn,preprintnumbers,superscriptaddress,nofootinbib,aps,floatfix,letterpaper]{revtex4-1}
+\documentclass[twocolumn,superscriptaddress,aps]{revtex4-1}
 
 \usepackage[utf8]{inputenc}
 
@@ -62,7 +62,7 @@ vulputate sed magna et, varius imperdiet leo.
 \section{Introduction}
 
 \glnote{Distinction between statistical and systematic uncertainty.}
-\glnote{Define nuisance parameters.}
+\glnote{Define nuisance parameters. See refs in Noel's papers.}
 \glnote{We want to build an accurate classifier whose output remains invariant with
 respect to systematic uncertainties.}
 % https://www.slac.stanford.edu/econf/C030908/papers/TUAT004.pdf
@@ -203,6 +203,7 @@ alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
     \end{minipage}
 \end{figure*}
 
+\glnote{Add summary figure.}
 
 
 % ==============================================================================
@@ -311,6 +312,8 @@ optimal.
 
 \section{Experiments}
 
+\subsection{Toy example}
+
 \glnote{Define the architecture of $r$ when $Z$ is categorical ($r$ is a
 standard classifier) or continuous ($r$ is e.g a 2-output NN such that the
 distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support).}
@@ -324,6 +327,23 @@ distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support).}
 \glnote{Similar to domain adaptation, but with infinitely many domains,
 as parameterized by $Z$, also related to transfer learning.}
 \glnote{Other applications: removing implicit bias in data (e.g. gender bias).}
+
+% In high energy physics, systematic uncertainties have traditionally been
+% taken into account using... \glnote{search for related works.}
+% In the context of likelihood-free inference, the proposed approach ... \glnote{todo}
+% Finally, from the point of view
+
+% In the literature, this problem is known
+% under many names, including transfer learning, co-variate shift or domain
+% adaptation. It has traditionally been  solved either by re-weighting approaches
+% (see e.g.
+% \citep{shimodaira2000improving,gretton2009covariate,sugiyama2012machine,vapnik2013constructive}
+% and references therein) or by learning robust representations over domains
+% \citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ganin2014unsupervised}.
+% Both of these families of methods assume that source and target distributions
+% share a same representation space, either of overlapping supports in the case of
+% re-weighting methods or as a domain-invariant low rank manifold in the case of
+% robust embedding methods.
 
 
 % ==============================================================================
