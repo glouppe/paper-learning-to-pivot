@@ -346,14 +346,14 @@ practice, parameterized classifiers  are also often computationally expensive to
 build and evaluate. In particular, calibrating their decision fucntion, i.e.
 approximating $p(f(x,z)|z)$ as a continuous function of $z$, remains an open
 challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
-may not be optimal, as discussed in Section~\ref{sec:theory}, but that can be
+may not be optimal with respect to $Y|X,Z$, as discussed in Section~\ref{sec:theory}, but that can be
 used in a wider range of applications, since knowing the correct value $z$ of
 the nuisance is not necessary, and for which calibration needs to be carried out
 only once, since  the dependence on the nuisance is now built in the classifier.
 \glnote{Shall we also discuss the relation with \citep{Neal:2007zz} where point
-estimates of the nuisance are used as inputs to $f4$?}
+estimates of the nuisance are used as inputs to $f$?}
 
-In machine learning, the proposed method can be related to the problem of domain
+In machine learning, learning a pivotal quantity can be related to the problem of domain
 adaptation
 \citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ganin2014unsupervised},
 where the goal is often stated as trying to learn a domain-invariant
@@ -362,12 +362,15 @@ enforcing fairness in classification \citep{zemel2013learning,EdwardsS15}. For
 both families of methods, the problem can equivalently be stated as learning a
 classifier which is a pivotal quantity with respect to either the domain or some
 chosen attribute of the data, such as gender, color or age. In this context,
-\citep{EdwardsS15} is certainly among the closest to our work, in which fairness
-is enforced through an adversarial minimax setup composed of a classifier and an
-adversary discriminator. In particular, our work can be regarded as a
-generalization that also supports the continuous case, which can be viewed as
-handling infinitely many domains, provided they can be continuously
-parameterized, or as enforcing fairness over continuous attributes.
+\citep{ganin2014unsupervised,EdwardsS15} are certainly among the closest to our
+work, in which domain invariance and fairness are enforced through an adversarial
+minimax setup composed of a classifier and an adversary discriminator. In
+particular, our work can be regarded as a generalization that also supports the
+continuous case, which can be viewed as handling infinitely many domains,
+provided they can be continuously parameterized, or as enforcing fairness over
+continuous attributes.
+
+\glnote{Check related work of cited references to see if important related work are missing.}
 
 
 % ==============================================================================
