@@ -62,11 +62,13 @@ vulputate sed magna et, varius imperdiet leo.
 \section{Introduction}
 
 \glnote{Distinction between statistical and systematic uncertainty.}
+\glnote{Outline taxonomy of uncertainties.}
 \glnote{Define nuisance parameters. See refs in Noel's papers.}
 \glnote{We want to build an accurate classifier whose output remains invariant with
 respect to systematic uncertainties.}
 % https://www.slac.stanford.edu/econf/C030908/papers/TUAT004.pdf
 \glnote{Motivate the criterion (which may not be obvious for the ML crowd). See pivotal quantity motivation.}
+\glnote{Discuss what kind of uncertainties the proposed approach is good for.}
 
 
 % ==============================================================================
@@ -316,34 +318,56 @@ optimal.
 
 \glnote{Define the architecture of $r$ when $Z$ is categorical ($r$ is a
 standard classifier) or continuous ($r$ is e.g a 2-output NN such that the
-distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support).}
+distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support). Cite Nix.}
+
+\subsection{Physics example}
 
 
 % ==============================================================================
 
 \section{Related work}
 
-\glnote{Alternative to learning a parameterized classifier for LLR.}
-\glnote{Similar to domain adaptation, but with infinitely many domains,
-as parameterized by $Z$, also related to transfer learning.}
-\glnote{Other applications: removing implicit bias in data (e.g. gender bias).}
+To account for systematic uncertainties, experimentalists in high energy physics
+typically take as fixed a classifier $f$ built from training data for a nominal
+value $z_0$ of the nuisance parameter, and then propagate uncertainty
+\glnote{add ref} by estimating $p(f(x)|z)$ with a parameterized calibration
+procedure. Clearly, this classifier is however not optimal for $z \neq z_0$. In
+this setting, parameterized
+classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
+(nuisance) parameters as additional input variables, hence ultimately providing
+the most statistically powerful approach for incorporating the effect of
+systematics on the underlying classification task.  As argued in
+\citep{Neal:2007zz}, such classifiers can however not be used on real data since
+the correct value $z$ of the nuisance often remains unknown. This is typically
+not an issue in the context of parameter
+inference~\citep{cranmer2015approximating}, where nuisance parameters are
+marginalized out, but otherwise often limits the range of their applications. In
+practice, parameterized classifiers  are also often computationally expensive to
+build and evaluate. In particular, calibrating their decision fucntion, i.e.
+approximating $p(f(x,z)|z)$ as a continuous function of $z$, remains an open
+challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
+may not be optimal, as discussed in Section~\ref{sec:theory}, but that can be
+used in a wider range of applications, since knowing the correct value $z$ of
+the nuisance is not necessary, and for which calibration needs to be carried out
+only once, since  the dependence on the nuisance is now built in the classifier.
+\glnote{Shall we also discuss the relation with \citep{Neal:2007zz} where point
+estimates of the nuisance are used as inputs to $f4$?}
 
-% In high energy physics, systematic uncertainties have traditionally been
-% taken into account using... \glnote{search for related works.}
-% In the context of likelihood-free inference, the proposed approach ... \glnote{todo}
-% Finally, from the point of view
-
-% In the literature, this problem is known
-% under many names, including transfer learning, co-variate shift or domain
-% adaptation. It has traditionally been  solved either by re-weighting approaches
-% (see e.g.
-% \citep{shimodaira2000improving,gretton2009covariate,sugiyama2012machine,vapnik2013constructive}
-% and references therein) or by learning robust representations over domains
-% \citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ganin2014unsupervised}.
-% Both of these families of methods assume that source and target distributions
-% share a same representation space, either of overlapping supports in the case of
-% re-weighting methods or as a domain-invariant low rank manifold in the case of
-% robust embedding methods.
+In machine learning, the proposed method can be related to the problem of domain
+adaptation
+\citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ganin2014unsupervised},
+where the goal is often stated as trying to learn a domain-invariant
+representation of the data. Similarly, our method also relates to the problem of
+enforcing fairness in classification \citep{zemel2013learning,EdwardsS15}. For
+both families of methods, the problem can equivalently be stated as learning a
+classifier which is a pivotal quantity with respect to either the domain or some
+chosen attribute of the data, such as gender, color or age. In this context,
+\citep{EdwardsS15} is certainly among the closest to our work, in which fairness
+is enforced through an adversarial minimax setup composed of a classifier and an
+adversary discriminator. In particular, our work can be regarded as a
+generalization that also supports the continuous case, which can be viewed as
+handling infinitely many domains, provided they can be continuously
+parameterized, or as enforcing fairness over continuous attributes.
 
 
 % ==============================================================================
@@ -354,7 +378,6 @@ as parameterized by $Z$, also related to transfer learning.}
 % ==============================================================================
 
 \begin{acknowledgments}
-The authors would like to thank...
 \end{acknowledgments}
 
 
