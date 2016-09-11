@@ -146,8 +146,10 @@ particular, we pit $f$ against an adversary model $r := p_{\theta_r}(z |
 f(X;\theta_f))$ of parameters $\theta_r$ and associated loss ${\cal
 L}_r(\theta_f, \theta_r)$. This model takes  as input realizations of $f(X;
 \theta_f)$, for the current value $\theta_f$ of $f$ parameters, and produces as
-output probability estimates $p_{\theta_r}(z | f(X;\theta_f))$ that $f(X;
-\theta_f)$ is generated from the nuisance value $z$. Intuitively, if $p(f(X;
+output a function $p_{\theta_r}(z | f(X;\theta_f))$ modeling the conditional probability density that $f(X;
+\theta_f)$ is generated from the nuisance value $z$.
+\glnote{Give examples of $r$ for categorical and continuous nuisances.}
+Intuitively, if $p(f(X;
 \theta_f)|z)$ varies with $z$, then the corresponding correlation can be
 captured by $r$. By contrast, if $p(f(X; \theta_f)|z)$ is invariant with $z$, as
 we require, then $r$ should perform poorly and be close to random guessing.
@@ -305,7 +307,7 @@ to rewrite the value function $E$  as
 \end{equation}
 where $\lambda \geq 0$ is a hyper-parameter controlling the trade-off between
 the performance of $f$ and its independence with respect to the nuisance
-parameter. Setting $\lambda$ to a large value will preferrably enforces $f$ to
+parameter. Setting $\lambda$ to a large value will preferably enforces $f$ to
 be pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
 optimal.
 
@@ -318,7 +320,7 @@ optimal.
 
 \glnote{Define the architecture of $r$ when $Z$ is categorical ($r$ is a
 standard classifier) or continuous ($r$ is e.g a 2-output NN such that the
-distribution of $Z|f(X)$ is modeled by a truncated gaussian of known support). Cite Nix.}
+distribution of $Z|f(X)$ is modeled by a truncated Gaussian of known support). Cite Nix.}
 
 \subsection{Physics example}
 
@@ -343,7 +345,7 @@ not an issue in the context of parameter
 inference~\citep{cranmer2015approximating}, where nuisance parameters are
 marginalized out, but otherwise often limits the range of their applications. In
 practice, parameterized classifiers  are also often computationally expensive to
-build and evaluate. In particular, calibrating their decision fucntion, i.e.
+build and evaluate. In particular, calibrating their decision function, i.e.
 approximating $p(f(x,z)|z)$ as a continuous function of $z$, remains an open
 challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
 may not be optimal with respect to $Y|X,Z$, as discussed in Section~\ref{sec:theory}, but that can be
