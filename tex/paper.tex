@@ -145,7 +145,7 @@ $p_X$.
     \usetikzlibrary{arrows}
     \def\layersep{1cm}
 
-    \begin{tikzpicture}[shorten >= 1pt, ->, node distance=\layersep,scale=.8]
+    \begin{tikzpicture}[shorten >= 1pt, ->, node distance=\layersep,scale=.85]
     \tikzstyle{neuron} = [circle, minimum size=0.25cm, draw=black!30, line width=0.3mm, fill=white]
 
     % Classifier f
@@ -184,9 +184,9 @@ $p_X$.
     \node at (9,0) {Adversary $r$};
     \draw (6.5,-0.5) rectangle (11.5,-5.5);
 
-    \node[above] at (12.75,-2.5) {$\mu(f(X;\theta_f))$};
+    \node[above] at (12.75,-2.5) {$\mu_{\theta_r}(f(X;\theta_f))$};
     \path[-o, shorten >= 0pt] (11,-2.5) edge (14,-2.5);
-    \node[above] at (12.75,-3.5) {$\sigma(f(X;\theta_f))$};
+    \node[above] at (12.75,-3.5) {$\sigma_{\theta_r}(f(X;\theta_f))$};
     \path[-o, shorten >= 0pt] (11,-3.5) edge (14,-3.5);
 
     \path[-o, shorten >= 0pt] (9,-6.5) edge (9,-5.5);
@@ -223,7 +223,7 @@ $p_X$.
 
     \end{tikzpicture}
 
-    \caption{Architecture for the adversarial training of a binary classifier $f$ against a continuous parameter $Z$.}
+    \caption{Architecture for the adversarial training of a binary classifier $f$ against a continuous parameter $Z$. \glnote{Shall we also illustrate the losses?}}
     \label{fig:architecture}
 \end{figure*}
 
