@@ -48,10 +48,7 @@ Nulla tempor lacinia tortor, in rhoncus augue porta nec. Morbi sed convallis
 nibh, eu hendrerit turpis. Curabitur sit amet rhoncus purus. Curabitur eget
 magna lorem. Phasellus pretium nisi quis est tincidunt, faucibus vulputate augue
 viverra. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a urna a
-ex egestas pulvinar. Curabitur facilisis a dui nec fringilla. Duis bibendum
-fermentum quam. Donec eget urna eget mi placerat malesuada ut et lacus. Nulla ac
-risus scelerisque, congue eros vitae, dignissim risus. Fusce purus ante,
-vulputate sed magna et, varius imperdiet leo.
+ex egestas pulvinar.
 
 \end{abstract}
 
@@ -229,9 +226,11 @@ $p_X$.
 
     \end{tikzpicture}
 
-    \caption{Architecture for the adversarial training of a binary classifier $f$ against a continuous parameter $Z$.}
+    \caption{Architecture for the adversarial training of a binary classifier
+    $f$ against a continuous parameter $Z$, assuming that $Z|f(X;\theta_f)$
+    follows a truncated gaussian distribution.}
     \label{fig:architecture}
-\end{figure*}
+    \end{figure*}
 
 In this work, we repurpose adversarial training as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
@@ -241,22 +240,28 @@ associated loss ${\cal L}_r(\theta_f, \theta_r)$. This model takes  as input
 realizations of $f(X; \theta_f)$, for the current value $\theta_f$ of $f$
 parameters, and produces as output a function $p_{\theta_r}(z | f(X;\theta_f))$
 modeling the posterior probability density that $z$ parameterizes the sample $X$
-observed through $f(\cdot;\theta_f)$. If $Z$ takes discrete values, then
-$p_{\theta_r}$ can be represented as a probabilistic classifier $\mathbb{R}
-\mapsto \mathbb{R}^{|{\cal Z|}}$ whose output $j$ (for $j=1, \dots, |{\cal Z}|$)
-is the estimated probability mass $p_{\theta_r}(z_j|f(X;\theta_f))$. Similarly,
-if $Z$ takes continuous values and if we assume some parameteric distribution
-for $Z|f(X;\theta_f)$ (e.g., a truncated gaussian over a bounded support), then $p_{\theta_r}$ can be represented
-as network whose output $j$ is the estimated value of the corresponding
-parameter of that distribution (e.g., its mean and variance). As in
-\citep{nix1994estimating}, the estimated probability density
-$p_{\theta_r}(z|f(X;\theta_f))$ can then be evaluated for any $z \in {\cal Z}$
-under that distribution.  Intuitively, if $p(f(X; \theta_f)|z)$ varies with $z$,
+observed through $f(\cdot;\theta_f)$.
+Intuitively, if $p(f(X; \theta_f)|z)$ varies with $z$,
 then the corresponding correlation can be captured by $r$. By contrast, if
 $p(f(X; \theta_f)|z)$ is invariant with $z$, as we require, then $r$ should
 perform poorly and be close to random guessing. Training $f$ such that it
 additionally minimizes the performance of $r$ therefore acts as a regularization
 towards Eqn.~\ref{eqn:criterion}.
+
+If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
+probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
+output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
+$p_{\theta_r}(z_j|f(X;\theta_f))$. Similarly, if $Z$ takes continuous values and
+if we assume some parameteric distribution for $Z|f(X;\theta_f)$ (e.g., a
+truncated gaussian over a bounded support), then $p_{\theta_r}$ can be
+represented e.g. as network whose output $j$ is the estimated value of the
+corresponding parameter of that distribution (e.g., its mean and variance). As
+in \citep{nix1994estimating}, the estimated probability density
+$p_{\theta_r}(z|f(X;\theta_f))$ can then be evaluated for any $z \in {\cal Z}$.
+As further explained in the next section, let us note that the adversary $r$ may
+take any form, i.e. it does need to be a neural network, as long as it exposes a
+differentiable function $p_{\theta_r}(z|f(X;\theta_f))$ of sufficient capacity
+to represent the true distribution within its bounded support.
 
 As for generative adversarial networks, we propose to
 train $f$ and $r$ simultaneously, which we carry out by considering
@@ -273,10 +278,15 @@ Without loss of generality, the adversarial training procedure to obtain
 $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ is formally presented in
 Algorithm~\ref{alg:adversarial-training} in the case of a binary classifier $f :
 \mathbb{R}^p \mapsto [0,1]$ modeling $p(Y=1|X)$. For reasons further explained
-in Section~\ref{sec:theory}, ${\cal L}_f$ (resp. ${\cal L}_r$) is set to the
+in Section~\ref{sec:theory}, ${\cal L}_f$ and ${\cal L}_r$  are respectively set to the
 expected value of the
-negative log-likelihood of $Y|X$ under $f$ (resp. of $Z|f(X;\theta_f)$ under
-$r$). The optimization algorithm consists in using stochastic gradient descent
+negative log-likelihood of $Y|X$ under $f$ and of of $Z|f(X;\theta_f)$ under
+$r$:
+\begin{align}
+    {\cal L}_f(\theta_f) &= \mathbb{E}_{Y|X} [ -\log p_{\theta_f} (Y|X) ], \\
+    {\cal L}_r(\theta_f, \theta_r) &= \mathbb{E}_{Z|f(X;\theta_f)} [-\log p_{\theta_r} (Z|f(X;\theta_f))].
+\end{align}
+The optimization algorithm consists in using stochastic gradient descent
 alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 
 \begin{figure*}
@@ -308,8 +318,6 @@ alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
     \end{algorithm}
     \end{minipage}
 \end{figure*}
-
-\glnote{Discuss that we could equivalently require an intermediate representation of the data (as learned internally by $f$) to be pivotal, instead of requiring $f(X)$ to be pivotal.}
 
 
 % ==============================================================================
@@ -412,6 +420,11 @@ the performance of $f$ and its independence with respect to the nuisance
 parameter. Setting $\lambda$ to a large value will preferably enforces $f$ to
 be pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
 optimal.
+
+Interestingly, let us emphasize that these results hold using only the 1D output
+of $f$ (in the case of binary classification) as input to the adversary. We
+could similarly enforce an intermediate representation of the data to be
+pivotal, e.g. as in \citep{ganin2014unsupervised}, but this is in fact not necessary.
 
 
 % ==============================================================================
