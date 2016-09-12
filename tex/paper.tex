@@ -16,6 +16,7 @@
 \usepackage{hyperref}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{tikz}
 
 \newcommand{\glnote}[1]{\textcolor{red}{[GL: #1]}}
 
@@ -140,22 +141,108 @@ $d$ only by chance. That is, assuming enough capacity in $d$ and  $g$, the
 distribution $p_{g(Z)}$ eventually converges towards the real distribution
 $p_X$.
 
+\begin{figure*}
+    \usetikzlibrary{arrows}
+    \def\layersep{1cm}
+
+    \begin{tikzpicture}[shorten >= 1pt, ->, node distance=\layersep,scale=.8]
+    \tikzstyle{neuron} = [circle, minimum size=0.25cm, draw=black!30, line width=0.3mm, fill=white]
+
+    % Classifier f
+    \node at (2,0) {Classifier $f$};
+    \draw (-1,-0.5) rectangle (4,-5.5);
+
+    \path[->, shorten >= 0pt] (-2,-3) edge (-1,-3);
+    \node[left] at (-2,-3) {$X$};
+
+    \path[-o, shorten >= 0pt] (1.5,-6.5) edge (1.5,-5.5);
+    \node[below] at (1.5,-6.5) {$\theta_f$};
+
+    \path[->, shorten >= 0pt] (3.5,-3) edge (6.5,-3);
+    \node[above] at (5.25,-3) {$f(X;\theta_f)$};
+
+    \foreach \name / \y in {1,...,3}
+        \node[neuron] (f-I-\name) at (-0.5,-1-\y) {};
+
+    \foreach \name / \y in {1,...,5}
+        \node[neuron] (f-H1-\name) at (-0.5cm+\layersep,-\y cm) {};
+    \foreach \name / \y in {1,...,5}
+        \node[neuron] (f-H2-\name) at (-0.5cm+3*\layersep,-\y cm) {};
+
+    \node[neuron] (f-O) at (-0.5cm+4*\layersep,-3cm) {};
+
+    \foreach \source in {1,...,3}
+        \foreach \dest in {1,...,5}
+            \path[black!20] (f-I-\source) edge (f-H1-\dest);
+
+    \foreach \source in {1,...,5}
+        \path[black!30] (f-H2-\source) edge (f-O);
+
+    \node[black!20] at (1.5,-3) {...};
+
+    % Adversary r
+    \node at (9,0) {Adversary $r$};
+    \draw (6.5,-0.5) rectangle (11.5,-5.5);
+
+    \node[above] at (12.75,-2.5) {$\mu(f(X;\theta_f))$};
+    \path[-o, shorten >= 0pt] (11,-2.5) edge (14,-2.5);
+    \node[above] at (12.75,-3.5) {$\sigma(f(X;\theta_f))$};
+    \path[-o, shorten >= 0pt] (11,-3.5) edge (14,-3.5);
+
+    \path[-o, shorten >= 0pt] (9,-6.5) edge (9,-5.5);
+    \node[below] at (9,-6.5) {$\theta_r$};
+
+    \foreach \name / \y in {1,...,1}
+        \node[neuron] (r-I-\name) at (7,-2-\y) {};
+
+    \foreach \name / \y in {1,...,5}
+        \node[neuron] (r-H1-\name) at (7cm+\layersep,-\y cm) {};
+    \foreach \name / \y in {1,...,5}
+        \node[neuron] (r-H2-\name) at (7cm+3*\layersep,-\y cm) {};
+
+    \node[neuron] (r-O1) at (7cm+4*\layersep,-2.5cm) {};
+    \node[neuron] (r-O2) at (7cm+4*\layersep,-3.5cm) {};
+
+    \foreach \source in {1,...,1}
+        \foreach \dest in {1,...,5}
+            \path[black!20] (r-I-\source) edge (r-H1-\dest);
+
+    \foreach \source in {1,...,5}
+        \path[black!30] (r-H2-\source) edge (r-O1);
+    \foreach \source in {1,...,5}
+        \path[black!30] (r-H2-\source) edge (r-O2);
+
+    \node[black!20] at (9,-3) {...};
+
+    \draw (14,-1.5) rectangle (17,-4.5);
+    \path[->, shorten >= 0pt] (15.5,-0.5) edge (15.5,-1.5);
+    \node[above] at (15.5,-0.5) {$z$};
+    \path[->, shorten >= 0pt] (15.5,-4.5) edge (15.5,-5.5);
+    \node[below] at (15.5,-5.5) {$p_{\theta_r}(z|f(X;\theta_f))$};
+    \node at (15.5,-3) {Truncated ${\cal N}$};
+
+    \end{tikzpicture}
+
+    \caption{Architecture for the adversarial training of a binary classifier $f$ against a continuous parameter $Z$.}
+    \label{fig:architecture}
+\end{figure*}
+
 In this work, we repurpose adversarial training as a means to constraint the
-predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. In
-particular, we pit $f$ against an adversary model $r := p_{\theta_r}(z |
-f(X;\theta_f))$ of parameters $\theta_r$ and associated loss ${\cal
-L}_r(\theta_f, \theta_r)$. This model takes  as input realizations of $f(X;
-\theta_f)$, for the current value $\theta_f$ of $f$ parameters, and produces as
-output a function $p_{\theta_r}(z | f(X;\theta_f))$ modeling the posterior
-probability density that $z$ parameterizes the sample $X$ observed through
-$f(\cdot;\theta_f)$. If $Z$ takes discrete values, then $p_{\theta_r}$ can be
-represented as a probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal
-Z|}}$ whose output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated
-probability mass $p_{\theta_r}(z_j|f(X;\theta_f))$. Similarly, if $Z$ takes
-continuous values and if we assume some parameteric distribution for
-$Z|f(X;\theta_f)$ (e.g., a gaussian), then $p_{\theta_r}$ can be represented as
-network whose output $j$ is the estimated value of the corresponding parameter
-of that distribution (e.g., its mean and variance). As in
+predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
+illustrated in Figure~\ref{fig:architecture}, we pit $f$ against an adversary
+model $r := p_{\theta_r}(z | f(X;\theta_f))$ of parameters $\theta_r$ and
+associated loss ${\cal L}_r(\theta_f, \theta_r)$. This model takes  as input
+realizations of $f(X; \theta_f)$, for the current value $\theta_f$ of $f$
+parameters, and produces as output a function $p_{\theta_r}(z | f(X;\theta_f))$
+modeling the posterior probability density that $z$ parameterizes the sample $X$
+observed through $f(\cdot;\theta_f)$. If $Z$ takes discrete values, then
+$p_{\theta_r}$ can be represented as a probabilistic classifier $\mathbb{R}
+\mapsto \mathbb{R}^{|{\cal Z|}}$ whose output $j$ (for $j=1, \dots, |{\cal Z}|$)
+is the estimated probability mass $p_{\theta_r}(z_j|f(X;\theta_f))$. Similarly,
+if $Z$ takes continuous values and if we assume some parameteric distribution
+for $Z|f(X;\theta_f)$ (e.g., a truncated gaussian over a bounded support), then $p_{\theta_r}$ can be represented
+as network whose output $j$ is the estimated value of the corresponding
+parameter of that distribution (e.g., its mean and variance). As in
 \citep{nix1994estimating}, the estimated probability density
 $p_{\theta_r}(z|f(X;\theta_f))$ can then be evaluated for any $z \in {\cal Z}$
 under that distribution.  Intuitively, if $p(f(X; \theta_f)|z)$ varies with $z$,
@@ -217,7 +304,6 @@ alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
 \end{figure*}
 
 \glnote{Discuss that we could equivalently require an intermediate representation of the data (as learned internally by $f$) to be pivotal, instead of requiring $f(X)$ to be pivotal.}
-\glnote{Add summary figure.}
 
 
 % ==============================================================================
