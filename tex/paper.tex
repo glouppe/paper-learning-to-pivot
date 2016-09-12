@@ -146,15 +146,23 @@ particular, we pit $f$ against an adversary model $r := p_{\theta_r}(z |
 f(X;\theta_f))$ of parameters $\theta_r$ and associated loss ${\cal
 L}_r(\theta_f, \theta_r)$. This model takes  as input realizations of $f(X;
 \theta_f)$, for the current value $\theta_f$ of $f$ parameters, and produces as
-output a function $p_{\theta_r}(z | f(X;\theta_f))$ modeling the conditional probability density that $f(X;
-\theta_f)$ is generated from the nuisance value $z$.
-\glnote{Give examples of $r$ for categorical and continuous nuisances.}
-Intuitively, if $p(f(X;
-\theta_f)|z)$ varies with $z$, then the corresponding correlation can be
-captured by $r$. By contrast, if $p(f(X; \theta_f)|z)$ is invariant with $z$, as
-we require, then $r$ should perform poorly and be close to random guessing.
-Training $f$ such that it additionally minimizes the performance of $r$
-therefore acts as a regularization towards Eqn.~\ref{eqn:criterion}.
+output a function $p_{\theta_r}(z | f(X;\theta_f))$ modeling the posterior
+probability density that $z$ parameterizes the sample $X$ observed through
+$f(\cdot;\theta_f)$. If $Z$ takes discrete values, then $p_{\theta_r}$ can be
+represented as a probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal
+Z|}}$ whose output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated
+probability mass $p_{\theta_r}(z_j|f(X;\theta_f))$. Similarly, if $Z$ takes
+continuous values and if we assume some parameteric distribution for
+$Z|f(X;\theta_f)$ (e.g., a gaussian), then $p_{\theta_r}$ can be represented as
+network whose output $j$ is the estimated value of the corresponding parameter
+of that distribution (e.g., its mean and variance), and such that
+$p_{\theta_r}(z|f(X;\theta_f))$ can then be evaluated for any $z \in {\cal Z}$
+under that distribution.  Intuitively, if $p(f(X; \theta_f)|z)$ varies with $z$,
+then the corresponding correlation can be captured by $r$. By contrast, if
+$p(f(X; \theta_f)|z)$ is invariant with $z$, as we require, then $r$ should
+perform poorly and be close to random guessing. Training $f$ such that it
+additionally minimizes the performance of $r$ therefore acts as a regularization
+towards Eqn.~\ref{eqn:criterion}.
 
 As for generative adversarial networks, we propose to
 train $f$ and $r$ simultaneously, which we carry out by considering
@@ -345,33 +353,35 @@ the correct value $z$ of the nuisance often remains unknown. This is typically
 not an issue in the context of parameter
 inference~\citep{cranmer2015approximating}, where nuisance parameters are
 marginalized out, but otherwise often limits the range of their applications. In
-practice, parameterized classifiers  are also often computationally expensive to
-build and evaluate. In particular, calibrating their decision function, i.e.
+practice, parameterized classifiers  are also computationally expensive to build
+and evaluate. In particular, calibrating their decision function, i.e.
 approximating $p(f(x,z)|z)$ as a continuous function of $z$, remains an open
 challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
-may not be optimal with respect to $Y|X,Z$, as discussed in Section~\ref{sec:theory}, but that can be
-used in a wider range of applications, since knowing the correct value $z$ of
-the nuisance is not necessary, and for which calibration needs to be carried out
-only once, since  the dependence on the nuisance is now built in the classifier.
-\glnote{Shall we also discuss the relation with \citep{Neal:2007zz} where point
-estimates of the nuisance are used as inputs to $f$?}
+may not be optimal with respect to $Y|X,Z$, as discussed in
+Section~\ref{sec:theory}, but that can otherwise be used in a wider range of
+applications, since knowing the correct value $z$ of the nuisance is not
+necessary. Similarly, calibration needs to be carried out only once, since  the
+dependence on the nuisance is now built-in. \glnote{Shall we also discuss the
+relation with \citep{Neal:2007zz} where point estimates of the nuisance are used
+as inputs to $f$?}
 
-In machine learning, learning a pivotal quantity can be related to the problem of domain
-adaptation
+In machine learning, learning a pivotal quantity can be related to the problem
+of domain adaptation
 \citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ganin2014unsupervised},
 where the goal is often stated as trying to learn a domain-invariant
-representation of the data. Similarly, our method also relates to the problem of
-enforcing fairness in classification \citep{zemel2013learning,EdwardsS15}. For
-both families of methods, the problem can equivalently be stated as learning a
-classifier which is a pivotal quantity with respect to either the domain or some
-chosen attribute of the data, such as gender, color or age. In this context,
+representation of the data. Likewise, our method also relates to the problem of
+enforcing fairness in classification \citep{zemel2013learning,EdwardsS15}, which
+is stated as learning a classifier that is independent of some chosen attribute
+such as gender, color or age. For both families of methods, the problem can
+equivalently be stated as learning a classifier which is a pivotal quantity with
+respect to either the domain or the selected feature. In this context,
 \citep{ganin2014unsupervised,EdwardsS15} are certainly among the closest to our
-work, in which domain invariance and fairness are enforced through an adversarial
-minimax setup composed of a classifier and an adversary discriminator. In
-particular, our work can be regarded as a generalization that also supports the
-continuous case, which can be viewed as handling infinitely many domains,
-provided they can be continuously parameterized, or as enforcing fairness over
-continuous attributes.
+work, in which domain invariance and fairness are enforced through an
+adversarial minimax setup composed of a classifier and an adversary
+discriminator. Following this line of work, our method can be regarded as a
+generalization that also supports the continuous case, which can be viewed as
+handling infinitely many domains, provided they can be continuously
+parameterized, or as enforcing fairness over continuous attributes.
 
 \glnote{Check related work of cited references to see if important related work are missing.}
 
