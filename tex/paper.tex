@@ -178,10 +178,10 @@ $p_X$.
     \foreach \source in {1,...,5}
         \path[black!30] (f-H2-\source) edge (f-O);
 
-    \node[black!20] at (1.5,-3) {...};
+    \node[black!30] at (1.5,-3) {...};
 
     % Adversary r
-    \node at (9,0) {Adversary $r$};
+    \node at (11.75,0) {Adversary $r$};
     \draw (6.5,-0.5) rectangle (11.5,-5.5);
 
     \node[above] at (12.75,-2.5) {$\mu_{\theta_r}(f(X;\theta_f))$};
@@ -212,13 +212,13 @@ $p_X$.
     \foreach \source in {1,...,5}
         \path[black!30] (r-H2-\source) edge (r-O2);
 
-    \node[black!20] at (9,-3) {...};
+    \node[black!30] at (9,-3) {...};
 
     \draw (14,-1.5) rectangle (17,-4.5);
     \path[->, shorten >= 0pt] (15.5,-0.5) edge (15.5,-1.5);
-    \node[above] at (15.5,-0.5) {$z$};
+    \node[above] at (15.5,-0.5) {$Z$};
     \path[->, shorten >= 0pt] (15.5,-4.5) edge (15.5,-5.5);
-    \node[below] at (15.5,-5.5) {$p_{\theta_r}(z|f(X;\theta_f))$};
+    \node[below] at (15.5,-5.5) {$p_{\theta_r}(Z|f(X;\theta_f))$};
     \node at (15.5,-3) {Truncated ${\cal N}$};
 
     \draw[dashed,-] (15.5,-5) -| (12.75,-6.5);
@@ -280,7 +280,7 @@ Algorithm~\ref{alg:adversarial-training} in the case of a binary classifier $f :
 \mathbb{R}^p \mapsto [0,1]$ modeling $p(Y=1|X)$. For reasons further explained
 in Section~\ref{sec:theory}, ${\cal L}_f$ and ${\cal L}_r$  are respectively set to the
 expected value of the
-negative log-likelihood of $Y|X$ under $f$ and of of $Z|f(X;\theta_f)$ under
+negative log-likelihood of $Y|X$ under $f$ and of $Z|f(X;\theta_f)$ under
 $r$:
 \begin{align}
     {\cal L}_f(\theta_f) &= \mathbb{E}_{Y|X} [ -\log p_{\theta_f} (Y|X) ], \\
@@ -421,10 +421,12 @@ parameter. Setting $\lambda$ to a large value will preferably enforces $f$ to
 be pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
 optimal.
 
-Interestingly, let us emphasize that these results hold using only the 1D output
+Interestingly, let us emphasize that these results hold using only the (1D) output
 of $f$ (in the case of binary classification) as input to the adversary. We
 could similarly enforce an intermediate representation of the data to be
-pivotal, e.g. as in \citep{ganin2014unsupervised}, but this is in fact not necessary.
+pivotal, e.g. as in \citep{ganin2014unsupervised}, but this is in fact not
+necessary. \glnote{This also suggests we could use for $r$ a simpler, maybe
+closed form, representation than a neural network (e.g. a GMM?).}
 
 
 % ==============================================================================
