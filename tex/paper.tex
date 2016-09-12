@@ -161,6 +161,9 @@ $p_X$.
     \path[->, shorten >= 0pt] (3.5,-3) edge (6.5,-3);
     \node[above] at (5.25,-3) {$f(X;\theta_f)$};
 
+    \path[dashed,-] (5.25,-3) edge (5.25,-6.5);
+    \node[below] at (5.25,-6.5) {${\cal L}_f(\theta_f)$};
+
     \foreach \name / \y in {1,...,3}
         \node[neuron] (f-I-\name) at (-0.5,-1-\y) {};
 
@@ -221,9 +224,12 @@ $p_X$.
     \node[below] at (15.5,-5.5) {$p_{\theta_r}(z|f(X;\theta_f))$};
     \node at (15.5,-3) {Truncated ${\cal N}$};
 
+    \draw[dashed,-] (15.5,-5) -| (12.75,-6.5);
+    \node[below] at (12.75,-6.5) {${\cal L}_r(\theta_f, \theta_r)$};
+
     \end{tikzpicture}
 
-    \caption{Architecture for the adversarial training of a binary classifier $f$ against a continuous parameter $Z$. \glnote{Shall we also illustrate the losses?}}
+    \caption{Architecture for the adversarial training of a binary classifier $f$ against a continuous parameter $Z$.}
     \label{fig:architecture}
 \end{figure*}
 
