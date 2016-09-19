@@ -78,7 +78,7 @@ Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
 sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
 Let consider the multivariate random variables $X_z: \Omega \mapsto
 \mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
-on a nuisance parameter $Z$ whose values $z \in {\cal Z}$  define a
+of the functional $X$ on a nuisance parameter $Z$ whose values $z \in {\cal Z}$  define a
 parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
 induce together a joint probability distribution $p(X,Y|z)$, where the
 conditional on $z$ denotes $X_z$. For training, let further assume a finite set $\{
@@ -184,10 +184,12 @@ $p_X$.
     \node at (11.75,0) {Adversary $r$};
     \draw (6.5,-0.5) rectangle (11.5,-5.5);
 
-    \node[above] at (12.75,-2.5) {$\mu_{\theta_r}(f(X;\theta_f))$};
-    \path[-o, shorten >= 0pt] (11,-2.5) edge (14,-2.5);
-    \node[above] at (12.75,-3.5) {$\sigma_{\theta_r}(f(X;\theta_f))$};
-    \path[-o, shorten >= 0pt] (11,-3.5) edge (14,-3.5);
+    \node[above] at (12.75,-2) {\small $\theta^1(f(X;\theta_f);\theta_r)$};
+    \path[-o, shorten >= 0pt] (11,-2.0) edge (14,-2.0);
+    \node[above] at (12.75,-3) {$\theta^2(f(X;\theta_f);\theta_r)$};
+    \path[-o, shorten >= 0pt] (11,-3) edge (14,-3);
+    \node[above] at (12.75,-4) {$\dots$};
+    \path[-o, shorten >= 0pt] (11,-4) edge (14,-4);
 
     \path[-o, shorten >= 0pt] (9,-6.5) edge (9,-5.5);
     \node[below] at (9,-6.5) {$\theta_r$};
@@ -200,8 +202,9 @@ $p_X$.
     \foreach \name / \y in {1,...,5}
         \node[neuron] (r-H2-\name) at (7cm+3*\layersep,-\y cm) {};
 
-    \node[neuron] (r-O1) at (7cm+4*\layersep,-2.5cm) {};
-    \node[neuron] (r-O2) at (7cm+4*\layersep,-3.5cm) {};
+    \node[neuron] (r-O1) at (7cm+4*\layersep,-2cm) {};
+    \node[neuron] (r-O2) at (7cm+4*\layersep,-3cm) {};
+    \node[neuron] (r-O3) at (7cm+4*\layersep,-4cm) {};
 
     \foreach \source in {1,...,1}
         \foreach \dest in {1,...,5}
@@ -211,6 +214,8 @@ $p_X$.
         \path[black!30] (r-H2-\source) edge (r-O1);
     \foreach \source in {1,...,5}
         \path[black!30] (r-H2-\source) edge (r-O2);
+    \foreach \source in {1,...,5}
+        \path[black!30] (r-H2-\source) edge (r-O3);
 
     \node[black!30] at (9,-3) {...};
 
@@ -219,7 +224,7 @@ $p_X$.
     \node[above] at (15.5,-0.5) {$Z$};
     \path[->, shorten >= 0pt] (15.5,-4.5) edge (15.5,-5.5);
     \node[below] at (15.5,-5.5) {$p_{\theta_r}(Z|f(X;\theta_f))$};
-    \node at (15.5,-3) {Truncated ${\cal N}$};
+    \node at (15.5,-3) {${\cal D}(\theta^1, \theta^2, \dots)$};
 
     \draw[dashed,-] (15.5,-5) -| (12.75,-6.5);
     \node[below] at (12.75,-6.5) {${\cal L}_r(\theta_f, \theta_r)$};
@@ -227,8 +232,7 @@ $p_X$.
     \end{tikzpicture}
 
     \caption{Architecture for the adversarial training of a binary classifier
-    $f$ against a continuous parameter $Z$, assuming that $Z|f(X;\theta_f)$
-    follows a truncated gaussian distribution.}
+    $f$ against a continuous parameter $Z$.}
     \label{fig:architecture}
     \end{figure*}
 
