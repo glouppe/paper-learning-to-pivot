@@ -349,15 +349,15 @@ assuming that both $f$ and $r$ have enough capacity.
 
 \begin{proposition}\label{prop:1}
 Let $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
-\theta_r)$ for fixed $\theta_f$. If $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$
+\theta_r)$ for fixed $\theta_f$. If $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z)$
 for all $z \in {\cal Z}$, then $f$ is a pivotal quantity.
 \end{proposition}
 
 \begin{proof}
 The optimal parameters $$\smash{\hat\theta}_r =
 \arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} {\cal L}_r(\theta_f,
-\theta_r)$$ are such that $p_{\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$.
-By assumption, $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$,
+\theta_r)$$ are such that $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$.
+By assumption, $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z)$,
 and therefore $p(z|f(X;\theta_f)) = p(z)$.
 Using the Bayes' rule, we write
 \begin{align*}
@@ -379,7 +379,7 @@ quantity.
 
 For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
 \max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} {\cal
-L}_r(\theta_f, \theta_r)$, in which case $p_{\theta_r}(z|f(X;\theta_f)) =
+L}_r(\theta_f, \theta_r)$, in which case $p_{\hat\theta_r}(z|f(X;\theta_f)) =
 p(z|f(X;\theta_f))$ and ${\cal L}_r$ reduces to the entropy
 $H(p_{Z|f(X;\theta_f)})$ of the conditional distribution of the nuisance. The
 value function $E$ can therefore be rewritten as $$E'(\theta_f) = {\cal
@@ -388,21 +388,24 @@ bound $$H(p_{Y|X}) - H(p_Z) \leq {\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$$
 where the equality holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f}
 E'(\theta_f)$ only when
 \begin{itemize}
-    \item $\smash{\hat\theta}_f$ corresponds to
-    the parameters of an optimal classifier, in which case the expected
-    negative log-likelihood ${\cal L}_f$ of $Y|X$ reduces to its minimum
-    value $H(p_{Y|X})$,
-    \item all
-   outcomes of $Z|f(X;\smash{\hat\theta}_f)$ are equally likely, in which case
-   $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal
-   Z}$ since we require a uniform prior by construction. Note that in the
-   continuous case, the supremum of the differential entropy
-   over continuous distributions on the same bounded support is also realized
-   by the uniform distribution over that support.
+    \item $\smash{\hat\theta}_f$ minimizes the negative log-likelihood ${\cal
+    L}_f$ of $X|Y$, which happens when $\smash{\hat\theta}_f$ are the parameters
+    of an optimal classifier and in which case ${\cal L}_f$ reduces to its
+    minimum value $H(p_{Y|X})$,
+
+    \item $\smash{\hat\theta}_f$ maximimizes the entropy
+    $H(p_{Z|f(X;\theta_f)})$, which happens when all outcomes of
+    $Z|f(X;\smash{\hat\theta}_f)$ are equally likely and in which case
+    $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal Z}$ since we
+    require a uniform prior by construction. Note that in the continuous case,
+    the supremum of the differential entropy over continuous distributions on
+    the same bounded support is also realized by the uniform distribution over
+    that support.
 \end{itemize}
-Accordingly, the second condition implies that $p_{\theta_r}(z|f(X;\theta_f)) =
-p(z)$ and therefore that at this point, because of Proposition~\ref{prop:1}, the
-optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal quantity.
+When the lower bound is active, we have $p_{\theta_r}(z|f(X;\theta_f)) = p(z)$
+because of the second condition, and because of Proposition~\ref{prop:1}, the
+optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is therefore also a pivotal
+quantity.
 
 \end{proof}
 
@@ -430,8 +433,7 @@ Interestingly, let us emphasize that these results hold using only the (1D) outp
 of $f$ (in the case of binary classification) as input to the adversary. We
 could similarly enforce an intermediate representation of the data to be
 pivotal, e.g. as in \citep{ganin2014unsupervised}, but this is in fact not
-necessary. \glnote{This also suggests we could use for $r$ a simpler, maybe
-closed form, representation than a neural network (e.g. a GMM?).}
+necessary.
 
 
 % ==============================================================================
