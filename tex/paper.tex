@@ -59,6 +59,84 @@ ex egestas pulvinar.
 
 \section{Introduction}
 
+The discovery of new particles or physical phenomena in high energy
+physics experiments, like those at the Large Hadron Collider, 
+requires the observation of statistically significant deviations from
+the predictions of the Standard Model, the current model
+of the known fundamental particles and their interactions.  Typically,
+discovery requires satisfying the \textit{5-sigma rule}, 
+whereby the deviation must be at least five standard deviations from
+predictions, i.e. having a p-value of $p \lesssim 3 \times 10^{-7}$.
+The evaluation of the statistical significance must not only account
+for statistical uncertainties, but also systematic 
+uncertainties that represent our incomplete knowledge of the theory of
+particle interactions or of the properties of the experimental
+detection apparatus. Systematic uncertainties can alter the expected
+rate of signal and background classes, e.g. their priors, as well as
+the distributions of features. As such, the signal class true-positive
+rate and the background class false-positive rate of a classifier can
+change with variations in the systematic uncertainty thereby
+decreasing the sensitivity of an analysis.  
+
+In this paper, we present a new strategy for training a classifier,
+based on adversarial training~\citep{goodfellow2014generative}, 
+which aims to build a classifier whose decision function is invariant
+under variations due to systematic uncertainties.  In this way,
+uncertainties on predictions from simulations will have a reduced
+impact when computing the significance of potential deviations after
+application of the discriminant model and thereby increase
+the sensitivity of the analysis to signals from potential new physics sources.
+
+Given training data $x \in X$ and associated labels $y \in \{s,
+b_{i=1...k} \}$ where $s$ is the signal class and $b_{i=1...k}$ are
+the background classes, then the probability distribution of the data
+can be written
+\[
+p(x) = \pi_s p(x|y=s) + \sum_{i=1}^{k} \pi_{b_i} p(x | y=b_i)
+\]
+where $\pi_{y}$ represents the prior for the signal or a given
+background, and $p(x|y)$ is the conditional distribution of the data
+for the signal or a given background. Systematic uncertainties can
+affect this distribution in the following ways:
+\begin{itemize}
+\item Uncertainties on the priors $\pi_{y}$.  These arise from
+  uncertainties on the rates we expect a given process to occur as
+  predicted from theoretical calculations or from alternative
+  measurements of the rate of a given class.
+
+\item Uncertainties in the simulators of the physical interactions,
+  giving rise to uncertainties on the distributions $p(x|y)$.  These
+  uncertainty are often determined by comparing the predictions of
+  different simulations using differing models of the same physical
+  process.
+
+\item Uncertainties on the detection apparatus and it's effect on the
+  measurement of particle properties, giving rise to uncertainties on
+  the distributions $p(x|y)$.  For instance this includes
+  uncertainties on our knowledge of the mean and variance of the
+  measured energy distribution of a particle.
+
+\end{itemize}
+In this paper, we will not address uncertainties of the first type
+mentioned above (uncertainties on the priors).  Rather, we will focus
+on mitigating the effect of systematic uncertainties that alter the
+conditional distributions $p(x|y)$.  
+
+Systematic uncertainties are parameterized by nuisance parameters in
+the statistical analysis of data.  Nuisance parameter often, though
+not always, have a suitable prior coming from alternative measurements
+in data.  For instance, The average measured energy of an electron in
+simulation may be compared with those in data using a relatively pure
+sample of $Z$ boson decays to electrons.  The average measured
+electron energy can not be measured without uncertainty, and the
+measured uncertainty can be used in other analyses to estimate the
+uncertainty deriving from our imperfect knowledge of the electron's
+energy.  A nuisance parameter is assigned to the electron energy
+uncertainty, which controls the variation of the electron energy in
+the statistical analysis of data.  Nuisance parameters are typically,
+though not always, constrained by a suitable prior, e.g. a Gaussian
+distribution with a standard deviation equal to the measured uncertainty.
+
 \glnote{Distinction between statistical and systematic uncertainty.}
 \glnote{Outline taxonomy of uncertainties.}
 \glnote{Define nuisance parameters. See refs in Noel's papers.}
