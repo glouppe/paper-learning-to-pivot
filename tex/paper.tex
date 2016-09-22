@@ -359,10 +359,11 @@ negative log-likelihood of $Y|X$ under $f$ and of $Z|f(X;\theta_f)$ under
 $r$:
 \begin{align}
     {\cal L}_f(\theta_f) &= \mathbb{E}_{Y|X} [ -\log p_{\theta_f} (Y|X) ], \\
-    {\cal L}_r(\theta_f, \theta_r) &= \mathbb{E}_{Z|f(X;\theta_f)} [-\log p_{\theta_r} (Z|f(X;\theta_f))].
+    {\cal L}_r(\theta_f, \theta_r) &= \mathbb{E}_{Z|f(X;\theta_f)} [-\log p_{\theta_r} (Z|f(X;\theta_f))],
 \end{align}
 The optimization algorithm consists in using stochastic gradient descent
 alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
+\glnote{Add a note to specify that quantities are assumed in expectation over their conditionings.}
 
 \begin{figure*}
     \begin{minipage}{\linewidth}
