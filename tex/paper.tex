@@ -358,12 +358,11 @@ expected value of the
 negative log-likelihood of $Y|X$ under $f$ and of $Z|f(X;\theta_f)$ under
 $r$:
 \begin{align}
-    {\cal L}_f(\theta_f) &= \mathbb{E}_{Y|X} [ -\log p_{\theta_f} (Y|X) ], \\
-    {\cal L}_r(\theta_f, \theta_r) &= \mathbb{E}_{Z|f(X;\theta_f)} [-\log p_{\theta_r} (Z|f(X;\theta_f))],
+    {\cal L}_f(\theta_f) &= \mathbb{E}_{X} \mathbb{E}_{Y|X} [ -\log p_{\theta_f} (Y|X) ], \\
+    {\cal L}_r(\theta_f, \theta_r) &= \mathbb{E}_{X}  \mathbb{E}_{Z|f(X;\theta_f)} [-\log p_{\theta_r} (Z|f(X;\theta_f))].
 \end{align}
 The optimization algorithm consists in using stochastic gradient descent
 alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
-\glnote{Add a note to specify that quantities are assumed in expectation over their conditionings.}
 
 \begin{figure*}
     \begin{minipage}{\linewidth}
@@ -421,7 +420,7 @@ assuming that both $f$ and $r$ have enough capacity.
 \begin{proposition}\label{prop:1}
 Let $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
 \theta_r)$ for fixed $\theta_f$. If $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z)$
-for all $z \in {\cal Z}$, then $f$ is a pivotal quantity.
+for all $z \in {\cal Z}$ and all values of $f(X;\theta_f)$, then $f$ is a pivotal quantity.
 \end{proposition}
 
 \begin{proof}
@@ -435,13 +434,13 @@ Using the Bayes' rule, we write
     p(f(X;\theta_f)|z) &= \frac{ p(z|f(X;\theta_f)) p(f(X;\theta_f)) } { p(z)}\\
                        &= p(f(X;\theta_f)),
 \end{align*}
-which holds for all $z \in {\cal Z}$ and implies that $f$ is a pivotal quantity.
+which holds for all $z \in {\cal Z}$ and all values of $f(X;\theta_f)$ and implies that $f$ is a pivotal quantity.
 \end{proof}
 
 \begin{proposition}\label{prop:2}
 If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
 for Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar} such that
-$E(\hat\theta_f, \hat\theta_r) = H(p_{Y|X}) - H(p_Z)$, then
+$E(\hat\theta_f, \hat\theta_r) = \mathbb{E}_{X} [H(p_{Y|X}) - H(p_Z)]$, then
 $f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier and a pivotal
 quantity.
 \end{proposition}
@@ -451,23 +450,23 @@ quantity.
 For fixed $\theta_f$, the adversary $r$ is optimal at $\hat\theta_r = \arg
 \max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} {\cal
 L}_r(\theta_f, \theta_r)$, in which case $p_{\hat\theta_r}(z|f(X;\theta_f)) =
-p(z|f(X;\theta_f))$ and ${\cal L}_r$ reduces to the entropy
-$H(p_{Z|f(X;\theta_f)})$ of the conditional distribution of the nuisance. The
+p(z|f(X;\theta_f))$ and ${\cal L}_r$ reduces to the expected entropy
+$\mathbb{E}_{X} [ H(p_{Z|f(X;\theta_f)}) ]$ of the conditional distribution of the nuisance. The
 value function $E$ can therefore be rewritten as $$E'(\theta_f) = {\cal
-L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)}).$$  In particular, we have the lower
-bound $$H(p_{Y|X}) - H(p_Z) \leq {\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$$
+L}_f(\theta_f) - \mathbb{E}_{X} [ H(p_{Z|f(X;\theta_f)}) ].$$  In particular, we have the lower
+bound $$\mathbb{E}_{X} [ H(p_{Y|X}) - H(p_Z)] \leq {\cal L}_f(\theta_f) - \mathbb{E}_{X} [H(p_{Z|f(X;\theta_f)})]$$
 where the equality holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f}
 E'(\theta_f)$ only when
 \begin{itemize}
     \item $\smash{\hat\theta}_f$ minimizes the negative log-likelihood ${\cal
     L}_f$ of $X|Y$, which happens when $\smash{\hat\theta}_f$ are the parameters
     of an optimal classifier and in which case ${\cal L}_f$ reduces to its
-    minimum value $H(p_{Y|X})$,
+    minimum value $\mathbb{E}_{X} [H(p_{Y|X})]$,
 
-    \item $\smash{\hat\theta}_f$ maximimizes the entropy
-    $H(p_{Z|f(X;\theta_f)})$, which happens when all outcomes of
-    $Z|f(X;\smash{\hat\theta}_f)$ are equally likely and in which case
-    $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal Z}$ since we
+    \item $\smash{\hat\theta}_f$ maximimizes the expected entropy
+    $\mathbb{E}_{X} [H(p_{Z|f(X;\theta_f)})]$, which happens when all outcomes of
+    $Z|f(X;\smash{\hat\theta}_f)$ are equally likely. In other words,
+    $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal Z}$ and all values of $f(X;\theta_f)$ since we
     require a uniform prior by construction. Note that in the continuous case,
     the supremum of the differential entropy over continuous distributions on
     the same bounded support is also realized by the uniform distribution over
@@ -483,12 +482,11 @@ quantity as a consequence of Proposition~\ref{prop:1}.
 Proposition~\ref{prop:2} suggests that if at each step of
 Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
 its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
-updated to improve ${\cal L}_f(\theta_f) - H(p_{Z|f(X;\theta_f)})$, then $f$
+updated to improve ${\cal L}_f(\theta_f) - \mathbb{E}_X [ H(p_{Z|f(X;\theta_f)}) ]$, then $f$
 should converge to a classifier which is both optimal and pivotal, provided such
 a classifier exists. On many problems of interest though, such a classifier may
 not exist because the nuisance parameter directly shapes the decision boundary,
-in which cases the lower bound $H(p_{Y|X}) - H(p_Z) < {\cal L}_f(\theta_f) -
-H(p_{Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal classifier or a
+in which cases the lower bound $\mathbb{E}_{X} [ H(p_{Y|X}) - H(p_Z)] < {\cal L}_f(\theta_f) - \mathbb{E}_{X} [H(p_{Z|f(X;\theta_f)})]$ is strict: $f$ can either be an optimal classifier or a
 pivotal quantity, but not both simultaneously. In this situation, it is natural
 to rewrite the value function $E$  as
 \begin{equation}
