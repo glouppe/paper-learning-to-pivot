@@ -424,7 +424,7 @@ for all $z \in {\cal Z}$ and all values of $f(X;\theta_f)$, then $f$ is a pivota
 \end{proposition}
 
 \begin{proof}
-The optimal parameters $$\smash{\hat\theta}_r =
+Since we assume enough capacity for $r$, the optimal parameters $$\smash{\hat\theta}_r =
 \arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} {\cal L}_r(\theta_f,
 \theta_r)$$ are such that $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$.
 By assumption, $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z)$,
@@ -510,6 +510,8 @@ necessary.
 \section{Experiments}
 
 \subsection{Toy example}
+
+As an illustrating example, let us consider...
 
 \glnote{Define the architecture of $r$ when $Z$ is categorical ($r$ is a
 standard classifier) or continuous ($r$ is e.g a 2-output NN such that the
