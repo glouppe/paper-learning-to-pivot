@@ -67,24 +67,25 @@ interactions.  Typically, discovery requires satisfying the \textit{5-sigma
 rule}, whereby the deviation must be at least five standard deviations from
 predictions, i.e. having a p-value of $p \lesssim 3 \times 10^{-7}$. The
 evaluation of the statistical significance must not only account for statistical
-uncertainties, but also systematic uncertainties that represent our incomplete
-knowledge of the theory of particle interactions or of the properties of the
-experimental detection apparatus. Systematic uncertainties can alter the
-expected rate of signal and background classes, e.g. their priors, as well as
-the distributions of features. As such, the signal class true-positive rate and
-the background class false-positive rate of a classifier can change with
-variations in the systematic uncertainty thereby decreasing the sensitivity of
-an analysis. In this paper, we present a new strategy for training a classifier,
-based on adversarial training~\citep{goodfellow2014generative}, which aims to
-build a classifier whose decision function is invariant under variations due to
-systematic uncertainties.  In this way, uncertainties on predictions from
-simulations will have a reduced impact when computing the significance of
-potential deviations after application of the discriminant model and thereby
-increase the sensitivity of the analysis to signals from potential new physics
-sources. \glnote{Shall we be more explicit somewhere and put a formula
-underlining the effect of having a pivotal classifier on the resulting
-sensitivity? (versus a classifier whose decision function depends on the
-nuisance.)}
+uncertainties \glnote{Shouldnt we define what are statistical uncertainties, so
+that systematic uncertainties are in constrast better understood?}, but also
+systematic uncertainties that represent our incomplete knowledge of the theory
+of particle interactions or of the properties of the experimental detection
+apparatus. Systematic uncertainties can alter the expected rate of signal and
+background classes, e.g. their priors, as well as the distributions of features.
+As such, the signal class true-positive rate and the background class
+false-positive rate of a classifier can change with variations in the systematic
+uncertainty thereby decreasing the sensitivity of an analysis. In this paper, we
+present a new strategy for training a classifier, based on adversarial
+training~\citep{goodfellow2014generative}, which aims to build a classifier
+whose decision function is invariant under variations due to systematic
+uncertainties.  In this way, uncertainties on predictions from simulations will
+have a reduced impact when computing the significance of potential deviations
+after application of the discriminant model and thereby increase the sensitivity
+of the analysis to signals from potential new physics sources. \glnote{Shall we
+be more explicit somewhere and put a formula underlining the effect of having a
+pivotal classifier on the resulting sensitivity? (versus a classifier whose
+decision function depends on the nuisance.)}
 
 Given data $X$ and associated labels $Y$
 taking values $y \in {\cal Y} = \{s,
@@ -187,7 +188,7 @@ from here on the pivotal quantity criterion as
 \begin{equation}\label{eqn:criterion}
     p(f(X ; \theta_f) | z ) = p(f(X ; \theta_f) | z^\prime )
 \end{equation}
-for all $z,z^\prime \in  {\cal Z}$.
+for all $z,z^\prime \in  {\cal Z}$ and all values of $f(X ; \theta_f)$.
 
 
 % ==============================================================================
