@@ -328,11 +328,13 @@ If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
 probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
 output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 $p_{\theta_r}(z_j|f(X;\theta_f))$. Similarly, if $Z$ takes continuous values and
-if we assume some parameteric distribution ${\cal P}$ for $Z|f(X;\theta_f)$ (e.g., a
-truncated gaussian over a bounded support), then $p_{\theta_r}$ can be
+if we assume some parameteric distribution ${\cal P}$ for $Z|f(X;\theta_f)$
+(e.g., a mixture of gaussians over a bounded support, as modeled with a mixture
+density network~\citep{bishop1994mixture}), then $p_{\theta_r}$ can be
 represented e.g. as network whose output $j$ is the estimated value of the
-corresponding parameter $\theta^j$ of that distribution (e.g., its mean and variance). As
-in \citep{nix1994estimating}, the estimated probability density
+corresponding parameter $\theta^j$ of that distribution (e.g., the mean,
+variance and mixing coefficients of its components). As in
+\citep{nix1994estimating,bishop1994mixture}, the estimated probability density
 $p_{\theta_r}(z|f(X;\theta_f))$ can then be evaluated for any $z \in {\cal Z}$.
 As further explained in the next section, let us note that the adversary $r$ may
 take any form, i.e. it does need to be a neural network, as long as it exposes a
