@@ -511,7 +511,55 @@ necessary.
 \subsection{Toy example}
 \label{sec:toy}
 
-As an illustrating example, let us consider...
+\begin{figure*}
+    \label{fig:toy}
+    \begin{center}
+        \includegraphics[width=0.48\textwidth]{figures/f-plain.pdf}
+        \includegraphics[width=0.48\textwidth]{figures/surface-plain.pdf}\\
+        \vspace{-0.8cm}
+        \includegraphics[width=0.48\textwidth]{figures/f-adversary.pdf}
+        \includegraphics[width=0.48\textwidth]{figures/surface-adversary.pdf}
+    \end{center}
+    \vspace{-0.5cm}
+    \caption{Toy example.
+    (Top left) Probability densities of the decision scores for $Z=0$, $2.5$ and $5$
+       when $f$ is built without adversarial training. The resulting densities
+       are clearly dependent on $Z$, indicating that $f$ is not pivotal.
+    (Top right) The corresponding decision surface, highlighting
+       the fact that samples are easier to classify for values of $Z$ closer to $5$,
+       hence explaining the dependency.
+    (Bottom left) Probability densities of the decision scores for $Z=0$, $2.5$ and $5$ when $f$ is
+       built with adversarial training, as outlined in Section~\ref{sec:method}.
+       The resulting densities are now almost identical to each other, indicating only a
+       small dependency on $Z$.
+    (Bottom right) The corresponding decision surface, illustrating how adversarial
+       training bends the decision function to erase the dependency on $Z$.
+    }
+\end{figure*}
+
+\begin{figure}
+    \label{fig:toy-training}
+    \includegraphics[width=0.48\textwidth]{figures/training.pdf}
+    \caption{Toy example. Training curves for $L_f(\theta_f)$, $L_r(\theta_f, \theta_r)$ and $L_f(\theta_f) - \lambda L_r(\theta_f, \theta_r)$.}
+\end{figure}
+
+As a guiding toy example, let us consider the binary classification problem of 2D
+data drawn from multivariate gaussians with equal priors, such that
+\begin{align}
+    x &\sim {\cal N}(\mu=(0,0), \sigma=2 \times \mathbb{1}) \text{ when } Y=0, \\
+    x &\sim {\cal N}(\mu=(1,-1+z), \sigma=2 \times \mathbb{1}) \text{ when } Y=1.
+\end{align}
+The nuisance parameter $Z$ represents in this case our
+uncertainty about the exact location of the mean of the second gaussian. Our goal is to
+build a classifier $f(\cdot;\theta_f)$ for predicting $Y$ given $X$, but such that
+the probability distribution of $f(X;\theta_f)$ is invariant with respect to the
+nuisance parameter $Z$.
+
+Assuming a uniform prior over the interval ${\cal Z} = [0;5]$, we start by
+generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we train
+a classifier $f$ minimizing $L_f(\theta_f)$ without any adversary.
+\glnote{to be continued}
+
 
 
 \subsection{Physics example}
