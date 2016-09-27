@@ -462,7 +462,7 @@ E'(\theta_f)$ only when
     of an optimal classifier and in which case ${\cal L}_f$ reduces to its
     minimum value $\mathbb{E}_{X} [H(p_{Y|X})]$,
 
-    \item $\smash{\hat\theta}_f$ maximimizes the expected entropy
+    \item $\smash{\hat\theta}_f$ maximizes the expected entropy
     $\mathbb{E}_{X} [H(p_{Z|f(X;\theta_f)})]$, which happens when all outcomes of
     $Z|f(X;\smash{\hat\theta}_f)$ are equally likely. In other words,
     $p(z|f(X;\smash{\hat\theta}_f)) = p(z)$ for all $z \in {\cal Z}$ and all values of $f(X;\theta_f)$ since we
@@ -512,7 +512,6 @@ necessary.
 \label{sec:toy}
 
 \begin{figure*}
-    \label{fig:toy}
     \begin{center}
         \includegraphics[width=0.48\textwidth]{figures/f-plain.pdf}
         \includegraphics[width=0.48\textwidth]{figures/surface-plain.pdf}\\
@@ -522,26 +521,29 @@ necessary.
     \end{center}
     \vspace{-1cm}
     \caption{Toy example.
-    (Top left) Probability densities of the decision scores for $Z=0$, $2.5$ and $5$
+    (Top left) Conditional probability densities of the decision scores for $Z=0$, $2.5$ and $5$
        when $f$ is built without adversarial training. The resulting densities
        are clearly dependent on $Z$, indicating that $f$ is not pivotal.
     (Top right) The corresponding decision surface, highlighting
        the fact that samples are easier to classify for values of $Z$ closer to $5$,
        hence explaining the dependency.
-    (Bottom left) Probability densities of the decision scores for $Z=0$, $2.5$ and $5$ when $f$ is
+    (Bottom left) Conditional probability densities of the decision scores for $Z=0$, $2.5$ and $5$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
        The resulting densities are now closer to each other, indicating only a
        small dependency on $Z$.
     (Bottom right) The corresponding decision surface, illustrating how adversarial
        training bends the decision function to erase the dependency on $Z$.
     }
+    \label{fig:toy}
 \end{figure*}
 
 \begin{figure}
-    \label{fig:toy-training}
     \includegraphics[width=0.48\textwidth]{figures/training.pdf}
     \vspace{-1cm}
-    \caption{Toy example. Training curves for $L_f(\theta_f)$, $L_r(\theta_f, \theta_r)$ and $L_f(\theta_f) - \lambda L_r(\theta_f, \theta_r)$.}
+    \caption{Toy example. Training curves for $L_f(\theta_f)$, $L_r(\theta_f, \theta_r)$
+             and $L_f(\theta_f) - \lambda L_r(\theta_f, \theta_r)$.
+             Adversarial training was performed for $1000$ iterations, mini-batches of size $M=128$, $K=100$ and $\lambda=50$.}
+    \label{fig:toy-training}
 \end{figure}
 
 As a guiding toy example, let us consider the binary classification problem of 2D
@@ -557,9 +559,22 @@ the probability distribution of $f(X;\theta_f)$ is invariant with respect to the
 nuisance parameter $Z$.
 
 Assuming a uniform prior over the interval ${\cal Z} = [0;5]$, we start by
-generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we build
-a classifier $f$ minimizing $L_f(\theta_f)$ without adversarial training.
-\glnote{to be continued}
+generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we build a
+neural network classifier $f$ minimizing $L_f(\theta_f)$ without adversarial
+training. As shown in the first row of Figure~\ref{fig:toy}, the resulting
+classifier is not pivotal, as the conditional probability densities of its
+decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
+the nuisance. While not shown here, a classifier trained only from data
+generated at the nominal value $Z=0$ would also not be pivotal.
+
+By contrast, when using Algorithm~\ref{alg:adversarial-training} for training
+$f$ jointly with a mixture density network $r$ modeling the conditional
+distribution of the nuisance as observed through $f$, the resulting classifier
+becomes effectively less dependent on $Z$, as shown in the second row of
+Figure~\ref{fig:toy}. In particular, the conditional probability densities of
+the decision scores $f(X;\theta_f)$ are now closer to each other, indicating only a
+small  dependency on the nuisance, as theoretically expected.
+\glnote{Discuss Figure~\ref{fig:toy-training}}
 
 
 
