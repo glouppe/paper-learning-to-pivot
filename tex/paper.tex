@@ -40,15 +40,7 @@
 
 \begin{abstract}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam commodo, enim
-vitae facilisis pretium, ligula justo aliquet lectus, non interdum erat lorem et
-nisi. Donec pharetra lectus in magna pellentesque vehicula. Praesent dapibus
-lorem sed enim lacinia, a vestibulum sapien mattis. Sed ornare mollis aliquet.
-Nulla tempor lacinia tortor, in rhoncus augue porta nec. Morbi sed convallis
-nibh, eu hendrerit turpis. Curabitur sit amet rhoncus purus. Curabitur eget
-magna lorem. Phasellus pretium nisi quis est tincidunt, faucibus vulputate augue
-viverra. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a urna a
-ex egestas pulvinar.
+Nice and cozy abstract goes here...
 
 \end{abstract}
 
@@ -67,8 +59,7 @@ interactions.  Typically, discovery requires satisfying the \textit{5-sigma
 rule}, whereby the deviation must be at least five standard deviations from
 predictions, i.e. having a p-value of $p \lesssim 3 \times 10^{-7}$. The
 evaluation of the statistical significance must not only account for statistical
-uncertainties \glnote{Shouldnt we define what are statistical uncertainties, so
-that systematic uncertainties are in constrast better understood?}, but also
+uncertainties due to random fluctuations, but also for
 systematic uncertainties that represent our incomplete knowledge of the theory
 of particle interactions or of the properties of the experimental detection
 apparatus. Systematic uncertainties can alter the expected rate of signal and
@@ -77,7 +68,7 @@ As such, the signal class true-positive rate and the background class
 false-positive rate of a classifier can change with variations in the systematic
 uncertainty thereby decreasing the sensitivity of an analysis. In this paper, we
 present a new strategy for training a classifier, based on adversarial
-training~\citep{goodfellow2014generative}, which aims to build a classifier
+training~\citep{goodfellow2014generative}, which aims at building a classifier
 whose decision function is invariant under variations due to systematic
 uncertainties.  In this way, uncertainties on predictions from simulations will
 have a reduced impact when computing the significance of potential deviations
@@ -90,7 +81,7 @@ decision function depends on the nuisance.)}
 Given data $X$ and associated labels $Y$
 taking values $y \in {\cal Y} = \{s,
 b_{i=1...k} \}$ where $s$ is the signal class and $b_{i=1...k}$ are
-the background classes, then the probability density of the data
+the background classes, the probability density of the data
 can be written as a mixture
 \begin{equation}
 p(X) = \pi_s p(X|Y=s) + \sum_{i=1}^{k} \pi_{b_i} p(X | Y=b_i),
@@ -125,7 +116,7 @@ conditional distributions $p(X|Y)$.
 Systematic uncertainties are parameterized by nuisance parameters in the
 statistical analysis of data \glnote{add references}.  Nuisance parameter often,
 though not always, have a suitable prior coming from alternative measurements in
-data.  For instance, The average measured energy of an electron in simulation
+data.  For instance, the average measured energy of an electron in simulation
 may be compared with those in data using a relatively pure sample of $Z$ boson
 decays to electrons.  The average measured electron energy can not be measured
 without uncertainty, and the measured uncertainty can be used in other analyses
@@ -304,9 +295,14 @@ $p_X$.
     \end{tikzpicture}
 
     \caption{Architecture for the adversarial training of a binary classifier
-    $f$ against a continuous parameter $Z$.}
+    $f$ against a nuisance parameter $Z$. The adversary $r$ models the
+    distribution $p(Z|f(X;\theta_f))$ of the nuisance as observed only through the output $f(X;\theta_f)$ of the classifier. By
+    maximizing the antagonistic objective ${\cal L}_r(\theta_f, \theta_r)$ (as part of minimizing ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$), the classifier
+    $f$ forces $p(Z|f(X;\theta_f)$ to become uniform, which happens
+    when $f(X;\theta_f)$ is  independent of the nuisance parameter $Z$ and therefore pivotal.}
+
     \label{fig:architecture}
-    \end{figure*}
+\end{figure*}
 
 In this work, we repurpose adversarial training as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
@@ -513,12 +509,10 @@ necessary.
 \section{Experiments}
 
 \subsection{Toy example}
+\label{sec:toy}
 
 As an illustrating example, let us consider...
 
-\glnote{Define the architecture of $r$ when $Z$ is categorical ($r$ is a
-standard classifier) or continuous ($r$ is e.g a 2-output NN such that the
-distribution of $Z|f(X)$ is modeled by a truncated Gaussian of known support). Cite Nix.}
 
 \subsection{Physics example}
 
@@ -531,8 +525,13 @@ To account for systematic uncertainties, experimentalists in high energy physics
 typically take as fixed a classifier $f$ built from training data for a nominal
 value $z_0$ of the nuisance parameter, and then propagate uncertainty
 \glnote{add ref} by estimating $p(f(x)|z)$ with a parameterized calibration
-procedure. Clearly, this classifier is however not optimal for $z \neq z_0$. In
-this setting, parameterized
+procedure. Clearly, this classifier is however not optimal for $z \neq z_0$.
+To overcome this issue, the classifier $f$ is sometimes \glnote{add refs} built instead on a mixture
+of training data generated from several nominal values $z_0, z_1, \dots$ of the nuisance.
+While this certainly improves with respect to classification performance,
+there is however no guarantee that the resulting classifier is pivotal, as shown
+previously in Section~\ref{sec:toy}.
+As an alternative, parameterized
 classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
 (nuisance) parameters as additional input variables, hence ultimately providing
 the most statistically powerful approach for incorporating the effect of
@@ -550,9 +549,7 @@ may not be optimal with respect to $Y|X,Z$, as discussed in
 Section~\ref{sec:theory}, but that can otherwise be used in a wider range of
 applications, since knowing the correct value $z$ of the nuisance is not
 necessary. Similarly, calibration needs to be carried out only once, since  the
-dependence on the nuisance is now built-in. \glnote{Shall we also discuss the
-relation with \citep{Neal:2007zz} where point estimates of the nuisance are used
-as inputs to $f$?}
+dependence on the nuisance is now built-in.
 
 In machine learning, learning a pivotal quantity can be related to the problem
 of domain adaptation
