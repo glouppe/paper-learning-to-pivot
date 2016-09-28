@@ -542,7 +542,7 @@ necessary.
     \vspace{-1cm}
     \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
              and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
-             Adversarial training was performed for $2000$ iterations, mini-batches of size $M=128$, $K=1$ and $\lambda=100$.}
+             Adversarial training was performed for $1000$ iterations, mini-batches of size $M=128$, $K=1$ and $\lambda=10$.}
     \label{fig:toy-training}
 \end{figure}
 
@@ -577,8 +577,8 @@ indicating only a small  dependency on the nuisance, as theoretically expected.
 The dynamics of adversarial training is illustrated in
 Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$, ${\cal L}_r$ and
 ${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each iteration of
-Algorithm~\ref{alg:adversarial-training}. In the first $200$ iterations, we
-observe that $f$ is worse than random because it rather tries to maximizes the
+Algorithm~\ref{alg:adversarial-training}. In the first iterations, we observe
+that $f$ is worse than random because it rather tries to maximizes the
 adversarial loss ${\cal L}_r$ by producing decision scores $f(X;\theta_f)$ that
 are very unlikely under the current model $p_{\theta_r}$, at the expense of
 making bad predictions with respect to the classification problem. As learning
@@ -589,10 +589,11 @@ uniform. Indeed, ${\cal L}_f$ eventually start decreasing, while remaining lower
 bounded by $\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed
 line in the first plot. Similarly,  ${\cal L}_r$ increasingly tends towards the
 differential entropy $H(p_Z) = \log(4)$ of the uniform distribution over ${\cal
-Z}$, as shown by the dashed line in the second plot.
-
-
-
+Z}$, as shown by the dashed line in the second plot. Finally, let us note that
+the ideal situation of a classifier that is both optimal and pivotal appears to
+be unreachable for this problem, as shown in third plot by the almost constant
+offset between ${\cal L}_f - \lambda {\cal L}_r$ and the dashed line
+approximating $\mathbb{E}_{X} [ H(p_{Y|X}) - \lambda H(p_Z)]$.
 
 
 \subsection{Physics example}
