@@ -521,17 +521,17 @@ necessary.
     \end{center}
     \vspace{-1cm}
     \caption{Toy example.
-    (Top left) Conditional probability densities of the decision scores for $Z=0$, $2.5$ and $5$
+    (Upper left) Conditional probability densities of the decision scores for $Z=0, 1, \dots, 4$
        when $f$ is built without adversarial training. The resulting densities
        are clearly dependent on $Z$, indicating that $f$ is not pivotal.
-    (Top right) The corresponding decision surface, highlighting
-       the fact that samples are easier to classify for values of $Z$ closer to $5$,
-       hence explaining the dependency.
-    (Bottom left) Conditional probability densities of the decision scores for $Z=0$, $2.5$ and $5$ when $f$ is
+    (Upper right) The corresponding decision surface, highlighting
+       the fact that samples are easier to classify for values of $Z$ closer to $4$,
+       hence partially explaining the dependency.
+    (Lower left) Conditional probability densities of the decision scores for $Z=0, 1, \dots, 4$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
-       The resulting densities are now closer to each other, indicating only a
+       The resulting densities are now almost identical to each other, indicating only a
        small dependency on $Z$.
-    (Bottom right) The corresponding decision surface, illustrating how adversarial
+    (Lower right) The corresponding decision surface, illustrating how adversarial
        training bends the decision function to erase the dependency on $Z$.
     }
     \label{fig:toy}
@@ -542,11 +542,11 @@ necessary.
     \vspace{-1cm}
     \caption{Toy example. Training curves for $L_f(\theta_f)$, $L_r(\theta_f, \theta_r)$
              and $L_f(\theta_f) - \lambda L_r(\theta_f, \theta_r)$.
-             Adversarial training was performed for $1000$ iterations, mini-batches of size $M=128$, $K=100$ and $\lambda=50$.}
+             Adversarial training was performed for $2000$ iterations, mini-batches of size $M=128$, $K=1$ and $\lambda=100$.}
     \label{fig:toy-training}
 \end{figure}
 
-As a guiding toy example, let us consider the binary classification problem of 2D
+As a guiding toy example, let us consider the binary classification of 2D
 data drawn from multivariate gaussians with equal priors, such that
 \begin{align}
     x &\sim {\cal N}(\mu=(0,0), \sigma=2 \times \mathbb{1}) \text{ when } Y=0, \\
@@ -558,10 +558,10 @@ build a classifier $f(\cdot;\theta_f)$ for predicting $Y$ given $X$, but such th
 the probability distribution of $f(X;\theta_f)$ is invariant with respect to the
 nuisance parameter $Z$.
 
-Assuming a uniform prior over the interval ${\cal Z} = [0;5]$, we start by
+Assuming a uniform prior over the interval ${\cal Z} = [0;4]$, we start by
 generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we build a
 neural network classifier $f$ minimizing $L_f(\theta_f)$ without adversarial
-training. As shown in the first row of Figure~\ref{fig:toy}, the resulting
+training. As shown in the upper plots of Figure~\ref{fig:toy}, the resulting
 classifier is not pivotal, as the conditional probability densities of its
 decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
 the nuisance. While not shown here, a classifier trained only from data
@@ -570,9 +570,9 @@ generated at the nominal value $Z=0$ would also not be pivotal.
 By contrast, when using Algorithm~\ref{alg:adversarial-training} for training
 $f$ jointly with a mixture density network $r$ modeling the conditional
 distribution of the nuisance as observed through $f$, the resulting classifier
-becomes effectively less dependent on $Z$, as shown in the second row of
+becomes effectively almost independent on $Z$, as shown in the lower plots of
 Figure~\ref{fig:toy}. In particular, the conditional probability densities of
-the decision scores $f(X;\theta_f)$ are now closer to each other, indicating only a
+the decision scores $f(X;\theta_f)$ are now very similar to each other, indicating only a
 small  dependency on the nuisance, as theoretically expected.
 \glnote{Discuss Figure~\ref{fig:toy-training}}
 
