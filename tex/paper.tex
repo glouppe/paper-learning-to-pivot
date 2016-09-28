@@ -540,8 +540,8 @@ necessary.
 \begin{figure}
     \includegraphics[width=0.48\textwidth]{figures/training.pdf}
     \vspace{-1cm}
-    \caption{Toy example. Training curves for $L_f(\theta_f)$, $L_r(\theta_f, \theta_r)$
-             and $L_f(\theta_f) - \lambda L_r(\theta_f, \theta_r)$.
+    \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
+             and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
              Adversarial training was performed for $2000$ iterations, mini-batches of size $M=128$, $K=1$ and $\lambda=100$.}
     \label{fig:toy-training}
 \end{figure}
@@ -560,7 +560,7 @@ nuisance parameter $Z$.
 
 Assuming a uniform prior over the interval ${\cal Z} = [0;4]$, we start by
 generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we build a
-neural network classifier $f$ minimizing $L_f(\theta_f)$ without adversarial
+neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without adversarial
 training. As shown in the upper plots of Figure~\ref{fig:toy}, the resulting
 classifier is not pivotal, as the conditional probability densities of its
 decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
@@ -572,9 +572,26 @@ $f$ jointly with a mixture density network $r$ modeling the conditional
 distribution of the nuisance as observed through $f$, the resulting classifier
 becomes effectively almost independent on $Z$, as shown in the lower plots of
 Figure~\ref{fig:toy}. In particular, the conditional probability densities of
-the decision scores $f(X;\theta_f)$ are now very similar to each other, indicating only a
-small  dependency on the nuisance, as theoretically expected.
-\glnote{Discuss Figure~\ref{fig:toy-training}}
+the decision scores $f(X;\theta_f)$ are now very similar to each other,
+indicating only a small  dependency on the nuisance, as theoretically expected.
+The dynamics of adversarial training is illustrated in
+Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$, ${\cal L}_r$ and
+${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each iteration of
+Algorithm~\ref{alg:adversarial-training}. In the first $200$ iterations, we
+observe that $f$ is worse than random because it rather tries to maximizes the
+adversarial loss ${\cal L}_r$ by producing decision scores $f(X;\theta_f)$ that
+are very unlikely under the current model $p_{\theta_r}$, at the expense of
+making bad predictions with respect to the classification problem. As learning
+goes and $p_{\theta_r}$ becomes more accurate, minimizing $E$ requires making
+predictions that are more accurate, hence decreasing ${\cal L}_f$, or that are
+less dependent on $Z$, hence shaping $p_{\theta_r}$ so that it becomes more
+uniform. Indeed, ${\cal L}_f$ eventually start decreasing, while remaining lower
+bounded by $\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed
+line in the first plot. Similarly,  ${\cal L}_r$ increasingly tends towards the
+differential entropy $H(p_Z) = \log(4)$ of the uniform distribution over ${\cal
+Z}$, as shown by the dashed line in the second plot.
+
+
 
 
 
