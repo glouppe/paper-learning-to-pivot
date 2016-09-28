@@ -521,15 +521,15 @@ necessary.
     \end{center}
     \vspace{-1cm}
     \caption{Toy example.
-    (Upper left) Conditional probability densities of the decision scores for $Z=0, 1, \dots, 4$
+    (Upper left) Conditional probability densities of the decision scores for $Z=0, 1, 2$
        when $f$ is built without adversarial training. The resulting densities
        are clearly dependent on $Z$, indicating that $f$ is not pivotal.
     (Upper right) The corresponding decision surface, highlighting
-       the fact that samples are easier to classify for values of $Z$ closer to $4$,
+       the fact that samples are easier to classify for values of $Z$ closer to $2$,
        hence partially explaining the dependency.
-    (Lower left) Conditional probability densities of the decision scores for $Z=0, 1, \dots, 4$ when $f$ is
+    (Lower left) Conditional probability densities of the decision scores for $Z=0, 1, 2$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
-       The resulting densities are now almost identical to each other, indicating only a
+       The resulting densities are now much closer to each other, indicating only a
        small dependency on $Z$.
     (Lower right) The corresponding decision surface, illustrating how adversarial
        training bends the decision function to erase the dependency on $Z$.
@@ -542,15 +542,15 @@ necessary.
     \vspace{-1cm}
     \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
              and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
-             Adversarial training was performed for $1000$ iterations, mini-batches of size $M=128$, $K=1$ and $\lambda=10$.}
+             Adversarial training was performed for $300$ iterations, mini-batches of size $M=128$, $K=10$ and $\lambda=10$.}
     \label{fig:toy-training}
 \end{figure}
 
 As a guiding toy example, let us consider the binary classification of 2D
 data drawn from multivariate gaussians with equal priors, such that
 \begin{align}
-    x &\sim {\cal N}(\mu=(0,0), \sigma=2 \times \mathbb{1}) \text{ when } Y=0, \\
-    x &\sim {\cal N}(\mu=(1,-1+z), \sigma=2 \times \mathbb{1}) \text{ when } Y=1.
+    x &\sim {\cal N}(\mu=(0,0), \Sigma= \mathbb{1}) \text{ when } Y=0, \\
+    x &\sim {\cal N}(\mu=(1,z), \Sigma= \mathbb{1}) \text{ when } Y=1.
 \end{align}
 The continuous nuisance parameter $Z$ represents in this case our
 uncertainty about the exact location of the mean of the second gaussian. Our goal is to
@@ -558,7 +558,7 @@ build a classifier $f(\cdot;\theta_f)$ for predicting $Y$ given $X$, but such th
 the probability distribution of $f(X;\theta_f)$ is invariant with respect to the
 nuisance parameter $Z$.
 
-Assuming a uniform prior over the interval ${\cal Z} = [0;4]$, we start by
+Assuming a uniform prior over the interval ${\cal Z} = [0;2]$, we start by
 generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we build a
 neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without adversarial
 training. As shown in the upper plots of Figure~\ref{fig:toy}, the resulting
@@ -567,33 +567,34 @@ decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
 the nuisance. While not shown here, a classifier trained only from data
 generated at the nominal value $Z=0$ would also not be pivotal.
 
-By contrast, when using Algorithm~\ref{alg:adversarial-training} for training
-$f$ jointly with a mixture density network $r$ modeling the conditional
-distribution of the nuisance as observed through $f$, the resulting classifier
-becomes effectively almost independent on $Z$, as shown in the lower plots of
-Figure~\ref{fig:toy}. In particular, the conditional probability densities of
+By contrast, when running Algorithm~\ref{alg:adversarial-training} initialized
+from the classifier obtained previously, in combination with a mixture density
+network $r$ (modeling $Y|f(X;\theta_f)$ as a truncated mixture of four gaussian
+components), adversarial training effectively reshapes the decision function
+$f$, so it that becomes almost independent on $Z$, as shown in the lower plots
+of Figure~\ref{fig:toy}. In particular, the conditional probability densities of
 the decision scores $f(X;\theta_f)$ are now very similar to each other,
 indicating only a small  dependency on the nuisance, as theoretically expected.
 The dynamics of adversarial training is illustrated in
 Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$, ${\cal L}_r$ and
 ${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each iteration of
 Algorithm~\ref{alg:adversarial-training}. In the first iterations, we observe
-that $f$ is worse than random because it rather tries to maximizes the
-adversarial loss ${\cal L}_r$ by producing decision scores $f(X;\theta_f)$ that
-are very unlikely under the current model $p_{\theta_r}$, at the expense of
-making bad predictions with respect to the classification problem. As learning
-goes and $p_{\theta_r}$ becomes more accurate, minimizing $E$ requires making
-predictions that are more accurate, hence decreasing ${\cal L}_f$, or that are
-less dependent on $Z$, hence shaping $p_{\theta_r}$ so that it becomes more
-uniform. Indeed, ${\cal L}_f$ eventually start decreasing, while remaining lower
-bounded by $\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed
-line in the first plot. Similarly,  ${\cal L}_r$ increasingly tends towards the
-differential entropy $H(p_Z) = \log(4)$ of the uniform distribution over ${\cal
-Z}$, as shown by the dashed line in the second plot. Finally, let us note that
-the ideal situation of a classifier that is both optimal and pivotal appears to
-be unreachable for this problem, as shown in third plot by the almost constant
-offset between ${\cal L}_f - \lambda {\cal L}_r$ and the dashed line
-approximating $\mathbb{E}_{X} [ H(p_{Y|X}) - \lambda H(p_Z)]$.
+that the global objective ${\cal L}_f - \lambda {\cal L}_r$ is minimized by
+making the classifier less optimal, hence the corresponding increase of ${\cal
+L}_f$, but which results in a classifier that is more pivotal, hence the
+corresponding increase of ${\cal L}_r$ and the total net benefit. As learning
+goes, minimizing $E$ requires making predictions that are more accurate, hence
+decreasing ${\cal L}_f$, or that are less dependent on $Z$, hence shaping
+$p_{\theta_r}$ so that it becomes more uniform. Indeed, ${\cal L}_f$ eventually
+start to slighlty decrease, while remaining lower bounded by $\min_{\theta_f}
+{\cal L}_f(\theta_f)$ as approximated by the dashed line in the first plot.
+Similarly,  ${\cal L}_r$ keeps tending towards the differential entropy $H(p_Z) =
+\log(2)$ of the uniform distribution over ${\cal Z}$, as shown by the dashed
+line in the second plot. Finally, let us note that the ideal situation of a
+classifier that is both optimal and pivotal appears to be unreachable for this
+problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
+{\cal L}_r$ and the dashed line approximating $\mathbb{E}_{X} [ H(p_{Y|X}) -
+\lambda H(p_Z)]$.
 
 \glnote{Discuss practical considerations regarding the stability of training. A
 better alternative seems to update $r$ until it is good
