@@ -567,11 +567,11 @@ decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
 the nuisance. While not shown here, a classifier trained only from data
 generated at the nominal value $Z=0$ would also not be pivotal.
 
-By contrast, when running Algorithm~\ref{alg:adversarial-training} initialized
-from the classifier obtained previously, in combination with a mixture density
-network $r$ (modeling $Y|f(X;\theta_f)$ as a truncated mixture of four gaussian
+By contrast, when running Algorithm~\ref{alg:adversarial-training} as initialized
+with the classifier obtained previously, and in combination with a mixture density
+network $r$ (modeling $Z|f(X;\theta_f)$ as a truncated mixture of four gaussian
 components), adversarial training effectively reshapes the decision function
-$f$, so it that becomes almost independent on $Z$, as shown in the lower plots
+$f$ so it that becomes almost independent on $Z$, as shown in the lower plots
 of Figure~\ref{fig:toy}. In particular, the conditional probability densities of
 the decision scores $f(X;\theta_f)$ are now very similar to each other,
 indicating only a small  dependency on the nuisance, as theoretically expected.
@@ -596,11 +596,8 @@ problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
 {\cal L}_r$ and the dashed line approximating $\mathbb{E}_{X} [ H(p_{Y|X}) -
 \lambda H(p_Z)]$.
 
-\glnote{Discuss practical considerations regarding the stability of training. A
-better alternative seems to update $r$ until it is good
-enough, then update $f$, and update $r$ again as soon as it becomes too bad.
-This is important e.g. for MDN to prevent weights to explode if the network is
-trained too much, and in which case gradients become useless.} \glnote{Warn against
+\glnote{Discuss practical considerations regarding the stability of training.}
+\glnote{Warn against
 setting $\lambda$ too high, since it could simply force $f$ to produce unlikely
 and very bad decisions.}
 
