@@ -595,6 +595,13 @@ be unreachable for this problem, as shown in third plot by the almost constant
 offset between ${\cal L}_f - \lambda {\cal L}_r$ and the dashed line
 approximating $\mathbb{E}_{X} [ H(p_{Y|X}) - \lambda H(p_Z)]$.
 
+\glnote{Discuss practical considerations regarding the stability of training. A
+better alternative seems to update $r$ until it is good
+enough, then update $f$, and update $r$ again as soon as it becomes too bad.
+This is important e.g. for MDN to prevent weights to explode if the network is
+trained too much, and in which case gradients become useless.} \glnote{Warn against
+setting $\lambda$ too high, since it could simply force $f$ to produce unlikely
+and very bad decisions.}
 
 \subsection{Physics example}
 
