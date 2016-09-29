@@ -46,7 +46,7 @@ may cause variations in the conditional distributions of features used for
 training a classifier.  As such, the efficacy of a classifier may change under
 the variations caused by systematic uncertainties.  In this paper, we repurpose
 adversarial training as a means to produce a pivotal classifier which is
-invariant to variations of the nuisance parameters which parameterize the
+invariant to variations of the nuisance parameters describing the
 effects of systematic uncertainties. In the machine learning context, this
 problem is closely related to those of domain adaptation and enforcing fairness
 in classification. Following that line of work, the method proposed in this work
@@ -85,7 +85,7 @@ whose decision function is invariant under variations due to systematic
 uncertainties.  In this way, uncertainties on predictions from simulations will
 have a reduced impact when computing the significance of potential deviations
 after application of the discriminant model and thereby increase the sensitivity
-of the analysis to signals from potential new physics sources. 
+of the analysis to signals from potential new physics sources.
 
 Given data $X$ and associated labels $Y$
 taking values $y \in {\cal Y} = \{s,
@@ -530,13 +530,13 @@ necessary.
     \end{center}
     \vspace{-1cm}
     \caption{Toy example.
-    (Upper left) Conditional probability densities of the decision scores for $Z=0, 1, 2$
+    (Upper left) Conditional probability densities of the decision scores at $Z=0, 1, 2$
        when $f$ is built without adversarial training. The resulting densities
-       are clearly dependent on $Z$, indicating that $f$ is not pivotal.
+       are clearly dependent on the continuous parameter $Z$, indicating that $f$ is not pivotal.
     (Upper right) The corresponding decision surface, highlighting
        the fact that samples are easier to classify for values of $Z$ closer to $2$,
        hence partially explaining the dependency.
-    (Lower left) Conditional probability densities of the decision scores for $Z=0, 1, 2$ when $f$ is
+    (Lower left) Conditional probability densities of the decision scores at $Z=0, 1, 2$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
        The resulting densities are now almost identical to each other, indicating only a
        small dependency on $Z$.
