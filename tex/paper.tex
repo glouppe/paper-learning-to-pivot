@@ -123,7 +123,8 @@ on mitigating the effect of systematic uncertainties that alter the
 conditional distributions $p(X|Y)$.
 
 Systematic uncertainties are parameterized by nuisance parameters in the
-statistical analysis of data (see e.g., \citep{bohm2010introduction,cowan2011asymptotic}).  Nuisance parameter often,
+statistical analysis of data (see e.g.,
+\citep{bohm2010introduction,cowan2011asymptotic}).  Nuisance parameters often,
 though not always, have a suitable prior coming from alternative measurements in
 data.  For instance, the average measured energy of an electron in simulation
 may be compared with those in data using a relatively pure sample of $Z$ boson
@@ -134,9 +135,8 @@ electron's energy.  A nuisance parameter is assigned to the electron energy
 uncertainty, which controls the variation of the electron energy in the
 statistical analysis of data.  Nuisance parameters are typically, though not
 always, constrained by a suitable prior, e.g. a Gaussian distribution with a
-standard deviation equal to the measured uncertainty. \glnote{... and
-accordingly, we want to build a classifier independent on the nuisance
-parameter, as a way to be independent of the corresponding systematics.}
+standard deviation equal to the measured uncertainty. \glnote{This paragraph
+could be improved, it is not very clear what we want to say...}
 
 \glnote{Add paper outline.}
 
@@ -616,9 +616,9 @@ problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
 To account for systematic uncertainties, experimentalists in high energy physics
 typically take as fixed a classifier $f$ built from training data for a nominal
 value $z_0$ of the nuisance parameter, and then propagate uncertainty
-\glnote{add ref} by estimating $p(f(x)|z)$ with a parameterized calibration
+ by estimating $p(f(x)|z)$ with a parameterized calibration
 procedure. Clearly, this classifier is however not optimal for $z \neq z_0$.
-To overcome this issue, the classifier $f$ is sometimes \glnote{add refs} built instead on a mixture
+To overcome this issue, the classifier $f$ is sometimes built instead on a mixture
 of training data generated from several nominal values $z_0, z_1, \dots$ of the nuisance.
 While this certainly improves with respect to classification performance,
 there is however no guarantee that the resulting classifier is pivotal, as shown
