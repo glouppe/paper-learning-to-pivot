@@ -529,7 +529,7 @@ necessary.
        hence partially explaining the dependency.
     (Lower left) Conditional probability densities of the decision scores for $Z=0, 1, 2$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
-       The resulting densities are now much closer to each other, indicating only a
+       The resulting densities are now almost identical to each other, indicating only a
        small dependency on $Z$.
     (Lower right) The corresponding decision surface, illustrating how adversarial
        training bends the decision function to erase the dependency on $Z$.
@@ -542,7 +542,7 @@ necessary.
     \vspace{-1cm}
     \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
              and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
-             Adversarial training was performed for $300$ iterations, mini-batches of size $M=128$, $K=10$ and $\lambda=10$.}
+             Adversarial training was performed for $75$ iterations, mini-batches of size $M=128$, $K=100$ and $\lambda=50$.}
     \label{fig:toy-training}
 \end{figure}
 
@@ -567,26 +567,27 @@ decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
 the nuisance. While not shown here, a classifier trained only from data
 generated at the nominal value $Z=0$ would also not be pivotal.
 
-By contrast, when running Algorithm~\ref{alg:adversarial-training} as initialized
-with the classifier obtained previously, and in combination with a mixture density
-network $r$ (modeling $Z|f(X;\theta_f)$ as a truncated mixture of four gaussian
-components), adversarial training effectively reshapes the decision function
-$f$ so it that becomes almost independent on $Z$, as shown in the lower plots
-of Figure~\ref{fig:toy}. In particular, the conditional probability densities of
-the decision scores $f(X;\theta_f)$ are now very similar to each other,
-indicating only a small  dependency on the nuisance, as theoretically expected.
-The dynamics of adversarial training is illustrated in
+Let us now consider the adversarial training of $f$ against an adversary $r$
+implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a
+truncated mixture of four gaussians over ${\cal Z}$. When running
+Algorithm~\ref{alg:adversarial-training} as initialized with the classifier $f$
+obtained previously, adversarial training effectively reshapes the decision
+function so it that becomes almost independent on the nuisance parameter, as
+shown in the lower plots of Figure~\ref{fig:toy}. In particular, the conditional
+probability densities of the decision scores $f(X;\theta_f)$ are now very
+similar to each other, indicating only a small  dependency on the nuisance, as
+theoretically expected. The dynamics of adversarial training is illustrated in
 Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$, ${\cal L}_r$ and
 ${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each iteration of
 Algorithm~\ref{alg:adversarial-training}. In the first iterations, we observe
 that the global objective ${\cal L}_f - \lambda {\cal L}_r$ is minimized by
-making the classifier less optimal, hence the corresponding increase of ${\cal
+making the classifier less accurate, hence the corresponding increase of ${\cal
 L}_f$, but which results in a classifier that is more pivotal, hence the
 corresponding increase of ${\cal L}_r$ and the total net benefit. As learning
-goes, minimizing $E$ requires making predictions that are more accurate, hence
-decreasing ${\cal L}_f$, or that are less dependent on $Z$, hence shaping
+goes, minimizing $E$ then requires making predictions that are more accurate,
+hence decreasing ${\cal L}_f$, or that are less dependent on $Z$, hence shaping
 $p_{\theta_r}$ so that it becomes more uniform. Indeed, ${\cal L}_f$ eventually
-start to slighlty decrease, while remaining lower bounded by $\min_{\theta_f}
+start to slightly decrease, while remaining lower bounded by $\min_{\theta_f}
 {\cal L}_f(\theta_f)$ as approximated by the dashed line in the first plot.
 Similarly,  ${\cal L}_r$ keeps tending towards the differential entropy $H(p_Z) =
 \log(2)$ of the uniform distribution over ${\cal Z}$, as shown by the dashed
