@@ -40,19 +40,19 @@
 
 \begin{abstract}
 
-Systematic uncertainties in high energy physics, representing our incomplete
-knowledge in the simulation of physical processes or in the detection apparatus,
-may cause variations in the conditional distributions of features used for
-training a classifier.  As such, the efficacy of a classifier may change under
-the variations caused by systematic uncertainties.  In this paper, we repurpose
-adversarial training as a means to produce a pivotal classifier which is
-invariant to variations of the nuisance parameters describing the
-effects of systematic uncertainties. In the machine learning context, this
-problem is closely related to those of domain adaptation and enforcing fairness
-in classification. Following that line of work, the method proposed in this work
-can be regarded as generalization that also supports the continuous case,
+Systematic uncertainties in high energy physics represent our incomplete
+knowledge in the simulation of physical processes or in the properties of the
+detection apparatus. In effect, systematic uncertainties may cause variations in
+the conditional distributions of the features used for training a predictive
+model like a classifier, thereby altering its decisions and resulting efficacy.
+In this paper, we repurpose adversarial training as a means to produce a pivotal
+classifier which is invariant to variations of the nuisance parameters
+describing the effects of systematic uncertainties. In the machine learning
+context, this problem is closely related to those of domain adaptation and
+enforcing fairness in classification. Following that line of work, the proposed
+method can be regarded as generalization that also supports the continuous case,
 which can be viewed as handling infinitely many domains or as enforcing fairness
-over continuous attributes.
+over continuous features.
 
 \end{abstract}
 
@@ -120,7 +120,7 @@ affect this distribution in the following ways \citep{sinervo2003definition,bohm
 In this paper, we will not address uncertainties of the first type
 mentioned above (uncertainties on the priors).  Rather, we will focus
 on mitigating the effect of systematic uncertainties that alter the
-conditional distributions $p(X|Y)$.
+conditional distributions $p(X|Y)$. \glnote{Remove this comment?}
 
 Systematic uncertainties are parameterized by nuisance parameters in the
 statistical analysis of data (see e.g.,
