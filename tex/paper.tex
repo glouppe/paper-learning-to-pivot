@@ -39,19 +39,20 @@
 \affiliation{New York University}
 
 \begin{abstract}
-Systematic uncertainties in high energy physics, representing
-incomplete knowledge in the simulation of physical processes or
-detection appartus, may cause variations in the class conditional
-distributions of features used for training a classifier.  As such,
-the efficiacy of a classifier may change under the variations caused
-by systematic uncertainties.  In this paper, we propose an adversarial
-training procedure to produce a pivotal
-classifier which is invariant to variations of nuisance parameters
-which parameterize the effects of systematic uncertainties.
-In the machine learning context, this problem is closely related to those of domain
-adaptation and enforcing fairness in classification.  The techniques
-described here can handle the case of continuous nuisance paramater
-variations that represents domain adaptation over infinitely many domains. 
+
+Systematic uncertainties in high energy physics, representing our incomplete
+knowledge in the simulation of physical processes or in the detection apparatus,
+may cause variations in the conditional distributions of features used for
+training a classifier.  As such, the efficacy of a classifier may change under
+the variations caused by systematic uncertainties.  In this paper, we repurpose
+adversarial training as a means to produce a pivotal classifier which is
+invariant to variations of the nuisance parameters which parameterize the
+effects of systematic uncertainties. In the machine learning context, this
+problem is closely related to those of domain adaptation and enforcing fairness
+in classification. Following that line of work, the method proposed in this work
+can be regarded as generalization that also supports the continuous case,
+which can be viewed as handling infinitely many domains or as enforcing fairness
+over continuous attributes.
 
 \end{abstract}
 
@@ -84,10 +85,7 @@ whose decision function is invariant under variations due to systematic
 uncertainties.  In this way, uncertainties on predictions from simulations will
 have a reduced impact when computing the significance of potential deviations
 after application of the discriminant model and thereby increase the sensitivity
-of the analysis to signals from potential new physics sources. \glnote{Shall we
-be more explicit somewhere and put a formula underlining the effect of having a
-pivotal classifier on the resulting sensitivity? (versus a classifier whose
-decision function depends on the nuisance.)}
+of the analysis to signals from potential new physics sources. 
 
 Given data $X$ and associated labels $Y$
 taking values $y \in {\cal Y} = \{s,
