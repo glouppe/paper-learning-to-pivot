@@ -542,7 +542,7 @@ necessary.
     \vspace{-1cm}
     \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
              and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
-             Adversarial training was performed for $100$ iterations, mini-batches of size $M=128$, $K=100$ and $\lambda=50$.}
+             Adversarial training was performed for $200$ iterations, mini-batches of size $M=128$, $K=100$ and $\lambda=50$.}
     \label{fig:toy-training}
 \end{figure}
 
@@ -596,11 +596,6 @@ classifier that is both optimal and pivotal appears to be unreachable for this
 problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
 {\cal L}_r$ and the dashed line approximating $\mathbb{E}_{X} [ H(p_{Y|X}) -
 \lambda H(p_Z)]$.
-
-\glnote{Discuss practical considerations regarding the stability of training.}
-\glnote{Warn against
-setting $\lambda$ too high, since it could simply force $f$ to produce unlikely
-and very bad decisions.}
 
 \subsection{Physics example}
 
