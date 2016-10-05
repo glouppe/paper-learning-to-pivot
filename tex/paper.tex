@@ -259,9 +259,9 @@ $p_X$.
     \node at (11.75,0) {Adversary $r$};
     \draw (6.5,-0.5) rectangle (11.5,-5.5);
 
-    \node[above] at (12.75,-2) {$\theta^1(f(X;\theta_f);\theta_r)$};
+    \node[above] at (12.75,-2) {$\gamma_1(f(X;\theta_f);\theta_r)$};
     \path[-o, shorten >= 0pt] (11,-2.0) edge (14,-2.0);
-    \node[above] at (12.75,-3) {$\theta^2(f(X;\theta_f);\theta_r)$};
+    \node[above] at (12.75,-3) {$\gamma_2(f(X;\theta_f);\theta_r)$};
     \path[-o, shorten >= 0pt] (11,-3) edge (14,-3);
     \node[above] at (12.75,-4) {$\dots$};
     \path[-o, shorten >= 0pt] (11,-4) edge (14,-4);
@@ -299,7 +299,7 @@ $p_X$.
     \node[above] at (15.5,-0.5) {$Z$};
     \path[->, shorten >= 0pt] (15.5,-4.5) edge (15.5,-5.5);
     \node[below] at (15.5,-5.5) {$p_{\theta_r}(Z|f(X;\theta_f))$};
-    \node at (15.5,-3) {${\cal P}(\theta^1, \theta^2, \dots)$};
+    \node at (15.5,-3) {${\cal P}(\gamma_1, \gamma_2, \dots)$};
 
     \draw[dashed,-] (15.5,-5) -| (12.75,-6.5);
     \node[below] at (12.75,-6.5) {${\cal L}_r(\theta_f, \theta_r)$};
@@ -340,7 +340,7 @@ if we assume some parameteric distribution ${\cal P}$ for $Z|f(X;\theta_f)$
 (e.g., a mixture of gaussians over a bounded support, as modeled with a mixture
 density network~\citep{bishop1994mixture}), then $p_{\theta_r}$ can be
 represented e.g. as network whose output $j$ is the estimated value of the
-corresponding parameter $\theta^j$ of that distribution (e.g., the mean,
+corresponding parameter $\gamma_j$ of that distribution (e.g., the mean,
 variance and mixing coefficients of its components). As in
 \citep{nix1994estimating,bishop1994mixture}, the estimated probability density
 $p_{\theta_r}(z|f(X;\theta_f))$ can then be evaluated for any $z \in {\cal Z}$.
