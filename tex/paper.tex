@@ -576,8 +576,9 @@ neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without adversar
 training. As shown in the upper plots of Figure~\ref{fig:toy}, the resulting
 classifier is not pivotal, as the conditional probability densities of its
 decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
-the nuisance. While not shown here, a classifier trained only from data
-generated at the nominal value $Z=0$ would also not be pivotal.
+the nuisance.
+% While not shown here, a classifier trained only from data
+% generated at the nominal value $Z=0$ would also not be pivotal.
 
 Let us now consider the adversarial training of $f$ against an adversary $r$
 implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a
