@@ -561,8 +561,14 @@ necessary.
 As a guiding toy example, let us consider the binary classification of 2D
 data drawn from multivariate gaussians with equal priors, such that
 \begin{align}
-    x &\sim {\cal N}(\mu=(0,0), \Sigma= \mathbb{1}) \text{ when } Y=0, \\
-    x &\sim {\cal N}(\mu=(1,z), \Sigma= \mathbb{1}) \text{ when } Y=1.
+    x &\sim {\cal N}((0,0), \begin{bmatrix}
+                              1 & -0.5 \\
+                              -0.5 & 1
+                            \end{bmatrix}) \text{ when } Y=0, \\
+    x &\sim {\cal N}((1,Z),  \begin{bmatrix}
+                              1 & 0 \\
+                              0 & 1
+                             \end{bmatrix}) \text{ when } Y=1.
 \end{align}
 The continuous nuisance parameter $Z$ represents in this case our
 uncertainty about the exact location of the mean of the second gaussian. Our goal is to
@@ -577,8 +583,8 @@ training. As shown in the upper plots of Figure~\ref{fig:toy}, the resulting
 classifier is not pivotal, as the conditional probability densities of its
 decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
 the nuisance.
-% While not shown here, a classifier trained only from data
-% generated at the nominal value $Z=0$ would also not be pivotal.
+While not shown here, a classifier trained only from data
+generated at the nominal value $Z=0$ would also not be pivotal.
 
 Let us now consider the adversarial training of $f$ against an adversary $r$
 implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a
