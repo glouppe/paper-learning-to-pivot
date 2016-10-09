@@ -578,17 +578,26 @@ nuisance parameter $Z$.
 
 Assuming a uniform prior over the interval ${\cal Z} = [0;2]$, we start by
 generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we build a
-neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without adversarial
-training. As shown in the upper plots of Figure~\ref{fig:toy}, the resulting
-classifier is not pivotal, as the conditional probability densities of its
-decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
-the nuisance.
-While not shown here, a classifier trained only from data
-generated at the nominal value $Z=0$ would also not be pivotal.
+neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without
+adversarial training. The network architecture comprises 2 dense hidden layers of 20
+nodes with ReLU activations, followed  by a dense output layer with a single
+node with a sigmoid activation. As shown in the upper plots of
+Figure~\ref{fig:toy}, the resulting classifier is not pivotal, as the
+conditional probability densities of its decision scores $f(X;\theta_f)$ show
+large discrepancies between values $z$ of the nuisance. While not shown here, a
+classifier trained only from data generated at the nominal value $Z=0$ would
+also not be pivotal.
 
 Let us now consider the adversarial training of $f$ against an adversary $r$
 implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a
-truncated mixture of four gaussians over ${\cal Z}$. When running
+truncated mixture of four gaussians over ${\cal Z}$. As for $f$, the network
+architecture comprises 2 dense hidden layers of 20 nodes with ReLU activations,
+but is followed by an output layer of 12 nodes corresponding to the means,
+standard deviations and mixture coefficients of the four gaussians. Output nodes
+for the mean values come with tanh activations rescaled over ${\cal Z}$, nodes
+for the standard deviations with exponential activations to ensure positivity,
+while nodes for the mixture coefficients implement the softmax function to
+ensure positivity and normalization. When running
 Algorithm~\ref{alg:adversarial-training} as initialized with the classifier $f$
 obtained previously, adversarial training effectively reshapes the decision
 function so it that becomes almost independent on the nuisance parameter, as
