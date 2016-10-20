@@ -337,7 +337,7 @@ probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
 output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 $p_{\theta_r}(z_j|f(X;\theta_f))$. Similarly, if $Z$ takes continuous values and
 if we assume some parameteric distribution ${\cal P}$ for $Z|f(X;\theta_f)$
-(e.g., a mixture of gaussians over a bounded support, as modeled with a mixture
+(e.g., a mixture of gaussians, as modeled with a mixture
 density network~\citep{bishop1994mixture}), then $p_{\theta_r}$ can be
 represented e.g. as network whose output $j$ is the estimated value of the
 corresponding parameter $\gamma_j$ of that distribution (e.g., the mean,
@@ -564,11 +564,11 @@ data drawn from multivariate gaussians with equal priors, such that
     x &\sim {\cal N}((0,0), \begin{bmatrix}
                               1 & -0.5 \\
                               -0.5 & 1
-                            \end{bmatrix}) \text{ when } Y=0, \\
+                            \end{bmatrix}) &\text{ when } Y=0, \\
     x &\sim {\cal N}((1,1+Z),  \begin{bmatrix}
                               1 & 0 \\
                               0 & 1
-                             \end{bmatrix}) \text{ when } Y=1.
+                             \end{bmatrix}) &\text{ when } Y=1.
 \end{align}
 The continuous nuisance parameter $Z$ represents in this case our
 uncertainty about the exact location of the mean of the second gaussian. Our goal is to
@@ -589,41 +589,42 @@ classifier trained only from data generated at the nominal value $Z=0$ would
 also not be pivotal.
 
 Let us now consider the adversarial training of $f$ against an adversary $r$
-implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a
- mixture of five gaussians. As for $f$, the network
-architecture comprises 2 dense hidden layers of 20 nodes with ReLU activations,
-but is followed by an output layer of 15 nodes corresponding to the means,
-standard deviations and mixture coefficients of the five gaussians. Output nodes
-for the mean values come with linear activations, nodes
-for the standard deviations with exponential activations to ensure positivity,
-while nodes for the mixture coefficients implement the softmax function to
-ensure positivity and normalization. When running
-Algorithm~\ref{alg:adversarial-training} as initialized with the classifier $f$
-obtained previously, adversarial training effectively reshapes the decision
-function so it that becomes almost independent on the nuisance parameter, as
-shown in the lower plots of Figure~\ref{fig:toy}. In particular, the conditional
-probability densities of the decision scores $f(X;\theta_f)$ are now very
-similar to each other, indicating only a small  dependency on the nuisance, as
-theoretically expected. The dynamics of adversarial training is illustrated in
-Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$, ${\cal L}_r$ and
-${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each iteration of
-Algorithm~\ref{alg:adversarial-training}. In the first iterations, we observe
-that the global objective ${\cal L}_f - \lambda {\cal L}_r$ is minimized by
-making the classifier less accurate, hence the corresponding increase of ${\cal
-L}_f$, but which results in a classifier that is more pivotal, hence the
-corresponding increase of ${\cal L}_r$ and the total net benefit. As learning
-goes, minimizing $E$ then requires making predictions that are more accurate,
-hence decreasing ${\cal L}_f$, or that are less dependent on $Z$, hence shaping
-$p_{\theta_r}$ so that it becomes more uniform. Indeed, ${\cal L}_f$ eventually
-start to slightly decrease, while remaining lower bounded by $\min_{\theta_f}
-{\cal L}_f(\theta_f)$ as approximated by the dashed line in the first plot.
-Similarly,  ${\cal L}_r$ keeps tending towards the differential entropy $H(Z) =
-\log(\sigma \sqrt{2 \pi e}) = 1.419$ of the gaussian distribution with unit variance, as shown by the dashed
-line in the second plot. Finally, let us note that the ideal situation of a
-classifier that is both optimal and pivotal appears to be unreachable for this
-problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
-{\cal L}_r$ and the dashed line approximating $\mathbb{E}_{X} [ H({Y|X}) -
-\lambda H(Z)]$.
+implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a mixture
+of five gaussians. As for $f$, the network architecture comprises 2 dense hidden
+layers of 20 nodes with ReLU activations, but is followed by an output layer of
+15 nodes corresponding to the means, standard deviations and mixture
+coefficients of the five gaussians. Output nodes for the mean values come with
+linear activations, nodes for the standard deviations with exponential
+activations to ensure positivity, while nodes for the mixture coefficients
+implement the softmax function to ensure positivity and normalization. When
+running Algorithm~\ref{alg:adversarial-training} as initialized with the
+classifier $f$ obtained previously, adversarial training effectively reshapes
+the decision function so it that becomes almost independent on the nuisance
+parameter, as shown in the lower plots of Figure~\ref{fig:toy}. In particular,
+the conditional probability densities of the decision scores $f(X;\theta_f)$ are
+now very similar to each other, indicating only a small  dependency on the
+nuisance, as theoretically expected. The dynamics of adversarial training is
+illustrated in Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$,
+${\cal L}_r$ and ${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each
+iteration of Algorithm~\ref{alg:adversarial-training}. In the first iterations,
+we observe that the global objective ${\cal L}_f - \lambda {\cal L}_r$ is
+minimized by making the classifier less accurate, hence the corresponding
+increase of ${\cal L}_f$, but which results in a classifier that is more
+pivotal, hence the corresponding increase of ${\cal L}_r$ and the total net
+benefit. As learning goes, minimizing $E$ then requires making predictions that
+are more accurate, hence decreasing ${\cal L}_f$, or that are less dependent on
+$Z$, hence shaping $p_{\theta_r}$ towards the prior $p(z)$. Indeed, ${\cal L}_f$
+eventually starts to slightly decrease, while remaining lower bounded by
+$\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed line in the
+first plot. Similarly,  ${\cal L}_r$ tends towards the differential entropy
+$H(Z)$ of the prior (where $H(Z) = \log(\sigma \sqrt{2 \pi e}) = 1.419$ in the
+case of a gaussian with unit variance), as shown by the dashed line in the
+second plot.
+% Finally, let us note that the ideal situation of a
+% classifier that is both optimal and pivotal appears to be unreachable for this
+% problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
+% {\cal L}_r$ and the dashed line approximating $\mathbb{E}_{X} [ H({Y|X}) -
+% \lambda H(Z)]$.
 
 \subsection{Physics example}
 
