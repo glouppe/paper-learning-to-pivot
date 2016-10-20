@@ -533,13 +533,13 @@ necessary.
     \end{center}
     \vspace{-1cm}
     \caption{Toy example.
-    (Upper left) Conditional probability densities of the decision scores at $Z=0, 1, 2$
+    (Upper left) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$
        when $f$ is built without adversarial training. The resulting densities
        are clearly dependent on the continuous parameter $Z$, indicating that $f$ is not pivotal.
     (Upper right) The corresponding decision surface, highlighting
-       the fact that samples are easier to classify for values of $Z$ closer to $2$,
+       the fact that samples are easier to classify for values of $Z$ above to $\sigma$,
        hence partially explaining the dependency.
-    (Lower left) Conditional probability densities of the decision scores at $Z=0, 1, 2$ when $f$ is
+    (Lower left) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
        The resulting densities are now almost identical to each other, indicating only a
        small dependency on $Z$.
@@ -554,7 +554,7 @@ necessary.
     \vspace{-1cm}
     \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
              and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
-             Adversarial training was performed for $100$ iterations, mini-batches of size $M=128$, $K=100$ and $\lambda=100$.}
+             Adversarial training was performed for $100$ iterations, mini-batches of size $M=128$, $K=100$ and $\lambda=50$.}
     \label{fig:toy-training}
 \end{figure}
 
@@ -565,7 +565,7 @@ data drawn from multivariate gaussians with equal priors, such that
                               1 & -0.5 \\
                               -0.5 & 1
                             \end{bmatrix}) \text{ when } Y=0, \\
-    x &\sim {\cal N}((1,Z),  \begin{bmatrix}
+    x &\sim {\cal N}((1,1+Z),  \begin{bmatrix}
                               1 & 0 \\
                               0 & 1
                              \end{bmatrix}) \text{ when } Y=1.
@@ -576,7 +576,7 @@ build a classifier $f(\cdot;\theta_f)$ for predicting $Y$ given $X$, but such th
 the probability distribution of $f(X;\theta_f)$ is invariant with respect to the
 nuisance parameter $Z$.
 
-Assuming a uniform prior over the interval ${\cal Z} = [0;2]$, we start by
+Assuming a gaussian prior $z \sim {\cal N}(0,1)$ of unit variance, we start by
 generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we build a
 neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without
 adversarial training. The network architecture comprises 2 dense hidden layers of 20
@@ -590,11 +590,11 @@ also not be pivotal.
 
 Let us now consider the adversarial training of $f$ against an adversary $r$
 implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a
-truncated mixture of four gaussians over ${\cal Z}$. As for $f$, the network
+ mixture of five gaussians. As for $f$, the network
 architecture comprises 2 dense hidden layers of 20 nodes with ReLU activations,
-but is followed by an output layer of 12 nodes corresponding to the means,
-standard deviations and mixture coefficients of the four gaussians. Output nodes
-for the mean values come with tanh activations rescaled over ${\cal Z}$, nodes
+but is followed by an output layer of 15 nodes corresponding to the means,
+standard deviations and mixture coefficients of the five gaussians. Output nodes
+for the mean values come with linear activations, nodes
 for the standard deviations with exponential activations to ensure positivity,
 while nodes for the mixture coefficients implement the softmax function to
 ensure positivity and normalization. When running
@@ -618,7 +618,7 @@ $p_{\theta_r}$ so that it becomes more uniform. Indeed, ${\cal L}_f$ eventually
 start to slightly decrease, while remaining lower bounded by $\min_{\theta_f}
 {\cal L}_f(\theta_f)$ as approximated by the dashed line in the first plot.
 Similarly,  ${\cal L}_r$ keeps tending towards the differential entropy $H(p_Z) =
-\log(2)$ of the uniform distribution over ${\cal Z}$, as shown by the dashed
+\log(\sigma \sqrt{2 \pi e}) = 1.419$ of the gaussian distribution with unit variance, as shown by the dashed
 line in the second plot. Finally, let us note that the ideal situation of a
 classifier that is both optimal and pivotal appears to be unreachable for this
 problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
