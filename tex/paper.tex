@@ -466,7 +466,7 @@ $\mathbb{E}_{s \sim f(X;\theta_f)} [ H({Z|f(X;\theta_f)=s}) ]$ of the conditiona
 This expectation is nothing else than the conditional entropy of the random variables
 $Z$ and $f(X;\theta_f)$ and can be written as $H(Z|f(X;\theta_f))$.
 Accordingly, the
-value function $E$ can be restated as $$E'(\theta_f) = {\cal
+value function $E$ can be restated as a function depending on $\theta_f$ only: $$E'(\theta_f) = {\cal
 L}_f(\theta_f) -  H({Z|f(X;\theta_f)}).$$  In particular, we have the lower
 bound $$H({Y|X}) - H(Z) \leq {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$$
 where the equality holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f}
@@ -478,7 +478,8 @@ E'(\theta_f)$ only when
     minimum value $H({Y|X})$,
 
     \item $\smash{\hat\theta}_f$ maximizes the conditional entropy
-    $H({Z|f(X;\theta_f)})$ since $H(Z|f(X;\theta)) \leq H(Z)$.
+    $H({Z|f(X;\theta_f)})$ since $H(Z|f(X;\theta)) \leq H(Z)$. Note that this
+    latter inequality holds for both the discrete and the differential definitions of entropy.
 \end{itemize}
 When the lower bound is active, we have $H(Z|f(X;\theta_f)) = H(Z)$
 because of the second condition, which happens exactly when $Z$ and $f(X;\theta_f)$
@@ -618,11 +619,11 @@ first plot. Similarly,  ${\cal L}_r$ tends towards the differential entropy
 $H(Z)$ of the prior (where $H(Z) = \log(\sigma \sqrt{2 \pi e}) = 1.419$ in the
 case of a gaussian with unit variance), as shown by the dashed line in the
 second plot.
-% Finally, let us note that the ideal situation of a
-% classifier that is both optimal and pivotal appears to be unreachable for this
-% problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
-% {\cal L}_r$ and the dashed line approximating $\mathbb{E}_{X} [ H({Y|X}) -
-% \lambda H(Z)]$.
+Finally, let us note that the ideal situation of a
+classifier that is both optimal and pivotal appears to be unreachable for this
+problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
+{\cal L}_r$ and the dashed line approximating $H({Y|X}) -
+\lambda H(Z)$.
 
 \subsection{Physics example}
 
