@@ -417,14 +417,15 @@ $f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
 $f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
 
 In this setting, the nuisance parameter $Z$ is considered as a random variable
-of prior $p(z)$ (for $z \in
-{\cal Z}$). Importantly, classification of $Y$ with respect to $X$ is therefore
+of prior $p(z)$ (for $z \in {\cal Z}$), and our goal is to find a function
+$f(\cdot;\theta_f)$ such that $f(X;\theta_f)$ and $Z$ are independent random
+variables.   Importantly, classification of $Y$ with respect to $X$ is therefore
 considered in the context where $Z$ is marginalized out, which means that the
 classifier minimizing ${\cal L}_f$ is optimal with respect to $Y|X$, but not
 necessarily with $Y|X,Z$. Results hold for a nuisance parameter $Z$ taking
 either categorical values or continuous values within a bounded support. By
-abuse of notation, $H(Z)$ denotes the differential entropy in this latter
-case. Finally, the  proposition below is derived in a non-parametric setting, by
+abuse of notation, $H(Z)$ denotes the differential entropy in this latter case.
+Finally, the  proposition below is derived in a non-parametric setting, by
 assuming that both $f$ and $r$ have enough capacity.
 
 % \begin{proposition}\label{prop:1}
@@ -459,8 +460,8 @@ quantity.
 
 For fixed $\theta_f$, the adversary $r$ is optimal at $$\hat\theta_r = \arg
 \max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} {\cal
-L}_r(\theta_f, \theta_r),$$ in which case $p_{\hat\theta_r}(z|f(X;\theta_f)) =
-p(z|f(X;\theta_f))$ and ${\cal L}_r$ reduces to the expected entropy
+L}_r(\theta_f, \theta_r),$$ in which case $p_{\hat\theta_r}(z|f(X;\theta_f)=s) =
+p(z|f(X;\theta_f)=s)$ for all $z$ and all $s$, and ${\cal L}_r$ reduces to the expected entropy
 $\mathbb{E}_{s \sim f(X;\theta_f)} [ H({Z|f(X;\theta_f)=s}) ]$ of the conditional distribution of the nuisance.
 This expectation is nothing else than the conditional entropy of the random variables
 $Z$ and $f(X;\theta_f)$ and can be written as $H(Z|f(X;\theta_f))$.
