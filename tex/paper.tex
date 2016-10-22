@@ -419,34 +419,14 @@ $f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
 In this setting, the nuisance parameter $Z$ is considered as a random variable
 of prior $p(z)$ (for $z \in {\cal Z}$), and our goal is to find a function
 $f(\cdot;\theta_f)$ such that $f(X;\theta_f)$ and $Z$ are independent random
-variables.   Importantly, classification of $Y$ with respect to $X$ is therefore
+variables.   Importantly, classification of $Y$ with respect to $X$ is
 considered in the context where $Z$ is marginalized out, which means that the
 classifier minimizing ${\cal L}_f$ is optimal with respect to $Y|X$, but not
 necessarily with $Y|X,Z$. Results hold for a nuisance parameter $Z$ taking
-either categorical values or continuous values within a bounded support. By
+either categorical or continuous values. By
 abuse of notation, $H(Z)$ denotes the differential entropy in this latter case.
 Finally, the  proposition below is derived in a non-parametric setting, by
 assuming that both $f$ and $r$ have enough capacity.
-
-% \begin{proposition}\label{prop:1}
-% Let $\hat\theta_r = \arg \max_{\theta_r} E(\theta_f,
-% \theta_r)$ for fixed $\theta_f$. If $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z)$
-% for all $z \in {\cal Z}$ and all values of $f(X;\theta_f)$, then $f$ is a pivotal quantity.
-% \end{proposition}
-%
-% \begin{proof}
-% Since we assume enough capacity for $r$, the optimal parameters $$\smash{\hat\theta}_r =
-% \arg \max_{\theta_r} E(\theta_f, \theta_r) = \arg \min_{\theta_r} {\cal L}_r(\theta_f,
-% \theta_r)$$ are such that $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z|f(X;\theta_f))$.
-% By assumption, $p_{\hat\theta_r}(z|f(X;\theta_f)) = p(z)$,
-% and therefore $p(z|f(X;\theta_f)) = p(z)$.
-% Using the Bayes' rule, we write
-% \begin{align*}
-%     p(f(X;\theta_f)|z) &= \frac{ p(z|f(X;\theta_f)) p(f(X;\theta_f)) } { p(z)}\\
-%                        &= p(f(X;\theta_f)),
-% \end{align*}
-% which holds for all $z \in {\cal Z}$ and all values of $f(X;\theta_f)$ and implies that $f$ is a pivotal quantity.
-% \end{proof}
 
 \begin{proposition}\label{prop:2}
 If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
@@ -494,7 +474,11 @@ Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
 its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
 updated to improve ${\cal L}_f(\theta_f) -  H({Z|f(X;\theta_f)})$, then $f$
 should converge to a classifier which is both optimal and pivotal, provided such
-a classifier exists. On many problems of interest though, such a classifier may
+a classifier exists. A formal proof of convergence of the alternating
+stochastic gradient descent procedure of
+Algorithm~\ref{alg:adversarial-training} remains however to be proven.
+
+On many problems of interest, let us also note that such a classifier may
 not exist because the nuisance parameter directly shapes the decision boundary,
 in which cases the lower bound $ H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal classifier or a
 pivotal quantity, but not both simultaneously. In this situation, it is natural
@@ -508,7 +492,7 @@ parameter. Setting $\lambda$ to a large value will preferably enforces $f$ to
 be pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
 optimal.
 
-Interestingly, let us emphasize that these results hold using only the (1D) output $s$
+Interestingly, let us finally emphasize that these results hold using only the (1D) output $s$
 of $f(\cdot;\theta_f)$ (in the case of binary classification) as input to the adversary. We
 could similarly enforce an intermediate representation of the data to be
 pivotal, e.g. as in \citep{ganin2014unsupervised}, but this is in fact not
@@ -601,7 +585,7 @@ classifier $f$ obtained previously, adversarial training effectively reshapes
 the decision function so it that becomes almost independent on the nuisance
 parameter, as shown in the lower plots of Figure~\ref{fig:toy}. In particular,
 the conditional probability densities of the decision scores $f(X;\theta_f)$ are
-now very similar to each other, indicating only a small  dependency on the
+now very similar to each other, indicating only a small residual  dependency on the
 nuisance, as theoretically expected. The dynamics of adversarial training is
 illustrated in Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$,
 ${\cal L}_r$ and ${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each
@@ -611,7 +595,7 @@ minimized by making the classifier less accurate, hence the corresponding
 increase of ${\cal L}_f$, but which results in a classifier that is more
 pivotal, hence the corresponding increase of ${\cal L}_r$ and the total net
 benefit. As learning goes, minimizing $E$ then requires making predictions that
-are more accurate, hence decreasing ${\cal L}_f$, or that are less dependent on
+are more accurate, hence decreasing ${\cal L}_f$, or that are even less dependent on
 $Z$, hence shaping $p_{\theta_r}$ towards the prior $p(z)$. Indeed, ${\cal L}_f$
 eventually starts to slightly decrease, while remaining lower bounded by
 $\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed line in the
@@ -621,7 +605,7 @@ case of a gaussian with unit variance), as shown by the dashed line in the
 second plot.
 Finally, let us note that the ideal situation of a
 classifier that is both optimal and pivotal appears to be unreachable for this
-problem, as shown in third plot by the  offset between ${\cal L}_f - \lambda
+problem, as shown in the third plot by the  offset between ${\cal L}_f - \lambda
 {\cal L}_r$ and the dashed line approximating $H({Y|X}) -
 \lambda H(Z)$.
 
