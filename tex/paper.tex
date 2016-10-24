@@ -611,6 +611,16 @@ problem, as shown in the third plot by the  offset between ${\cal L}_f - \lambda
 
 \subsection{High energy physics example}
 
+\begin{figure}
+    \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
+    \vspace{-1cm}
+    \caption{Approximate median significance as a function of the decision threshold
+             on the output of $f$.  As shown at $\lambda=10$, trading
+             classification accuracy for independence with respect to pileup
+             results in a positive total net benefit in terms of statistical significance.}
+    \label{fig:physics-ams}
+\end{figure}
+
 In collisions at the Large Hadron Collider, massive particles can be produced at
 such high energies that their decay products are collimated and the resulting
 jets overlap. Still, deducing whether an observed jet is either due  to a single
@@ -638,23 +648,14 @@ of \citep{adam2014higgs}). Our motivation is that reducing the effects of
 uncertainties by requiring independence of $Z$ with the classifier output should
 allow for a larger maximum significance.
 
-\begin{figure}
-    \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
-    \vspace{-1cm}
-    \caption{Approximate median significance as a function of the decision threshold
-             on the output of $f$.  As shown at $\lambda=10$, trading
-             classification accuracy for independence with respect to pileup
-             results in a positive total net benefit in terms of statistical significance.}
-    \label{fig:physics-ams}
-\end{figure}
-
-To minimize the effects of $Z$ in the background events, we train a
-classifier using  Algorithm~\ref{alg:adversarial-training} but consider the
-adversarial term ${\cal L}_r$ conditioned on $Y=0$ only. Both $f$ and $r$ are
-neural networks with 3 hidden layers of 64 nodes and ReLU activations, each
-terminated by a single final output node with a sigmoid activation. Training is
-performed on a subset of 150000 samples while AMS is evaluated on an independent
-test set of 5000000 samples. Results reported below are averages over 5 runs.
+To minimize the effects of $Z$ in the background events, we train a classifier
+using  Algorithm~\ref{alg:adversarial-training} but consider the adversarial
+term ${\cal L}_r$ conditioned on $Y=0$ only. Both $f$ and $r$ are neural
+networks with 3 hidden layers of 64 nodes and ReLU activations, each terminated
+by a single final output node with a sigmoid activation. Experiments are performed
+on the high-level features data described in \citep{guest2016jet}, on a subset
+of 150000 samples for training while AMS is evaluated on an independent test set of 5000000
+samples. Results reported below are averages over 5 runs.
 
 As shown in  Fig.~\ref{fig:physics-ams}, trading classification accuracy for
 independence with respect to pileup results in a positive total net benefit in
