@@ -317,7 +317,7 @@ of $X$.
 
 In this work, we repurpose adversarial training as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
-illustrated in Figure~\ref{fig:architecture}, we pit $f$ against an adversary
+illustrated in Fig.~\ref{fig:architecture}, we pit $f$ against an adversary
 model $r := p_{\theta_r}(z | f(X;\theta_f)=s)$ of parameters $\theta_r$ and
 associated loss ${\cal L}_r(\theta_f, \theta_r)$. This model takes  as input
 realizations $s$ of $f(X; \theta_f)$, for the current value $\theta_f$ of $f$
@@ -483,7 +483,7 @@ not exist because the nuisance parameter directly shapes the decision boundary,
 in which cases the lower bound $ H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal classifier or a
 pivotal quantity, but not both simultaneously. In this situation, it is natural
 to rewrite the value function $E$  as
-\begin{equation}
+\begin{equation}\label{eqn:vf-lambda}
     E_\lambda(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r),
 \end{equation}
 where $\lambda \geq 0$ is a hyper-parameter controlling the trade-off between
@@ -565,7 +565,7 @@ neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without
 adversarial training. The network architecture comprises 2 dense hidden layers of 20
 nodes with ReLU activations, followed  by a dense output layer with a single
 node with a sigmoid activation. As shown in the upper plots of
-Figure~\ref{fig:toy}, the resulting classifier is not pivotal, as the
+Fig.~\ref{fig:toy}, the resulting classifier is not pivotal, as the
 conditional probability densities of its decision scores $f(X;\theta_f)$ show
 large discrepancies between values $z$ of the nuisance. While not shown here, a
 classifier trained only from data generated at the nominal value $Z=0$ would
@@ -583,11 +583,11 @@ implement the softmax function to ensure positivity and normalization. When
 running Algorithm~\ref{alg:adversarial-training} as initialized with the
 classifier $f$ obtained previously, adversarial training effectively reshapes
 the decision function so it that becomes almost independent on the nuisance
-parameter, as shown in the lower plots of Figure~\ref{fig:toy}. In particular,
+parameter, as shown in the lower plots of Fig.~\ref{fig:toy}. In particular,
 the conditional probability densities of the decision scores $f(X;\theta_f)$ are
 now very similar to each other, indicating only a small residual  dependency on the
 nuisance, as theoretically expected. The dynamics of adversarial training is
-illustrated in Figure~\ref{fig:toy-training}, where the losses ${\cal L}_f$,
+illustrated in Fig.~\ref{fig:toy-training}, where the losses ${\cal L}_f$,
 ${\cal L}_r$ and ${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each
 iteration of Algorithm~\ref{alg:adversarial-training}. In the first iterations,
 we observe that the global objective ${\cal L}_f - \lambda {\cal L}_r$ is
@@ -617,15 +617,56 @@ jets overlap. Still, deducing whether an observed jet is either due  to a single
 hadronic particle or to the decay of a massive object into multiple hadronic
 particles  is critical for understanding the nature of the particles produced in
 the collision \citep{butterworth2008jet,guest2016jet}. More importantly, this
-classification problem is often made difficult by the presence of simulatenous
+classification problem is often made difficult by the presence of simultaneous
 interactions, known as pileup, which contributes significant energy depositions
 unrelated to the particles of interest.
+
+In this setting, we reuse the classification problem of \citep{guest2016jet}
+between single jets produced in quark or gluon fragmentation and two overlapping
+jets produced when a high-velocity $W$ boson decays to a collimated pair of
+quarks. As nuisance parameter, we consider events without pileup ($Z=0$) and
+events with pileup ($Z=1$), for which an average number of $\langle \mu \rangle =
+50$ unrelated interactions are overlaid. Our goal is to build an accurate
+classifier, for which we also want to minimize the effects due to the
+uncertainties on the nuisance. More specifically, we choose to recast the
+classification problem as a hypothesis test between signal+background (jets
+originating from $W$ bosons or from single quarks and gluons) and background
+only (jets originating from single quarks and gluons only) and tune the decision
+threshold of our classifier by maximizing its approximate median significance
+(AMS), when uncertainties in the background are taken into account (see Eqn.~19
+of \citep{adam2014higgs}). Our motivation is that reducing the effects of
+uncertainties by requiring independence of $Z$ with the classifier output should
+allow for a larger maximum significance.
+
+To minimize the effects of the nuisance $Z$ in the background events, we train a
+classifier using  Algorithm~\ref{alg:adversarial-training} but consider the
+adversarial term ${\cal L}_r$ conditioned on $Y=0$ only. Both $f$ and $r$ are
+neural networks with 3 hidden layers of 64 nodes and ReLU activations, each
+terminated by a single final output node with a sigmoid activation. Training is
+performed on a subset of 150000 samples while AMS is evaluated on an independent
+test set of 5000000 samples. Results reported below are averages over 5 runs.
+
+As shown in  Fig.~\ref{fig:physics-ams}, trading classification accuracy for
+independence with respect to pileup results in a positive total net benefit in
+terms of statistical significance. Without adversarial training (at
+$\lambda=0$), the maximum significance peaks at $7$. By contrast, as the
+independence constraint is made stronger (for $\lambda > 0$) the AMS peak moves
+higher, with a maximum value around  $7.8$ for $\lambda=10$. In other words,
+sacrificing accuracy to reduce  the  effects of the systematics in the
+background jets does indeed allow one to improve the overall significance of the
+results. Setting $\lambda$ too high however (e.g. $\lambda=500$) results in a
+decrease of the maximum significance, by focusing $f$ too much on independence,
+at the expense of too large a drop in accuracy.
+
 
 
 \begin{figure}
     \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
     \vspace{-1cm}
-    \caption{(to write)}
+    \caption{Approximate median signifance as a function of the decision threshold
+             on the output of $f$.  As shown at $\lambda=10$, trading
+             classification accuracy for independence with respect to pileup
+             results in a positive total net benefit in terms of statistical significance.}
     \label{fig:physics-ams}
 \end{figure}
 
