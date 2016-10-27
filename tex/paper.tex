@@ -622,27 +622,61 @@ problem, as shown in the third plot by the  offset between ${\cal L}_f - \lambda
     \label{fig:physics-ams}
 \end{figure}
 
-In collisions at the Large Hadron Collider, massive particles can be produced at
-such high energies that their decay products are collimated and the resulting
-jets overlap. Still, deducing whether an observed jet is either due  to a single
-hadronic particle or to the decay of a massive object into multiple hadronic
-particles  is critical for understanding the nature of the particles produced in
-the collision \citep{butterworth2008jet,baldi2016jet}. Critically, this
-classification problem is often made difficult by the presence of simultaneous
-interactions, known as pileup, which contributes significant energy depositions
-unrelated to the particles of interest.
+Jets, or collimated sprays of particles produced
+by high energy quarks and gluons, are produced ubiqitiously at high
+energy colliders like the Large Hadron Collider \citep{LHCMachine}.  In a wide
+array of new physcis models, new highly massive particles can decay
+though known heavy particles in Standard Model (SM), like the $W$, $Z$, Higgs bosons, or top
+quarks which subsequently decay to mutiple quarks.  When these these
+heavy SM particles have significant energy, the Lorentz boost causes
+their quark decay products to merge into a single jet which has a rich
+internal substructure (see e.g.  \citep{Altheimer:2012mn,Altheimer:2013yza} and references
+therin).  Distinguishing these \textit{boosted jets} produced by heavy SM particles
+from vanilla quarks and  gluons is a fundamental challenge in
+searching for signs of new high mass particles.
 
-In this setting, we reuse the classification problem of \citep{baldi2016jet}
-between single jets produced in quark or gluon fragmentation and two overlapping
-jets produced when a high-velocity $W$ boson decays to a collimated pair of
-quarks. As nuisance parameter, we consider events without pileup ($Z=0$) and
+Challenging in it's own right, this classification problem is
+made all the more difficult by the presence of pileup, or multiple simultaneous
+proton-proton interactions occuring at the same time as the
+primary interaction.  These pileup interactions produce additional
+particles that can contributie singificant energies to jets unrelated to
+the underlying discrimnating information. Thus pileup acts as a source of noise in
+the classification problem.
+
+
+
+% In collisions at the Large Hadron Collider, massive particles can be produced at
+% such high energies that their decay products are collimated and the resulting
+% jets overlap. Still, deducing whether an observed jet is either due  to a single
+% hadronic particle or to the decay of a massive object into multiple hadronic
+% particles  is critical for understanding the nature of the particles produced in
+% the collision \citep{butterworth2008jet,guest2016jet}. Critically, this
+% classification problem is often made difficult by the presence of simultaneous
+% interactions, known as pileup, which contributes significant energy depositions
+% unrelated to the particles of interest.
+
+The classification challenge used here is common in jet substructure
+studies (see \citep{Khachatryan:2014vla,ATL-PHYS-PUB-2015-033,wbosonATLAS} and
+references therein): we aim to discriminate between jets produced by quark or gluon fragmentation (the
+background) and  boosted $W$ boson jets containing a collimated pair of
+quarks (the signal).  We reuse the datasets used in reference
+\citep{guest2016jet}.  Briefly summarizing, jets are built with the
+anti-$k_T$ algoritm \citep{Cacciari:2008gp} 
+with radius parameter $R=1.2$, and trimmed \citep{Krohn:2009th} with subjets built with
+the $k_T$ algorithm and parameter $f_{cut}=0.2$. The features used
+in the classifiers are: trimmed jet invariant mass, N-subjettiness
+$\tau_{21}^{\beta=1}$ \citep{nsub,Thaler2012}, and the energy correlation
+functions \citep{Larkoski2013} $C_{2}^{\beta=1}$, $C_{2}^{\beta=2}$,
+$D_{2}^{\beta=1}$, $D_{2}^{\beta=2}$.
+
+As nuisance parameter, we consider events without pileup ($Z=0$) and
 events with pileup ($Z=1$), for which an average number of $\langle \mu \rangle =
-50$ unrelated interactions are overlaid. Our goal is to build an accurate
+50$ unrelated additional pileup interactions are overlaid. Our goal is to build an accurate
 classifier, for which we also want to minimize the effects due to the
 uncertainties on the nuisance. More specifically, we choose to recast the
 classification problem as a hypothesis test between signal+background (jets
-originating from $W$ bosons or from single quarks and gluons) and background
-only (jets originating from single quarks and gluons only) and tune the decision
+originating from $W$ bosons or from quarks and gluons) and background
+only (jets originating from quarks and gluons only) and tune the decision
 threshold of our classifier by maximizing its approximate median significance
 (AMS), when uncertainties in the background are taken into account (see Eqn.~20
 of \citep{adam2014higgs}). Our motivation is that reducing the effects of
@@ -654,9 +688,11 @@ using  Algorithm~\ref{alg:adversarial-training} but consider the adversarial
 term ${\cal L}_r$ conditioned on $Y=0$ only. Both $f$ and $r$ are neural
 networks with 3 hidden layers of 64 nodes and ReLU activations, each terminated
 by a single final output node with a sigmoid activation. Experiments are performed
-on the high-level features data described in \citep{baldi2016jet}, on a subset
-of 150000 samples for training while AMS is evaluated on an independent test set of 5000000
-samples. Results reported below are averages over 5 runs.
+on a subset of 150000 samples for training while AMS is evaluated on an independent test set of 5000000
+samples. Both training and testing samples are weighted such
+that the signal-to-background ratio is 1/10, allowing us to probe the
+efficacy of the method proposed here in a background dominated
+environment. Results reported below are averages over 5 runs.
 
 As  Fig.~\ref{fig:physics-ams} illustrates, without adversarial training (at
 $\lambda=0$), the maximum significance peaks at $7$. By contrast, as the
@@ -671,6 +707,7 @@ example, controlling the classification versus pivot trade-off through $\lambda$
 therefore gives us a principled and effective approach for maximizing
 significance by desensitizing the classifier output $f(X;\theta_f)$ in the most
 beneficial way.
+
 
 
 
