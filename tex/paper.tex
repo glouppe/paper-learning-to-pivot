@@ -612,48 +612,24 @@ problem, as shown in the third plot by the  offset between ${\cal L}_f - \lambda
 
 \subsection{High energy physics example}
 
-\begin{figure}
-    \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
-    \vspace{-1cm}
-    \caption{Approximate median significance as a function of the decision threshold
-             on the output of $f$.  As shown at $\lambda=10$, trading
-             classification accuracy for independence with respect to pileup
-             results in a positive total net benefit in terms of statistical significance.}
-    \label{fig:physics-ams}
-\end{figure}
-
-Jets, or collimated sprays of particles produced
-by high energy quarks and gluons, are produced ubiqitiously at high
-energy colliders like the Large Hadron Collider \citep{LHCMachine}.  In a wide
-array of new physcis models, new highly massive particles can decay
-though known heavy particles in Standard Model (SM), like the $W$, $Z$, Higgs bosons, or top
-quarks which subsequently decay to mutiple quarks.  When these these
-heavy SM particles have significant energy, the Lorentz boost causes
-their quark decay products to merge into a single jet which has a rich
-internal substructure (see e.g.  \citep{Altheimer:2012mn,Altheimer:2013yza} and references
-therin).  Distinguishing these \textit{boosted jets} produced by heavy SM particles
-from vanilla quarks and  gluons is a fundamental challenge in
-searching for signs of new high mass particles.
-
-Challenging in it's own right, this classification problem is
-made all the more difficult by the presence of pileup, or multiple simultaneous
-proton-proton interactions occuring at the same time as the
-primary interaction.  These pileup interactions produce additional
-particles that can contributie singificant energies to jets unrelated to
-the underlying discrimnating information. Thus pileup acts as a source of noise in
-the classification problem.
-
-
-
-% In collisions at the Large Hadron Collider, massive particles can be produced at
-% such high energies that their decay products are collimated and the resulting
-% jets overlap. Still, deducing whether an observed jet is either due  to a single
-% hadronic particle or to the decay of a massive object into multiple hadronic
-% particles  is critical for understanding the nature of the particles produced in
-% the collision \citep{butterworth2008jet,guest2016jet}. Critically, this
-% classification problem is often made difficult by the presence of simultaneous
-% interactions, known as pileup, which contributes significant energy depositions
-% unrelated to the particles of interest.
+Jets, or collimated sprays of particles produced by high energy quarks and
+gluons, are produced ubiquitously at high energy colliders like the Large Hadron
+Collider \citep{LHCMachine}.  In a wide array of new physics models, new highly
+massive particles can decay though known heavy particles in Standard Model (SM),
+like the $W$, $Z$, Higgs bosons, or top quarks which subsequently decay to
+multiple quarks.  When these these heavy SM particles have significant energy,
+the Lorentz boost causes their quark decay products to merge into a single jet
+which has a rich internal substructure (see e.g.
+\citep{Altheimer:2012mn,Altheimer:2013yza} and references therein).
+Distinguishing these \textit{boosted jets} produced by heavy SM particles from
+vanilla quarks and  gluons is a fundamental challenge in searching for signs of
+new high mass particles. Challenging in it's own right, this classification
+problem is made all the more difficult by the presence of pileup, or multiple
+simultaneous proton-proton interactions occurring at the same time as the primary
+interaction.  These pileup interactions produce additional particles that can
+contribute significant energies to jets unrelated to the underlying
+discriminating information. Thus pileup acts as a source of noise in the
+classification problem.
 
 The classification challenge used here is common in jet substructure
 studies (see \citep{Khachatryan:2014vla,ATL-PHYS-PUB-2015-033,wbosonATLAS} and
@@ -661,7 +637,7 @@ references therein): we aim to discriminate between jets produced by quark or gl
 background) and  boosted $W$ boson jets containing a collimated pair of
 quarks (the signal).  We reuse the datasets used in reference
 \citep{guest2016jet}.  Briefly summarizing, jets are built with the
-anti-$k_T$ algoritm \citep{Cacciari:2008gp} 
+anti-$k_T$ algorithm \citep{Cacciari:2008gp}
 with radius parameter $R=1.2$, and trimmed \citep{Krohn:2009th} with subjets built with
 the $k_T$ algorithm and parameter $f_{cut}=0.2$. The features used
 in the classifiers are: trimmed jet invariant mass, N-subjettiness
@@ -694,6 +670,16 @@ that the signal-to-background ratio is 1/10, allowing us to probe the
 efficacy of the method proposed here in a background dominated
 environment. Results reported below are averages over 5 runs.
 
+\begin{figure}
+    \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
+    \vspace{-1cm}
+    \caption{Approximate median significance as a function of the decision threshold
+             on the output of $f$.  As shown at $\lambda=10$, trading
+             classification accuracy for independence with respect to pileup
+             results in a positive total net benefit in terms of statistical significance.}
+    \label{fig:physics-ams}
+\end{figure}
+
 As  Fig.~\ref{fig:physics-ams} illustrates, without adversarial training (at
 $\lambda=0$), the maximum significance peaks at $7$. By contrast, as the
 independence constraint is made stronger (for $\lambda > 0$) the AMS peak moves
@@ -707,11 +693,6 @@ example, controlling the classification versus pivot trade-off through $\lambda$
 therefore gives us a principled and effective approach for maximizing
 significance by desensitizing the classifier output $f(X;\theta_f)$ in the most
 beneficial way.
-
-
-
-
-
 
 
 % ==============================================================================
