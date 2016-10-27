@@ -152,13 +152,13 @@ Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
 sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
 Let consider the multivariate random variables $X_z: \Omega \mapsto
 \mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
-of the functional $X$ on a nuisance parameter $Z$ whose values $z \in {\cal Z}$  define a
+of the functional $X$ on a nuisance parameter $Z$, whose values $z \in {\cal Z}$  define a
 parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
 induce together a joint probability distribution $p(X,Y|Z=z)$, where the
 conditional denotes $X_z$. For training, let further assume a finite set $\{
 x_i, y_i, z_i \}_{i=1}^N$ of realizations $X_{z_i}(\omega_i), Y(\omega_i)$, for
 $\omega_i \in \Omega$ and known values $z_i$ of the nuisance parameter. Our goal
-is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S} \subseteq {\cal Y}$ of
+is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
 parameters $\theta_f$ (e.g., a neural network-based probabilistic classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
 the cross-entropy). In addition, we require that $f(X_z ; \theta_f)$ should be
 robust to the value $z$ of the nuisance parameter  -- which remains unknown at
@@ -176,7 +176,7 @@ solve the closely related problem of finding a predictive function $f$ such that
     &P(\{ \omega | f(X_{z}(\omega) ; \theta_f) = s \} ) \nonumber \\
     &\indent = P( \{ \omega' | f(X_{z^\prime}(\omega') ; \theta_f) = s\})
 \end{align}
-for all $s \in {\cal S}$. In words, we are looking for a predictive function $f$
+for all values $s \in {\cal S}$ taken by the score function $f$. In words, we are looking for a predictive function $f$
 which is a pivotal quantity \citep{degroot1986probability} with respect to the
 nuisance parameter. That is, such that  the distribution of $f(X_z; \theta_f)$
 is invariant with respect to the value $z$ of the nuisance. Note that a function
@@ -190,7 +190,7 @@ from here on the pivotal quantity criterion as
 \begin{equation}\label{eqn:criterion}
     p(f(X ; \theta_f) = s | z ) = p(f(X ; \theta_f) = s | z^\prime )
 \end{equation}
-for all $z,z^\prime \in  {\cal Z}$ and all values $s$ of $f(X ; \theta_f)$.
+for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
 
 
 % ==============================================================================
@@ -198,7 +198,7 @@ for all $z,z^\prime \in  {\cal Z}$ and all values $s$ of $f(X ; \theta_f)$.
 \section{Method}
 \label{sec:method}
 
-Adversarial training was first proposed by \citep{goodfellow2014generative} as a
+Joint training of adversarial networks was first proposed by \citep{goodfellow2014generative} as a
 way to build a generative model capable of producing samples from random noise
 $z$. More specifically, the authors pit a generative model $g:
 \mathbb{R} \mapsto \mathbb{R}^p$ against an adversary classifier $d :
@@ -315,7 +315,7 @@ of $X$.
     \label{fig:architecture}
 \end{figure*}
 
-In this work, we repurpose adversarial training as a means to constraint the
+In this work, we repurpose adversarial networks as a means to constraint the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
 illustrated in Fig.~\ref{fig:architecture}, we pit $f$ against an adversary
 model $r := p_{\theta_r}(z | f(X;\theta_f)=s)$ of parameters $\theta_r$ and
@@ -451,12 +451,12 @@ value function $E$ can be restated as a function depending on $\theta_f$ only: $
 L}_f(\theta_f) -  H({Z|f(X;\theta_f)}).$$  In particular, we have the lower
 bound $$H({Y|X}) - H(Z) \leq {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$$
 where the equality holds at $\smash{\hat\theta}_f = \arg \min_{\theta_f}
-E'(\theta_f)$ only when
+E'(\theta_f)$  when:
 \begin{itemize}
     \item $\smash{\hat\theta}_f$ minimizes the negative log-likelihood of $Y|X$ under $f$,
     which happens when $\smash{\hat\theta}_f$ are the parameters
-    of an optimal classifier and in which case ${\cal L}_f$ reduces to its
-    minimum value $H({Y|X})$,
+    of an optimal classifier. In this case, ${\cal L}_f$ reduces to its
+    minimum value $H({Y|X})$.
 
     \item $\smash{\hat\theta}_f$ maximizes the conditional entropy
     $H({Z|f(X;\theta_f)})$ since $H(Z|f(X;\theta)) \leq H(Z)$. Note that this
@@ -479,9 +479,9 @@ a classifier exists. A formal proof of convergence of the alternating
 stochastic gradient descent procedure of
 Algorithm~\ref{alg:adversarial-training} remains however to be proven.
 
-On many problems of interest, let us also note that such a classifier may
-not exist because the nuisance parameter directly shapes the decision boundary,
-in which cases the lower bound $ H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal classifier or a
+On many practical problems, let us note that such a classifier may
+not exist because the nuisance parameter directly shapes the decision boundary.
+In this case, the lower bound $ H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal classifier or a
 pivotal quantity, but not both simultaneously. In this situation, it is natural
 to rewrite the value function $E$  as
 \begin{equation}\label{eqn:vf-lambda}
