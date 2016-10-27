@@ -627,12 +627,12 @@ such high energies that their decay products are collimated and the resulting
 jets overlap. Still, deducing whether an observed jet is either due  to a single
 hadronic particle or to the decay of a massive object into multiple hadronic
 particles  is critical for understanding the nature of the particles produced in
-the collision \citep{butterworth2008jet,guest2016jet}. Critically, this
+the collision \citep{butterworth2008jet,baldi2016jet}. Critically, this
 classification problem is often made difficult by the presence of simultaneous
 interactions, known as pileup, which contributes significant energy depositions
 unrelated to the particles of interest.
 
-In this setting, we reuse the classification problem of \citep{guest2016jet}
+In this setting, we reuse the classification problem of \citep{baldi2016jet}
 between single jets produced in quark or gluon fragmentation and two overlapping
 jets produced when a high-velocity $W$ boson decays to a collimated pair of
 quarks. As nuisance parameter, we consider events without pileup ($Z=0$) and
@@ -654,7 +654,7 @@ using  Algorithm~\ref{alg:adversarial-training} but consider the adversarial
 term ${\cal L}_r$ conditioned on $Y=0$ only. Both $f$ and $r$ are neural
 networks with 3 hidden layers of 64 nodes and ReLU activations, each terminated
 by a single final output node with a sigmoid activation. Experiments are performed
-on the high-level features data described in \citep{guest2016jet}, on a subset
+on the high-level features data described in \citep{baldi2016jet}, on a subset
 of 150000 samples for training while AMS is evaluated on an independent test set of 5000000
 samples. Results reported below are averages over 5 runs.
 
