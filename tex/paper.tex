@@ -71,6 +71,34 @@ We demonstrate the effectiveness of this approach with a toy and real world exam
 \kcnote{ need some text like abstract here before diving into formal statement.}
 
 
+Machine learning techniques have been used to enhance a number of scientific disciplines, 
+and they have the potential to transform even more of the scientific process.
+One of the challenges of applying machine learning techniques to scientific 
+problems is the need to incorporate systematic uncertainties. The presence of systematic
+uncertainties affects both the robustness of inference and the metrics used to evaluate the 
+performance of a particular data analysis strategy. 
+
+We will focus on supervised learning techniques where the presence of systematic 
+uncertainty can be associated to the fact that the data generation process is not uniquely 
+specified. In other words, the lack of systematic uncertainties corresponds to the case 
+that the process that generates training data is unique, fully specified, 
+and an accurate representative of the real world data. 
+
+A common situation when systematic uncertainty is present is when the training data are not representative of
+the real data that a predictive model will be applied to in practice. Several techniques for domain adaptation have
+been developed to create predictive models that are more robust to this type of uncertainty.
+
+Another common situation is that there are several plausible data generation processes. We consider the situation of a 
+family of data generation processes parametrized by nuisance parameters, which can be categorical or continuous. In particular, we consider the probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the target labels, and $Z$ are the nuisance parameters. We will consider the problem of learning a predictive model for $Y$ conditional on the observed values of $X$ that is robust to uncertainty in the unknown value of $Z$. 
+
+\kcnote{Fill in outline}
+
+In Sec.~\ref{sec:problem}  Sec.~\ref{sec:method}  Sec.~\ref{sec:theory}  Sec.~\ref{sec:toy}  Sec.~\ref{sec:hep} 
+ Sec.~\ref{sec:related}  Sec.~\ref{sec:conclusions} .
+ 
+ 
+
+
 % ==============================================================================
 
 \section{Problem statement}
@@ -100,15 +128,15 @@ We demonstrate the effectiveness of this approach with a toy and real world exam
 %Since in general we do not have training tuples $(X_{z}(\omega),
 %X_{z^\prime}(\omega))$ (for the same unknown $\omega$), 
 
-Our goal
-is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
+We begin with a family of data generation processes $p(X,Y,Z)$, where $X$ are the data, $Y$ are the target labels, and $Z$ are the nuisance parameters that can be continuous or categorical. We can use this model to generate training data for $X$ conditional on both $Y$ and $Z$. Our goal is to learn a predictive model $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
 parameters $\theta_f$ (e.g., a neural network-based probabilistic classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
-the cross-entropy). In addition, we require that the distribution of $f(X_z ; \theta_f)$ should be
-robust to the value $z$ of the nuisance parameter  -- which remains unknown at
-test time.
+the cross-entropy). 
 
-We propose  to
-solve the  problem of finding a predictive function $f$ such that
+In addition, we would like that inference based on $f(X ; \theta_f)$ should be
+robust to the value $z$ of the nuisance parameter  -- which remains unknown at
+test time. A formal way of enforcing robustness is to require that the distribution of 
+$f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant to the value $Z$
+ of the nuisance parameter. Thus, we wish find a predictive function $f$ such that
 \begin{equation}\label{eqn:criterion}
     p(f(X ; \theta_f) = s | z ) = p(f(X ; \theta_f) = s | z^\prime )
 \end{equation}
@@ -117,6 +145,8 @@ In words, we are looking for a predictive function $f$
 which is a pivotal quantity \citep{degroot1986probability} with respect to the
 nuisance parameter. That is, such that  the distribution of $f(X_z; \theta_f)$
 is invariant with respect to the value $z$ of the nuisance. 
+
+\kcnote{adjust text for conditional on Y as well}
 
 %Note that a function
 %$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
@@ -128,7 +158,6 @@ is invariant with respect to the value $z$ of the nuisance.
 %from here on the pivotal quantity criterion as
 
 
-\glnote{Add paper outline.}
 
 % ==============================================================================
 
@@ -548,6 +577,7 @@ problem, as shown in the third plot by the  offset between ${\cal L}_f - \lambda
 \lambda H(Z)$.
 
 \subsection{High energy physics example}
+\label{sec:hep}
 
 Jets, or collimated sprays of particles produced by high energy quarks and
 gluons, are produced ubiquitously at high energy colliders like the LHC \citep{LHCMachine}.
@@ -635,6 +665,7 @@ beneficial way.
 % ==============================================================================
 
 \section{Related work}
+\label{sec:related}
 
 To account for systematic uncertainties, experimentalists in high energy physics
 typically take as fixed a classifier $f$ built from training data for a nominal
@@ -688,6 +719,7 @@ parameterized, or as enforcing fairness over continuous attributes.
 % ==============================================================================
 
 \section{Conclusions}
+\label{sec:conclusions}
 
 
 % ==============================================================================
