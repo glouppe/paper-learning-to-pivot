@@ -40,158 +40,94 @@
 
 \begin{abstract}
 
-In high energy physics, systematic uncertainties represent our incomplete
-knowledge in the theory of physical processes or in the properties of the
-experimental detection apparatus. In effect, these uncertainties typically cause
-variations in the conditional distributions of the data, thereby altering the
-decisions and resulting efficacy of a classifier trained from it. To contain
-this issue, we propose to repurpose adversarial training as a means to learn a
-pivotal classifier which is invariant to variations of the nuisance parameters
-describing the effects of systematic uncertainties. In particular, we show and
-derive theoretical conditions under which classification optimality and
-invariance with respect to systematics can be achieved, which we confirm
-experimentally on a couple of illustrative examples. In machine learning, this
-problem is closely related to those of domain adaptation and enforcing fairness
-in classification. Following that line of work, the proposed method can be
-regarded as generalization that also supports the continuous case, which can be
-viewed as handling infinitely many domains or as enforcing fairness over
-continuous features.
+Many inference problems involve data generation processes that are not uniquely specified or are uncertain in some way. 
+In a scientific context, the presence of several plausible data generation processes is often
+associated to the presence of systematic uncertainties. 
+Robust inference is possible if it is based on a pivot -- a quantity whose
+distribution is invariant to the unknown value of the nuisance parameters that parametrize a family of data generation processes. 
+We introduce an adversarial training procedure to enforce the pivotal property on a predictive model, which 
+allows one to tune the tradeoff between power and robustness. 
+We demonstrate the effectiveness of this approach with a toy and real world example.
 
+%Many inference problems involve data generation processes that are not uniquely specified or uncertain in some way. 
+%In a scientific context, the presence of several plausible data generation processes is often
+%associated to the presence of systematic uncertainty. 
+%We consider the situation of a 
+%family of data generation processes parametrized by nuisance parameters, which can
+%be categorical or continuous. Robust inference is possible if it is based on a pivot -- a quantity whose
+%distribution is invariant to the unknown value of these nuisance parameters. 
+%We introduce an adversarial training procedure to enforce the pivotal property and
+%allow one to tune the tradeoff between power and robustness.
+
+%Our goal is to have an inferential procedure that is robust to the uncertainties in the data generation process. 
 \end{abstract}
 
 \maketitle
-
-
 % ==============================================================================
 
 \section{Introduction}
 
-The discovery of new particles or physical phenomena in high energy physics
-experiments, like those at the Large Hadron Collider, requires the observation
-of statistically significant deviations from the predictions of the Standard
-Model, the current model of the known fundamental particles and their
-interactions.  Typically, discovery requires satisfying the \textit{5-sigma
-rule}, whereby the deviation must be at least five standard deviations from
-predictions, i.e. having a p-value of $p \lesssim 3 \times 10^{-7}$. The
-evaluation of the statistical significance must not only account for statistical
-uncertainties due to random fluctuations, but also for
-systematic uncertainties that represent our incomplete knowledge of the theory
-of particle interactions or of the properties of the experimental detection
-apparatus. Systematic uncertainties can alter the expected rate of signal and
-background classes, e.g. their priors, as well as the distributions of features.
-As such, the signal class true-positive rate and the background class
-false-positive rate of a classifier can change with variations in the systematic
-uncertainty thereby decreasing the sensitivity of an analysis. In this paper, we
-present a new strategy for training a classifier, based on adversarial
-training~\citep{goodfellow2014generative}, which aims at building a classifier
-whose decision function is invariant under variations due to systematic
-uncertainties.  In this way, uncertainties on predictions from simulations will
-have a reduced impact when computing the significance of potential deviations
-after application of the discriminant model and thereby increase the sensitivity
-of the analysis to signals from potential new physics sources.
+\kcnote{ need some text like abstract here before diving into formal statement.}
 
-Given data $X$ and associated labels $Y$
-taking values $y \in {\cal Y} = \{s,
-b_{i=1...k} \}$ where $s$ is the signal class and $b_{i=1...k}$ are
-the background classes, the probability density of the data
-can be written as a mixture
-\begin{equation}
-p(X) = \pi_s p(X|Y=s) + \sum_{i=1}^{k} \pi_{b_i} p(X | Y=b_i),
-\end{equation}
-where $\pi_{y}$ represents the prior for the signal or a given
-background, and $p(X|Y)$ is the conditional distribution of the data
-for the signal or a given background. Systematic uncertainties can
-affect this distribution in the following ways \citep{sinervo2003definition,bohm2010introduction}:
-\begin{itemize}
-\item Uncertainties on the priors $\pi_{y}$.  These arise from
-  uncertainties on the rates we expect a given process to occur as
-  predicted from theoretical calculations or from alternative
-  measurements of the rate of a given class.
-
-\item Uncertainties in the simulators of the physical interactions,
-  giving rise to uncertainties on the distributions $p(X|Y)$.  These
-  uncertainties are often determined by comparing the predictions of
-  different simulations using differing models of the same physical
-  process.
-
-\item Uncertainties on the detection apparatus and its effect on the
-  measurement of particle properties, giving rise to uncertainties on
-  the distributions $p(X|Y)$.  For instance, this includes
-  uncertainties on our knowledge of the mean and variance of the
-  measured energy distribution of a particle.
-\end{itemize}
-In this paper, we will not address uncertainties of the first type
-mentioned above (uncertainties on the priors).  Rather, we will focus
-on mitigating the effect of systematic uncertainties that alter the
-conditional distributions $p(X|Y)$. \glnote{Remove this comment?}
-
-Systematic uncertainties are parameterized by nuisance parameters in the
-statistical analysis of data (see e.g.,
-\citep{bohm2010introduction,cowan2011asymptotic}).  Nuisance parameters often,
-though not always, have a suitable prior coming from alternative measurements in
-data.  For instance, the average measured energy of an electron in simulation
-may be compared with those in data using a relatively pure sample of $Z$ boson
-decays to electrons.  The average measured electron energy can not be measured
-without uncertainty, and the measured uncertainty can be used in other analyses
-to estimate the uncertainty deriving from our imperfect knowledge of the
-electron's energy.  A nuisance parameter is assigned to the electron energy
-uncertainty, which controls the variation of the electron energy in the
-statistical analysis of data.  Nuisance parameters are typically, though not
-always, constrained by a suitable prior, e.g. a Gaussian distribution with a
-standard deviation equal to the measured uncertainty. \glnote{This paragraph
-could be improved, it is not very clear what we want to say...}
-
-\glnote{Add paper outline.}
 
 % ==============================================================================
 
 \section{Problem statement}
 \label{sec:problem}
+%
+%Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
+%sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
+%Let consider the multivariate random variables $X_z: \Omega \mapsto
+%\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
+%of the functional $X$ on a nuisance parameter $Z$, whose values $z \in {\cal Z}$  define a
+%parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
+%induce together a joint probability distribution $p(X,Y|Z=z)$, where the
+%conditional denotes $X_z$. For training, let further assume a finite set $\{
+%x_i, y_i, z_i \}_{i=1}^N$ of realizations $X_{z_i}(\omega_i), Y(\omega_i)$, for
+%$\omega_i \in \Omega$ and known values $z_i$ of the nuisance parameter. Our goal
+%is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
+%parameters $\theta_f$ (e.g., a neural network-based probabilistic classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
+%the cross-entropy). In addition, we require that $f(X_z ; \theta_f)$ should be
+%robust to the value $z$ of the nuisance parameter  -- which remains unknown at
+%test time. More specifically, we aim at building $f$ such that in the ideal case
+%\begin{equation}\label{eqn:criterion-true}
+%f(X_{z}(\omega) ; \theta_f) = f(X_{z^\prime}(\omega) ; \theta_f)
+%\end{equation} for all
+%samples $\omega \in \Omega$ and all $z, z^\prime$ pairs of values of the
+%nuisance parameter.
+%
+%Since in general we do not have training tuples $(X_{z}(\omega),
+%X_{z^\prime}(\omega))$ (for the same unknown $\omega$), 
 
-Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
-sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
-Let consider the multivariate random variables $X_z: \Omega \mapsto
-\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
-of the functional $X$ on a nuisance parameter $Z$, whose values $z \in {\cal Z}$  define a
-parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
-induce together a joint probability distribution $p(X,Y|Z=z)$, where the
-conditional denotes $X_z$. For training, let further assume a finite set $\{
-x_i, y_i, z_i \}_{i=1}^N$ of realizations $X_{z_i}(\omega_i), Y(\omega_i)$, for
-$\omega_i \in \Omega$ and known values $z_i$ of the nuisance parameter. Our goal
+Our goal
 is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
 parameters $\theta_f$ (e.g., a neural network-based probabilistic classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
-the cross-entropy). In addition, we require that $f(X_z ; \theta_f)$ should be
+the cross-entropy). In addition, we require that the distribution of $f(X_z ; \theta_f)$ should be
 robust to the value $z$ of the nuisance parameter  -- which remains unknown at
-test time. More specifically, we aim at building $f$ such that in the ideal case
-\begin{equation}\label{eqn:criterion-true}
-f(X_{z}(\omega) ; \theta_f) = f(X_{z^\prime}(\omega) ; \theta_f)
-\end{equation} for all
-samples $\omega \in \Omega$ and all $z, z^\prime$ pairs of values of the
-nuisance parameter.
+test time.
 
-Since in general we do not have training tuples $(X_{z}(\omega),
-X_{z^\prime}(\omega))$ (for the same unknown $\omega$), we propose instead to
-solve the closely related problem of finding a predictive function $f$ such that
-\begin{align}\label{eqn:criterion-measure}
-    &P(\{ \omega | f(X_{z}(\omega) ; \theta_f) = s \} ) \nonumber \\
-    &\indent = P( \{ \omega' | f(X_{z^\prime}(\omega') ; \theta_f) = s\})
-\end{align}
-for all values $s \in {\cal S}$ taken by the score function $f$. In words, we are looking for a predictive function $f$
-which is a pivotal quantity \citep{degroot1986probability} with respect to the
-nuisance parameter. That is, such that  the distribution of $f(X_z; \theta_f)$
-is invariant with respect to the value $z$ of the nuisance. Note that a function
-$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
-Eqn.~\ref{eqn:criterion-measure}. In general, the converse is however not true,
-since the sets of samples $\{ \omega | f(X_{z}(\omega); \theta_f) = s \}$ and $\{
-\omega' | f(X_{z^\prime}(\omega'); \theta_f) = s \}$ do not need to be the same
-for the equality to hold. In order to simplify notations, and as only
-Eqn.~\ref{eqn:criterion-measure} is of direct interest in this work, we denote
-from here on the pivotal quantity criterion as
+We propose  to
+solve the  problem of finding a predictive function $f$ such that
 \begin{equation}\label{eqn:criterion}
     p(f(X ; \theta_f) = s | z ) = p(f(X ; \theta_f) = s | z^\prime )
 \end{equation}
 for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
+In words, we are looking for a predictive function $f$
+which is a pivotal quantity \citep{degroot1986probability} with respect to the
+nuisance parameter. That is, such that  the distribution of $f(X_z; \theta_f)$
+is invariant with respect to the value $z$ of the nuisance. 
 
+%Note that a function
+%$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
+%Eqn.~\ref{eqn:criterion-measure}. In general, the converse is however not true,
+%since the sets of samples $\{ \omega | f(X_{z}(\omega); \theta_f) = s \}$ and $\{
+%\omega' | f(X_{z^\prime}(\omega'); \theta_f) = s \}$ do not need to be the same
+%for the equality to hold. In order to simplify notations, and as only
+%Eqn.~\ref{eqn:criterion-measure} is of direct interest in this work, we denote
+%from here on the pivotal quantity criterion as
+
+
+\glnote{Add paper outline.}
 
 % ==============================================================================
 
