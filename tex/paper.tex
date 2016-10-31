@@ -731,9 +731,9 @@ the hyperparameter $\lambda$ of Eqn.~\ref{eqn:vf-lambda} with respect to
 a higher-level objective. In this case, the natural higher-level context is a
 hypothesis test of a null hypothesis with no $Y=1$ events against an
 alternate hypothesis that is a mixture of $Y=0$ and $Y=1$ events.
-In the absence of systematic uncertainties optimizing $L_f$ simultaneously
+In the absence of systematic uncertainties, optimizing $L_f$ simultaneously
 optimizes the power of a classical hypothesis test in the Neyman-Pearson sense.
-When we include systematic uncertainties we will need to balance the
+When we include systematic uncertainties we need to balance the
 classification performance against the robustness to uncertainty in $Z$.
 Since we are still performing a hypothesis test against the null, we only
 wish to impose the pivotal property on $Y=0$ events. Furthermore,
@@ -786,7 +786,7 @@ benefit in terms of the power of the resulting hypothesis test. Setting $\lambda
 focusing the capacity of $f$ too strongly on independence with $Z$, at the expense of
 classification accuracy. As demonstrated in this example, optimizing $\lambda$
 gives us a principled and effective approach to control the tradeoff between
-classification accuracy and robustness that ultimately maximizes the
+accuracy and robustness that ultimately maximizes the
 power of the enveloping hypothesis test.
 %significance by desensitizing
 %the classifier output $f(X;\theta_f)$ in the most beneficial way.
@@ -894,5 +894,7 @@ use cases is certaintly worth investigating.
 
 \bibliographystyle{acm}
 \bibliography{bibliography.bib}
+
+\vfill
 
 \end{document}
