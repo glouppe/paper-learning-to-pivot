@@ -52,7 +52,7 @@ property on a predictive model, which allows one to tune the tradeoff between
 power and robustness. Under the assumption of existence, we derive theoretical
 results proving that the proposed procedure converges towards a predictive model
 that is both optimal and independent on the nuisance parameters, and demonstrate
-the effectiveness of this approach with a toy and real world examples.
+the effectiveness of this approach with a toy and physics examples.
 
 %Many inference problems involve data generation processes that are not uniquely specified or uncertain in some way.
 %In a scientific context, the presence of several plausible data generation processes is often
@@ -108,7 +108,7 @@ fashion. We derive theoretical results proving that the proposed procedure
 converges towards a predictive model that is both optimal and independent on the
 nuisance parameters (if that models exists) or for which one can tune the
 trade-off between power and robustness. Finally, we demonstrate the
-effectiveness of this approach with a toy and real world examples.
+effectiveness of this approach with a toy and physics examples.
 
 The remainder of the paper is structured as follows. In Sec.~\ref{sec:problem},
 we first formally define the problem of learning a pivotal predictive model. In
@@ -116,8 +116,8 @@ sections \ref{sec:method} and \ref{sec:theory}, we describe how adversarial
 networks can be trained to obtain predictive models that are independent on
 nuisance parameters and show that the proposed procedure converges
 towards a model that is both optimal and robust. The  effectiveness of the
-approach is then demonstrated in sections \ref{sec:toy} and \ref{sec:hep} with a
-toy and real world examples. In Sec.~\ref{sec:related}, we relate our work to
+approach is then demonstrated empirically in sections \ref{sec:toy} and \ref{sec:hep}.
+In Sec.~\ref{sec:related}, we relate our work to
 close contributions from statistical inference, domain adaptation and fairness
 in classification. Finally, we gather our concluding remarks in
 Sec.~\ref{sec:conclusions}.
@@ -515,25 +515,24 @@ necessary.
 
 \begin{figure*}
     \begin{center}
-        \includegraphics[width=0.48\textwidth]{figures/f-plain.pdf}
-        \includegraphics[width=0.48\textwidth]{figures/surface-plain.pdf}\\
-        \vspace{-0.8cm}
-        \includegraphics[width=0.48\textwidth]{figures/f-adversary.pdf}
-        \includegraphics[width=0.48\textwidth]{figures/surface-adversary.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/f-plain.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/surface-plain.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/f-adversary.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/surface-adversary.pdf}
     \end{center}
     \vspace{-1cm}
     \caption{Toy example.
-    (Upper left) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$
+    (Left) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$
        when $f$ is built without adversarial training. The resulting densities
        are clearly dependent on the continuous parameter $Z$, indicating that $f$ is not pivotal.
-    (Upper right) The corresponding decision surface, highlighting
+    (Middle left) The corresponding decision surface, highlighting
        the fact that samples are easier to classify for values of $Z$ above to $\sigma$,
        hence partially explaining the dependency.
-    (Lower left) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$ when $f$ is
+    (Middle right) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
        The resulting densities are now almost identical to each other, indicating only a
        small dependency on $Z$.
-    (Lower right) The corresponding decision surface, illustrating how adversarial
+    (Right) The corresponding decision surface, illustrating how adversarial
        training bends the decision function vertically to erase the dependency on $Z$.
     }
     \label{fig:toy}
@@ -681,7 +680,7 @@ below are averages over 5 runs.
 \begin{figure}
     \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
     \vspace{-1cm}
-    \caption{Approximate median significance as a function of the decision threshold
+    \caption{Physics example. Approximate median significance as a function of the decision threshold
              on the output of $f$.  As shown at $\lambda=10$, trading
              classification accuracy for independence with respect to pileup
              results in a positive total net benefit in terms of statistical significance.}
