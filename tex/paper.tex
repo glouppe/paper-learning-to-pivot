@@ -527,7 +527,7 @@ necessary.
        when $f$ is built without adversarial training. The resulting densities
        are clearly dependent on the continuous parameter $Z$, indicating that $f$ is not pivotal.
     (Middle left) The corresponding decision surface, highlighting
-       the fact that samples are easier to classify for values of $Z$ above to $\sigma$,
+       the fact that samples are easier to classify for values of $Z$ above $\sigma$,
        hence partially explaining the dependency.
     (Middle right) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$ when $f$ is
        built with adversarial training, as outlined in Section~\ref{sec:method}.
@@ -571,7 +571,7 @@ generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we train a
 neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without
 considering its adversary $r$. The network architecture comprises 2 dense hidden layers of 20
 nodes with ReLU activations, followed  by a dense output layer with a single
-node with a sigmoid activation. As shown in 
+node with a sigmoid activation. As shown in
 Fig.~\ref{fig:toy}, the resulting classifier is not pivotal, as the
 conditional probability densities of its decision scores $f(X;\theta_f)$ show
 large discrepancies between values $z$ of the nuisance. While not shown here, a
