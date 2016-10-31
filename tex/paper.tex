@@ -49,10 +49,10 @@ pivot -- a quantity whose distribution is invariant to the unknown value of the
 nuisance parameters that parametrize the family of data generation processes. In
 this work, we introduce an adversarial training procedure to enforce the pivotal
 property on a predictive model, which allows one to tune the tradeoff between
-power and robustness. We derive theoretical results proving that the proposed
-procedure converges towards a predictive model that is both optimal and independent on
-the nuisance parameters, and demonstrate the effectiveness of this approach with a
-toy and real world examples.
+power and robustness. Under the assumption of existence, we derive theoretical
+results proving that the proposed procedure converges towards a predictive model
+that is both optimal and independent on the nuisance parameters, and demonstrate
+the effectiveness of this approach with a toy and real world examples.
 
 %Many inference problems involve data generation processes that are not uniquely specified or uncertain in some way.
 %In a scientific context, the presence of several plausible data generation processes is often
@@ -422,7 +422,7 @@ $f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
 $f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
 
 In this setting, the nuisance parameter $Z$ is considered as a random variable
-of prior $p(z)$ (for $z \in {\cal Z}$), and our goal is to find a function
+of prior $p(Z)$, and our goal is to find a function
 $f(\cdot;\theta_f)$ such that $f(X;\theta_f)$ and $Z$ are independent random
 variables.   Importantly, classification of $Y$ with respect to $X$ is
 considered in the context where $Z$ is marginalized out, which means that the
@@ -485,9 +485,9 @@ convergence of the alternating stochastic gradient descent procedure of
 Algorithm~\ref{alg:adversarial-training} in the case where a finite number $K$
 of steps is taken for $r$ remains however to be proven.
 
-On many practical problems, let us note that such a classifier may
-not exist because the nuisance parameter directly shapes the decision boundary.
-In this case, the lower bound $ H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$ is strict: $f$ can either be an optimal classifier or a
+On many practical problems, the assumption of existence of such a classifier may
+not hold because the nuisance parameter directly shapes the decision boundary.
+In this case, the lower bound $$ H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$$ is strict: $f$ can either be an optimal classifier or a
 pivotal quantity, but not both simultaneously. In this situation, it is natural
 to rewrite the value function $E$  as
 \begin{equation}\label{eqn:vf-lambda}
@@ -741,7 +741,7 @@ dependence on the nuisance is now built-in.
 
 In machine learning, learning a pivotal quantity can be related to the problem
 of domain adaptation
-\citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ganin2014unsupervised},
+\citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ajakan2014domain,ganin2014unsupervised},
 where the goal is often stated as trying to learn a domain-invariant
 representation of the data. Likewise, our method also relates to the problem of
 enforcing fairness in classification \citep{zemel2013learning,feldman2015certifying,EdwardsS15,zafar2015fairness}, which
@@ -752,7 +752,7 @@ respect to either the domain or the selected feature. In this context,
 \citep{ganin2014unsupervised,EdwardsS15} are certainly among the closest to our
 work, in which domain invariance and fairness are enforced through an
 adversarial minimax setup composed of a classifier and an adversary
-discriminator. Following this line of work, our method can be regarded as a
+discriminator. Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
 generalization that also supports the continuous case, which can be viewed as
 handling infinitely many domains, provided they can be continuously
 parameterized, or as enforcing fairness over continuous attributes.
