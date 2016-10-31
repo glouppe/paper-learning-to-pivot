@@ -72,7 +72,7 @@ toy and real world examples.
 
 \section{Introduction}
 
-\kcnote{ need some text like abstract here before diving into formal statement.}
+% \kcnote{ need some text like abstract here before diving into formal statement.}
 
 
 Machine learning techniques have been used to enhance a number of scientific
@@ -89,7 +89,7 @@ process is not uniquely specified. In other words, the lack of systematic
 uncertainties corresponds to the (rare) case that the process that generates
 training data is unique, fully specified, and an accurate representative of the
 real world data.
-A common situation when systematic uncertainty is present is when the training
+By contrast, a common situation when systematic uncertainty is present is when the training
 data are not representative of the real data that a predictive model will be
 applied to in practice. Several techniques for domain adaptation have been
 developed to create predictive models that are more robust to this type of
@@ -98,98 +98,32 @@ Another common situation is that there are several plausible data generation
 processes, specificied as a family of data generation processes
 parametrized by nuisance parameters, which can be categorical or continuous.
 
-Assuming a probability model $p(X,Y,Z)$, where $X$ are the
-data, $Y$ are the target labels, and $Z$ are the nuisance parameters,
-we consider the problem of learning a predictive model for $Y$ conditional on the
-observed values of $X$ that is robust to uncertainty in the unknown value of
-$Z$. More specifically, we introduce a learning procedure for enforcing the
-pivotal property on a predictive model by jointly training adversarial networks.
-We derive theoretical results proving that the proposed procedure converges
-towards a predictive model that is both optimal and independent on the nuisance
-parameters, and demonstrate the effectiveness of this approach with a toy and
-real world examples.
+Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
+target labels, and $Z$ are the nuisance parameters, we consider the problem of
+learning a predictive model for $Y$ conditional on the observed values of $X$
+that is robust to uncertainty in the unknown value of $Z$. More specifically, we
+introduce a learning procedure for enforcing the pivotal property on a
+predictive model by jointly training two neural networks in an adversarial
+fashion. We derive theoretical results proving that the proposed procedure
+converges towards a predictive model that is both optimal and independent on the
+nuisance parameters (if that models exists) or for which one can tune the
+trade-off between power and robustness. Finally, we demonstrate the
+effectiveness of this approach with a toy and real world examples.
 
 The remainder of the paper is structured as follows. In Sec.~\ref{sec:problem},
 we first formally define the problem of learning a pivotal predictive model. In
 sections \ref{sec:method} and \ref{sec:theory}, we describe how adversarial
 networks can be trained to obtain predictive models that are independent on
-nuisance parameters and show that the proposed procedure indeed converges
+nuisance parameters and show that the proposed procedure converges
 towards a model that is both optimal and robust. The  effectiveness of the
 approach is then demonstrated in sections \ref{sec:toy} and \ref{sec:hep} with a
-toy and real world examples. In Sec.~\ref{sec:related}, we relate our work
-to close contributions from statistical inference, domain adaptation
-and fairness in classification. Finally, Sec.~\ref{sec:conclusions} gathers
-our concluding remarks.
+toy and real world examples. In Sec.~\ref{sec:related}, we relate our work to
+close contributions from statistical inference, domain adaptation and fairness
+in classification. Finally, we gather our concluding remarks in
+Sec.~\ref{sec:conclusions}.
 
 
 % ==============================================================================
-
-\section{Problem statement}
-\label{sec:problem}
-%
-%Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
-%sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
-%Let consider the multivariate random variables $X_z: \Omega \mapsto
-%\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
-%of the functional $X$ on a nuisance parameter $Z$, whose values $z \in {\cal Z}$  define a
-%parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
-%induce together a joint probability distribution $p(X,Y|Z=z)$, where the
-%conditional denotes $X_z$. For training, let further assume a finite set $\{
-%x_i, y_i, z_i \}_{i=1}^N$ of realizations $X_{z_i}(\omega_i), Y(\omega_i)$, for
-%$\omega_i \in \Omega$ and known values $z_i$ of the nuisance parameter. Our goal
-%is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
-%parameters $\theta_f$ (e.g., a neural network-based probabilistic classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
-%the cross-entropy). In addition, we require that $f(X_z ; \theta_f)$ should be
-%robust to the value $z$ of the nuisance parameter  -- which remains unknown at
-%test time. More specifically, we aim at building $f$ such that in the ideal case
-%\begin{equation}\label{eqn:criterion-true}
-%f(X_{z}(\omega) ; \theta_f) = f(X_{z^\prime}(\omega) ; \theta_f)
-%\end{equation} for all
-%samples $\omega \in \Omega$ and all $z, z^\prime$ pairs of values of the
-%nuisance parameter.
-%
-%Since in general we do not have training tuples $(X_{z}(\omega),
-%X_{z^\prime}(\omega))$ (for the same unknown $\omega$),
-
-We begin with a family of data generation processes $p(X,Y,Z)$, where $X$ are
-the data, $Y$ are the target labels, and $Z$ are the nuisance parameters that
-can be continuous or categorical. We can use this model to generate training
-data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both $Y$ and $Z$. Our goal is to learn a predictive
-score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of parameters
-$\theta_f$ (e.g., a neural network-based probabilistic classifier) and
-minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the cross-entropy).
-
-In addition, we would like that inference based on $f(X ; \theta_f)$ should be
-robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
-test time. A formal way of enforcing robustness is to require that the distribution of
-$f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant to the value
- of the nuisance parameter $Z$. Thus, we wish find a predictive function $f$ such that
-\begin{equation}\label{eqn:criterion}
-    p(f(X ; \theta_f) = s | z ) = p(f(X ; \theta_f) = s | z^\prime )
-\end{equation}
-for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
-In words, we are looking for a predictive function $f$
-which is a pivotal quantity \citep{degroot1986probability} with respect to the
-nuisance parameter. That is, such that  the distribution of $f(X_z; \theta_f)$
-is invariant with respect to the value $z$ of the nuisance.
-
-\kcnote{adjust text for conditional on Y as well}
-
-%Note that a function
-%$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
-%Eqn.~\ref{eqn:criterion-measure}. In general, the converse is however not true,
-%since the sets of samples $\{ \omega | f(X_{z}(\omega); \theta_f) = s \}$ and $\{
-%\omega' | f(X_{z^\prime}(\omega'); \theta_f) = s \}$ do not need to be the same
-%for the equality to hold. In order to simplify notations, and as only
-%Eqn.~\ref{eqn:criterion-measure} is of direct interest in this work, we denote
-%from here on the pivotal quantity criterion as
-
-
-
-% ==============================================================================
-
-\section{Method}
-\label{sec:method}
 
 \tikzstyle{every node}=[font=\scriptsize]
 \begin{figure*}
@@ -295,6 +229,110 @@ is invariant with respect to the value $z$ of the nuisance.
     \label{fig:architecture}
 \end{figure*}
 
+\section{Problem statement}
+\label{sec:problem}
+%
+%Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
+%sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
+%Let consider the multivariate random variables $X_z: \Omega \mapsto
+%\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
+%of the functional $X$ on a nuisance parameter $Z$, whose values $z \in {\cal Z}$  define a
+%parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
+%induce together a joint probability distribution $p(X,Y|Z=z)$, where the
+%conditional denotes $X_z$. For training, let further assume a finite set $\{
+%x_i, y_i, z_i \}_{i=1}^N$ of realizations $X_{z_i}(\omega_i), Y(\omega_i)$, for
+%$\omega_i \in \Omega$ and known values $z_i$ of the nuisance parameter. Our goal
+%is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
+%parameters $\theta_f$ (e.g., a neural network-based probabilistic classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
+%the cross-entropy). In addition, we require that $f(X_z ; \theta_f)$ should be
+%robust to the value $z$ of the nuisance parameter  -- which remains unknown at
+%test time. More specifically, we aim at building $f$ such that in the ideal case
+%\begin{equation}\label{eqn:criterion-true}
+%f(X_{z}(\omega) ; \theta_f) = f(X_{z^\prime}(\omega) ; \theta_f)
+%\end{equation} for all
+%samples $\omega \in \Omega$ and all $z, z^\prime$ pairs of values of the
+%nuisance parameter.
+%
+%Since in general we do not have training tuples $(X_{z}(\omega),
+%X_{z^\prime}(\omega))$ (for the same unknown $\omega$),
+
+We begin with a family of data generation processes $p(X,Y,Z)$, where $X$ are
+the data, $Y$ are the target labels, and $Z$ are the nuisance parameters that
+can be continuous or categorical. We assume training
+data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both $Y$ and $Z$. Our goal is to learn a predictive
+score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of parameters
+$\theta_f$ (e.g., a neural network-based probabilistic classifier) and
+minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the cross-entropy).
+
+In addition, we would like that inference based on $f(X ; \theta_f)$ should be
+robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
+test time. A formal way of enforcing robustness is to require that the distribution of
+$f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant to the value
+ of the nuisance parameter $Z$. Thus, we wish find a predictive function $f$ such that
+\begin{equation}\label{eqn:criterion}
+    p(f(X ; \theta_f) = s | z ) = p(f(X ; \theta_f) = s | z^\prime )
+\end{equation}
+for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
+In words, we are looking for a predictive function $f$
+which is a pivotal quantity \citep{degroot1986probability} with respect to the
+nuisance parameter. That is, such that  $f(X; \theta_f)$ and $Z$ are independent random variables.
+
+As stated in Eqn.~\ref{eqn:criterion}, the pivotal quantity criterion is
+considered in the case where $Y$ is marginalized out. In some situations
+however (see e.g., Sec.~\ref{sec:hep}), class conditional independence of $f(X;
+\theta_f)$ on the nuisance $Z$ is preferred, which can then be stated as
+requiring
+\begin{equation}\label{eqn:criterion-class}
+    p(f(X ; \theta_f) = s | z, y ) = p(f(X ; \theta_f) = s | z^\prime, y )
+\end{equation}
+for one or several specified values $y \in {\cal Y}$ of $Y$.
+
+%Note that a function
+%$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
+%Eqn.~\ref{eqn:criterion-measure}. In general, the converse is however not true,
+%since the sets of samples $\{ \omega | f(X_{z}(\omega); \theta_f) = s \}$ and $\{
+%\omega' | f(X_{z^\prime}(\omega'); \theta_f) = s \}$ do not need to be the same
+%for the equality to hold. In order to simplify notations, and as only
+%Eqn.~\ref{eqn:criterion-measure} is of direct interest in this work, we denote
+%from here on the pivotal quantity criterion as
+
+
+
+% ==============================================================================
+
+\section{Method}
+\label{sec:method}
+
+\begin{figure*}
+    \begin{minipage}{\linewidth}
+    \begin{algorithm}[H]
+    \caption{Adversarial training of a classifier $f$ against an adversary $r$.}
+
+    \begin{flushleft}
+        {\it Inputs:} training data $\{ x_i, y_i, z_i \}_{i=1}^N$;\\
+        {\it Outputs:} $\smash{\hat\theta_f}, \smash{\hat\theta_r}$;\\
+        {\it Hyper-parameters:} Number $T$ of training iterations,
+                                Number $K$ of gradient steps to update $r$.
+    \end{flushleft}
+
+    \label{alg:adversarial-training}
+    \begin{algorithmic}[1]
+        \For{$t=1$ to $T$}
+            \For{$k=1$ to $K$} \Comment{Update $r$}
+                \State{Sample minibatch $\{x_m, z_m, s_m = f(x_m;\theta_f) \}_{m=1}^M$} of size $M$;
+                \State{With $\theta_f$ fixed, update $r$ by ascending its stochastic gradient $\nabla_{\theta_r} E(\theta_f, \theta_r) :=$
+                $$\nabla_{\theta_r} \sum_{m=1}^M \log p_{\theta_r}(z_m|s_m)  ;$$}
+            \EndFor
+            \State{Sample minibatch $\{x_m, y_m, z_m, s_m = f(x_m;\theta_f)  \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
+            \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient $\nabla_{\theta_f} E(\theta_f, \theta_r) :=$
+            $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\log p_{\theta_f}(y_m|x_m)  +\log p_{\theta_r}(z_m|s_m)  \right],$$
+            \indent where $p_{\theta_f}(y_m|x_m)$ denotes $1(y_m=0)(1-s_m) + 1(y_m=1)s_m$;}
+        \EndFor
+    \end{algorithmic}
+    \end{algorithm}
+    \end{minipage}
+\end{figure*}
+
 Joint training of adversarial networks was first proposed by \citep{goodfellow2014generative} as a
 way to build a generative model capable of producing samples from random noise
 $z$. More specifically, the authors pit a generative model $g:
@@ -366,36 +404,10 @@ $r$:
 \end{align}
 The optimization algorithm consists in using stochastic gradient descent
 alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
+Finally, in the case of a class conditional pivot, the settings are the
+same, except that the adversarial term ${\cal L}_r(\theta_f, \theta_r)$ is restricted to $Y=y$.
 
-\begin{figure*}
-    \begin{minipage}{\linewidth}
-    \begin{algorithm}[H]
-    \caption{Adversarial training of a classifier $f$ against an adversary $r$.}
 
-    \begin{flushleft}
-        {\it Inputs:} training data $\{ x_i, y_i, z_i \}_{i=1}^N$;\\
-        {\it Outputs:} $\smash{\hat\theta_f}, \smash{\hat\theta_r}$;\\
-        {\it Hyper-parameters:} Number $T$ of training iterations,
-                                Number $K$ of gradient steps to update $r$.
-    \end{flushleft}
-
-    \label{alg:adversarial-training}
-    \begin{algorithmic}[1]
-        \For{$t=1$ to $T$}
-            \For{$k=1$ to $K$} \Comment{Update $r$}
-                \State{Sample minibatch $\{x_m, z_m, s_m = f(x_m;\theta_f) \}_{m=1}^M$} of size $M$;
-                \State{With $\theta_f$ fixed, update $r$ by ascending its stochastic gradient $\nabla_{\theta_r} E(\theta_f, \theta_r) :=$
-                $$\nabla_{\theta_r} \sum_{m=1}^M \log p_{\theta_r}(z_m|s_m)  ;$$}
-            \EndFor
-            \State{Sample minibatch $\{x_m, y_m, z_m, s_m = f(x_m;\theta_f)  \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
-            \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient $\nabla_{\theta_f} E(\theta_f, \theta_r) :=$
-            $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\log p_{\theta_f}(y_m|x_m)  +\log p_{\theta_r}(z_m|s_m)  \right],$$
-            \indent where $p_{\theta_f}(y_m|x_m)$ denotes $1(y_m=0)(1-s_m) + 1(y_m=1)s_m$;}
-        \EndFor
-    \end{algorithmic}
-    \end{algorithm}
-    \end{minipage}
-\end{figure*}
 
 
 % ==============================================================================
@@ -466,11 +478,12 @@ quantity.
 Proposition~\ref{prop:2} suggests that if at each step of
 Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
 its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
-updated to improve ${\cal L}_f(\theta_f) -  H({Z|f(X;\theta_f)})$, then $f$
-should converge to a classifier which is both optimal and pivotal, provided such
-a classifier exists. A formal proof of convergence of the alternating
-stochastic gradient descent procedure of
-Algorithm~\ref{alg:adversarial-training} remains however to be proven.
+updated to improve ${\cal L}_f(\theta_f) -  H({Z|f(X;\theta_f)})$ with
+sufficiently small steps, then $f$ should converge to a classifier which is both
+optimal and pivotal, provided such a classifier exists. A formal proof of
+convergence of the alternating stochastic gradient descent procedure of
+Algorithm~\ref{alg:adversarial-training} in the case where a finite number $K$
+of steps is taken for $r$ remains however to be proven.
 
 On many practical problems, let us note that such a classifier may
 not exist because the nuisance parameter directly shapes the decision boundary.
