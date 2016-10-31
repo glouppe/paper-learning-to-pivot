@@ -270,8 +270,8 @@ minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the cross-entropy).
 We augment our initial objective so that inference based on $f(X ; \theta_f)$ will be
 robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
 test time. A formal way of enforcing robustness is to require that the distribution of
-$f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant to the value
- of the nuisance parameter $Z$. Thus, we wish find a predictive function $f$ such that
+$f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant with
+ the nuisance parameter $Z$. Thus, we wish find a predictive function $f$ such that
 \begin{equation}\label{eqn:criterion}
     p(f(X ; \theta_f) = s | z ) = p(f(X ; \theta_f) = s | z^\prime )
 \end{equation}
