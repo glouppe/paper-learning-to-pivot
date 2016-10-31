@@ -260,9 +260,9 @@ Sec.~\ref{sec:conclusions}.
 We begin with a family of data generation processes $p(X,Y,Z)$, where $X \in \mathcal{X}$ are
 the data, $Y\in \mathcal{Y}$ are the target labels, and $Z\in \mathcal{Z}$ are the nuisance parameters that
 can be continuous or categorical. We assume training
-data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both $Y$ and $Z$. 
-Let us assume that prior to incorporating the effect of uncertainty in $Z$, 
-our goal is to learn a 
+data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both $Y$ and $Z$.
+Let us assume that prior to incorporating the effect of uncertainty in $Z$,
+our goal is to learn a
 regression function $f : \mathcal{X} \mapsto {\cal S}$ of parameters
 $\theta_f$ (e.g., a neural network-based probabilistic classifier) and
 minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the cross-entropy).
@@ -518,10 +518,10 @@ necessary.
 
 \begin{figure*}
     \begin{center}
-        \includegraphics[width=0.23\textwidth]{figures/f-plain.pdf}
-        \includegraphics[width=0.23\textwidth]{figures/surface-plain.pdf}
-        \includegraphics[width=0.23\textwidth]{figures/f-adversary.pdf}
-        \includegraphics[width=0.23\textwidth]{figures/surface-adversary.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/f-plain.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/surface-plain.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/f-adversary.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/surface-adversary.pdf}
     \end{center}
     \vspace{-0.5cm}
     \caption{Toy example.
@@ -723,7 +723,7 @@ respect to either the domain or the selected feature. In this context,
 \citep{ganin2014unsupervised,EdwardsS15} are certainly among the closest to our
 work, in which domain invariance and fairness are enforced through an
 adversarial minimax setup composed of a classifier and an adversary
-discriminator. 
+discriminator.
 Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
 generalization that also supports a continuously parametrized family of domains or as enforcing fairness over continuous attributes.
 
@@ -749,14 +749,14 @@ the correct value $z$ of the nuisance often remains unknown. This is
 not an issue in the context of parameter
 inference~\citep{cranmer2015approximating}, where nuisance parameters are
 eliminated via optimization or marginalization.
-%, but otherwise often limits the range of their applications. 
+%, but otherwise often limits the range of their applications.
 In practice, parametrized classifiers  are  computationally expensive to build
 and evaluate. In particular, calibrating their decision function, i.e.
 approximating $p(f(x,z)|y,z)$ as a continuous function of $z$, remains an open
 challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
 may not be optimal with respect to $Y|X,Z$, as discussed in
 Section~\ref{sec:theory}, but that can otherwise be directly used in a wider range of
-applications, since the dependence on the nuisance parameter $z$ has already been eliminated. 
+applications, since the dependence on the nuisance parameter $z$ has already been eliminated.
 Moreover, if $f$ is sufficiently close to being pivotal, then calibration only needs to be carried out once.
 
 \bigskip
