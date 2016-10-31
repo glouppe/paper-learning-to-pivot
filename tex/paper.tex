@@ -418,8 +418,9 @@ same, except that the adversarial term ${\cal L}_r(\theta_f, \theta_r)$ is restr
 In this section, we show that in the setting of
 Algorithm~\ref{alg:adversarial-training} where ${\cal L}_f$ and ${\cal L}_r$ are
 respectively set to expected value of the negative log-likelihood of $Y|X$ under
-$f$ and of $Z|f(X;\theta_f)$ under $r$, the procedure converges to a classifier
-$f$ which is a pivotal quantity in the sense of Eqn.~\ref{eqn:criterion}.
+$f$ and of $Z|f(X;\theta_f)$ under $r$, the minimax solution of Eqn.~\ref{eqn:min_thetaf}
+corresponds to a classifier
+$f$ which is a pivotal quantity.
 
 In this setting, the nuisance parameter $Z$ is considered as a random variable
 of prior $p(Z)$, and our goal is to find a function
@@ -570,7 +571,7 @@ generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we train a
 neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without
 considering its adversary $r$. The network architecture comprises 2 dense hidden layers of 20
 nodes with ReLU activations, followed  by a dense output layer with a single
-node with a sigmoid activation. As shown in the upper plots of
+node with a sigmoid activation. As shown in 
 Fig.~\ref{fig:toy}, the resulting classifier is not pivotal, as the
 conditional probability densities of its decision scores $f(X;\theta_f)$ show
 large discrepancies between values $z$ of the nuisance. While not shown here, a
@@ -589,7 +590,7 @@ implement the softmax function to ensure positivity and normalization. When
 running Algorithm~\ref{alg:adversarial-training} as initialized with the
 classifier $f$ obtained previously, adversarial training effectively reshapes
 the decision function so it that becomes almost independent on the nuisance
-parameter, as shown in the lower plots of Fig.~\ref{fig:toy}. In particular,
+parameter, as shown in Fig.~\ref{fig:toy}. In particular,
 the conditional probability densities of the decision scores $f(X;\theta_f)$ are
 now very similar to each other, indicating only a small residual  dependency on the
 nuisance, as theoretically expected. The dynamics of adversarial training is
@@ -679,7 +680,6 @@ below are averages over 5 runs.
 
 \begin{figure}
     \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
-    \vspace{-1cm}
     \caption{Physics example. Approximate median significance as a function of the decision threshold
              on the output of $f$.  As shown at $\lambda=10$, trading
              classification accuracy for independence with respect to pileup
