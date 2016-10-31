@@ -95,7 +95,7 @@ data are not representative of the real data that a predictive model will be
 applied to in practice. Several techniques for domain adaptation have been
 developed to create predictive models that are more robust to this type of
 uncertainty.
-Another common situation is that there are several plausible data generation
+A more generic situation is that there are several plausible data generation
 processes, specified as a family of data generation processes
 parametrized by nuisance parameters, which can be categorical or continuous.
 
@@ -109,7 +109,7 @@ fashion. We derive theoretical results proving that the proposed procedure
 converges towards a predictive model that is both optimal and independent on the
 nuisance parameters (if that models exists) or for which one can tune the
 trade-off between power and robustness. Finally, we demonstrate the
-effectiveness of this approach with a toy and physics examples.
+effectiveness of this approach with a toy example and an example from particle physics.
 
 The remainder of the paper is structured as follows. In Sec.~\ref{sec:problem},
 we first formally define the problem of learning a pivotal predictive model. In
@@ -257,15 +257,17 @@ Sec.~\ref{sec:conclusions}.
 %Since in general we do not have training tuples $(X_{z}(\omega),
 %X_{z^\prime}(\omega))$ (for the same unknown $\omega$),
 
-We begin with a family of data generation processes $p(X,Y,Z)$, where $X$ are
-the data, $Y$ are the target labels, and $Z$ are the nuisance parameters that
+We begin with a family of data generation processes $p(X,Y,Z)$, where $X \in \mathcal{X}$ are
+the data, $Y\in \mathcal{Y}$ are the target labels, and $Z\in \mathcal{Z}$ are the nuisance parameters that
 can be continuous or categorical. We assume training
-data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both $Y$ and $Z$. Our goal is to learn a predictive
-score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of parameters
+data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both $Y$ and $Z$. 
+Let us assume that prior to incorporating the effect of uncertainty in $Z$, 
+our goal is to learn a 
+regression function $f : \mathcal{X} \mapsto {\cal S}$ of parameters
 $\theta_f$ (e.g., a neural network-based probabilistic classifier) and
 minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the cross-entropy).
 
-In addition, we would like that inference based on $f(X ; \theta_f)$ should be
+We augment our initial objective so that inference based on $f(X ; \theta_f)$ will be
 robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
 test time. A formal way of enforcing robustness is to require that the distribution of
 $f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant to the value
@@ -276,7 +278,7 @@ $f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant to the valu
 for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
 In words, we are looking for a predictive function $f$
 which is a pivotal quantity \citep{degroot1986probability} with respect to the
-nuisance parameter. That is, such that  $f(X; \theta_f)$ and $Z$ are independent random variables.
+nuisance parameter. This implies that  $f(X; \theta_f)$ and $Z$ are independent random variables.
 
 As stated in Eqn.~\ref{eqn:criterion}, the pivotal quantity criterion is
 considered in the case where $Y$ is marginalized out. In some situations
@@ -286,7 +288,7 @@ requiring
 \begin{equation}\label{eqn:criterion-class}
     p(f(X ; \theta_f) = s | z, y ) = p(f(X ; \theta_f) = s | z^\prime, y )
 \end{equation}
-for one or several specified values $y \in {\cal Y}$ of $Y$.
+for one or several specified values $y \in {\cal Y}$.
 
 %Note that a function
 %$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
@@ -551,14 +553,14 @@ necessary.
 As a guiding toy example, let us consider the binary classification of 2D
 data drawn from multivariate gaussians with equal priors, such that
 \begin{align}
-    x &\sim {\cal N}((0,0), \begin{bmatrix}
+    x &\sim {\cal N}\left ((0,0), \begin{bmatrix}
                               1 & -0.5 \\
                               -0.5 & 1
-                            \end{bmatrix}) &\text{ when } Y=0, \\
-    x &\sim {\cal N}((1,1+Z),  \begin{bmatrix}
+                            \end{bmatrix}\right) &\text{ when } Y=0, \\
+    x &\sim {\cal N}\left ((1,1+Z),  \begin{bmatrix}
                               1 & 0 \\
                               0 & 1
-                             \end{bmatrix}) &\text{ when } Y=1.
+                             \end{bmatrix}\right) &\text{ when } Y=1.
 \end{align}
 The continuous nuisance parameter $Z$ represents in this case our
 uncertainty about the exact location of the mean of the second gaussian. Our goal is to
@@ -708,36 +710,6 @@ the classifier output $f(X;\theta_f)$ in the most beneficial way.
 \section{Related work}
 \label{sec:related}
 
-To account for systematic uncertainties, experimentalists in high energy physics
-typically take as fixed a classifier $f$ built from training data for a nominal
-value $z_0$ of the nuisance parameter, and then propagate uncertainty
- by estimating $p(f(x)|z)$ with a parametrized calibration
-procedure. Clearly, this classifier is however not optimal for $z \neq z_0$.
-To overcome this issue, the classifier $f$ is sometimes built instead on a mixture
-of training data generated from several nominal values $z_0, z_1, \dots$ of the nuisance.
-While this certainly improves with respect to classification performance,
-there is however no guarantee that the resulting classifier is pivotal, as shown
-previously in Section~\ref{sec:toy}.
-As an alternative, parametrized
-classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
-(nuisance) parameters as additional input variables, hence ultimately providing
-the most statistically powerful approach for incorporating the effect of
-systematics on the underlying classification task.  As argued in
-\citep{Neal:2007zz}, such classifiers can however not be used on real data since
-the correct value $z$ of the nuisance often remains unknown. This is typically
-not an issue in the context of parameter
-inference~\citep{cranmer2015approximating}, where nuisance parameters are
-marginalized out, but otherwise often limits the range of their applications. In
-practice, parametrized classifiers  are also computationally expensive to build
-and evaluate. In particular, calibrating their decision function, i.e.
-approximating $p(f(x,z)|z)$ as a continuous function of $z$, remains an open
-challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
-may not be optimal with respect to $Y|X,Z$, as discussed in
-Section~\ref{sec:theory}, but that can otherwise be used in a wider range of
-applications, since knowing the correct value $z$ of the nuisance is not
-necessary. Similarly, calibration needs to be carried out only once, since  the
-dependence on the nuisance is now built-in.
-
 In machine learning, learning a pivotal quantity can be related to the problem
 of domain adaptation
 \citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ajakan2014domain,ganin2014unsupervised},
@@ -751,10 +723,50 @@ respect to either the domain or the selected feature. In this context,
 \citep{ganin2014unsupervised,EdwardsS15} are certainly among the closest to our
 work, in which domain invariance and fairness are enforced through an
 adversarial minimax setup composed of a classifier and an adversary
-discriminator. Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
-generalization that also supports the continuous case, which can be viewed as
-handling infinitely many domains, provided they can be continuously
-parametrized, or as enforcing fairness over continuous attributes.
+discriminator. 
+Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
+generalization that also supports a continuously parametrized family of domains or as enforcing fairness over continuous attributes.
+
+\bigskip
+
+To account for systematic uncertainties, experimentalists in high energy physics
+typically take as fixed a classifier $f$ built from training data for a nominal
+value $z_0$ of the nuisance parameter, and then propagate uncertainty
+ by estimating $p(f(x)|z)$ with a parametrized calibration
+procedure. Clearly, this classifier is however not optimal for $z \neq z_0$.
+To overcome this issue, the classifier $f$ is sometimes built instead on a mixture
+of training data generated from several plausible values $z_0, z_1, \dots$ of the nuisance parameter.
+While this certainly improves classification performance with respect to the marginal model $p(X,Y)$,
+there is no reason to expect the resulting classifier to be pivotal, as shown
+previously in Section~\ref{sec:toy}.
+As an alternative, parametrized
+classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
+(nuisance) parameters as additional input variables, hence ultimately providing
+the most statistically powerful approach for incorporating the effect of
+systematics on the underlying classification task.  As argued in
+\citep{Neal:2007zz}, it is not obvious how such classifiers can be used on real data since
+the correct value $z$ of the nuisance often remains unknown. This is
+not an issue in the context of parameter
+inference~\citep{cranmer2015approximating}, where nuisance parameters are
+eliminated via optimization or marginalization.
+%, but otherwise often limits the range of their applications. 
+In practice, parametrized classifiers  are  computationally expensive to build
+and evaluate. In particular, calibrating their decision function, i.e.
+approximating $p(f(x,z)|y,z)$ as a continuous function of $z$, remains an open
+challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
+may not be optimal with respect to $Y|X,Z$, as discussed in
+Section~\ref{sec:theory}, but that can otherwise be directly used in a wider range of
+applications, since the dependence on the nuisance parameter $z$ has already been eliminated. 
+Moreover, if $f$ is sufficiently close to being pivotal, then calibration only needs to be carried out once.
+
+\bigskip
+
+
+
+%Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
+%generalization that also supports the continuous case, which can be viewed as
+%handling infinitely many domains, provided they can be continuously
+%parametrized, or as enforcing fairness over continuous attributes.
 
 
 % ==============================================================================
@@ -763,13 +775,13 @@ parametrized, or as enforcing fairness over continuous attributes.
 \label{sec:conclusions}
 
 In this work, we proposed a flexible learning procedure for building a
-predictive model that is independent on continuous or categorical nuisance
+predictive model that is independent of continuous or categorical nuisance
 parameters by jointly training two neural networks in an adversarial fashion.
 From a theoretical perspective, we motivated the proposed algorithm by showing
 that the minimax value  of its value function corresponds to a predictive model
 that is both optimal and pivotal (if that models exists) or for which one can
 tune the trade-off between power and robustness. From an empirical point of
-view, we confirmed the effectiveness of our method on a toy and physics examples.
+view, we confirmed the effectiveness of our method on a toy example and particle physics example.
 
 As previously discussed, the proposed solution can be used in any situation
 where the training data may not be representative of the real data the
