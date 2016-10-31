@@ -47,13 +47,13 @@ several plausible data generation processes is often associated to the presence
 of systematic uncertainties. Robust inference is possible if it is based on a
 pivot -- a quantity whose distribution is invariant to the unknown value of the
 (categorical or continuous)
-nuisance parameters that parametrize the family of data generation processes. In
+nuisance parameters that parametrizes the family of data generation processes. In
 this work, we introduce a flexible adversarial training procedure to enforce the pivotal
-property on a predictive model, which allows one to tune the tradeoff between
-power and robustness. Under the assumption of existence, we derive theoretical
-results proving that the proposed procedure converges towards a predictive model
+property on a predictive model, which allows one to tune the trade-off between
+power and robustness. We derive theoretical
+results proving that the proposed procedure tends towards a minimax solution corresponding to a predictive model
 that is both optimal and independent on the nuisance parameters, and demonstrate
-the effectiveness of this approach with a toy and physics examples.
+its effectiveness  with a toy and physics examples.
 
 %Many inference problems involve data generation processes that are not uniquely specified or uncertain in some way.
 %In a scientific context, the presence of several plausible data generation processes is often
@@ -96,7 +96,7 @@ applied to in practice. Several techniques for domain adaptation have been
 developed to create predictive models that are more robust to this type of
 uncertainty.
 Another common situation is that there are several plausible data generation
-processes, specificied as a family of data generation processes
+processes, specified as a family of data generation processes
 parametrized by nuisance parameters, which can be categorical or continuous.
 
 Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
@@ -367,7 +367,7 @@ If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
 probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
 output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 $p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values and
-if we assume some parameteric distribution ${\cal P}$ for $Z|f(X;\theta_f)=s$
+if we assume some parametric distribution ${\cal P}$ for $Z|f(X;\theta_f)=s$
 (e.g., a mixture of gaussians, as modeled with a mixture
 density network~\citep{bishop1994mixture}), then $p_{\theta_r}$ can be
 represented e.g. as network whose output $j$ is the estimated value of the
@@ -386,11 +386,10 @@ the value function
 \begin{equation}
     E(\theta_f, \theta_r) = {\cal L}_f(\theta_f) - {\cal L}_r(\theta_f, \theta_r)
 \end{equation}
-that we optimize by finding the saddle point $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ such that
-\begin{align}
-    \smash{\hat\theta_f} &= \arg \min_{\theta_f} E(\theta_f, \smash{\hat\theta_r}), \label{eqn:min_thetaf} \\
-    \smash{\hat\theta_r} &= \arg \max_{\theta_r} E(\smash{\hat\theta_f}, \theta_r) \label{eqn:max_thetar}.
-\end{align}
+that we optimize by finding the minimax solution
+\begin{equation}\label{eqn:min_thetaf}
+    \smash{\hat\theta_f, \hat\theta_f} = \arg \min_{\theta_f} \max_{\theta_r} E(\theta_f, \theta_r).
+\end{equation}
 Without loss of generality, the adversarial training procedure to obtain
 $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ is formally presented in
 Algorithm~\ref{alg:adversarial-training} in the case of a binary classifier $f :
@@ -404,7 +403,7 @@ $r$:
     {\cal L}_r(\theta_f, \theta_r) &= \mathbb{E}_{s \sim f(X;\theta_f)}  \mathbb{E}_{z \sim Z|s} [-\log p_{\theta_r} (z|s)].
 \end{align}
 The optimization algorithm consists in using stochastic gradient descent
-alternatively for solving Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar}.
+alternatively for solving Eqn.~\ref{eqn:min_thetaf}.
 Finally, in the case of a class conditional pivot, the settings are the
 same, except that the adversarial term ${\cal L}_r(\theta_f, \theta_r)$ is restricted to $Y=y$.
 
@@ -436,8 +435,8 @@ derived in a non-parametric setting, by assuming that both $f$ and $r$ have
 enough capacity.
 
 \begin{proposition}\label{prop:2}
-If there exists a saddle point $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
-for Eqn.~\ref{eqn:min_thetaf} and \ref{eqn:max_thetar} such that
+If there exists a minimax solution $(\smash{\hat\theta}_f, \smash{\hat\theta}_r)$
+for Eqn.~\ref{eqn:min_thetaf} such that
 $E(\hat\theta_f, \hat\theta_r) = H({Y|X}) - H(Z)$, then
 $f(\cdot;\smash{\hat\theta}_f)$ is both an optimal classifier and a pivotal
 quantity.
@@ -712,14 +711,14 @@ the classifier output $f(X;\theta_f)$ in the most beneficial way.
 To account for systematic uncertainties, experimentalists in high energy physics
 typically take as fixed a classifier $f$ built from training data for a nominal
 value $z_0$ of the nuisance parameter, and then propagate uncertainty
- by estimating $p(f(x)|z)$ with a parameterized calibration
+ by estimating $p(f(x)|z)$ with a parametrized calibration
 procedure. Clearly, this classifier is however not optimal for $z \neq z_0$.
 To overcome this issue, the classifier $f$ is sometimes built instead on a mixture
 of training data generated from several nominal values $z_0, z_1, \dots$ of the nuisance.
 While this certainly improves with respect to classification performance,
 there is however no guarantee that the resulting classifier is pivotal, as shown
 previously in Section~\ref{sec:toy}.
-As an alternative, parameterized
+As an alternative, parametrized
 classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
 (nuisance) parameters as additional input variables, hence ultimately providing
 the most statistically powerful approach for incorporating the effect of
@@ -729,7 +728,7 @@ the correct value $z$ of the nuisance often remains unknown. This is typically
 not an issue in the context of parameter
 inference~\citep{cranmer2015approximating}, where nuisance parameters are
 marginalized out, but otherwise often limits the range of their applications. In
-practice, parameterized classifiers  are also computationally expensive to build
+practice, parametrized classifiers  are also computationally expensive to build
 and evaluate. In particular, calibrating their decision function, i.e.
 approximating $p(f(x,z)|z)$ as a continuous function of $z$, remains an open
 challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
@@ -755,7 +754,7 @@ adversarial minimax setup composed of a classifier and an adversary
 discriminator. Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
 generalization that also supports the continuous case, which can be viewed as
 handling infinitely many domains, provided they can be continuously
-parameterized, or as enforcing fairness over continuous attributes.
+parametrized, or as enforcing fairness over continuous attributes.
 
 
 % ==============================================================================
@@ -766,14 +765,21 @@ parameterized, or as enforcing fairness over continuous attributes.
 In this work, we proposed a flexible learning procedure for building a
 predictive model that is independent on continuous or categorical nuisance
 parameters by jointly training two neural networks in an adversarial fashion.
-From a theoretical perspective, we showed that the approach leads to a
-predictive model that is both optimal and pivotal (if that models exists) or for
-which one can tune the trade-off between power and robustness. From an empirical
-point of view, we confirmed the effectiveness of our method on a toy and physics
-example.
+From a theoretical perspective, we motivated the proposed algorithm by showing
+that the minimax value  of its value function corresponds to a predictive model
+that is both optimal and pivotal (if that models exists) or for which one can
+tune the trade-off between power and robustness. From an empirical point of
+view, we confirmed the effectiveness of our method on a toy and physics examples.
 
-\glnote{Add future works.}
-\glnote{Mention limitations of the current algorithm.}
+As previously discussed, the proposed solution can be used in any situation
+where the training data may not be representative of the real data the
+predictive model will be applied to in practice. In the scientific context, this
+includes situations where the data generation processes are associated to
+systematic uncertainties (e.g., as in high energy physics), and which would be
+certainly interesting to revisit in light of the proposed solution. More generally,
+the approach also extends to cases where independence of the predictive
+model with respect to random variables is desired, as in domain adaptation
+or fairness in classification.
 
 
 
