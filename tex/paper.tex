@@ -53,7 +53,7 @@ property on a predictive model, which allows one to tune the trade-off between
 accuracy and robustness. We derive theoretical
 results showing that the proposed procedure tends towards a minimax solution corresponding to a predictive model
 that is both optimal and independent on the nuisance parameters, and demonstrate
-its effectiveness  with a toy and physics examples.
+its effectiveness  with a toy and a particle physics examples.
 
 %Many inference problems involve data generation processes that are not uniquely specified or uncertain in some way.
 %In a scientific context, the presence of several plausible data generation processes is often
@@ -103,7 +103,8 @@ Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
 target labels, and $Z$ are the nuisance parameters, we consider the problem of
 learning a predictive model for $Y$ conditional on the observed values of $X$
 that is robust to uncertainty in the unknown value of $Z$. More specifically, we
-introduce a learning procedure for enforcing the pivotal property on a
+introduce a learning procedure for enforcing the pivotal property
+\citep{degroot1986probability}  on a
 predictive model by jointly training two neural networks in an adversarial
 fashion. We derive theoretical results proving that the proposed procedure
 converges towards a predictive model that is both optimal and independent on the
@@ -370,10 +371,10 @@ If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
 probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
 output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 $p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values and
-if we assume some parametric distribution ${\cal P}$ for $Z|f(X;\theta_f)=s$
+if we assume a flexible enough parametric distribution ${\cal P}$ for $Z|f(X;\theta_f)=s$
 (e.g., a mixture of gaussians, as modeled with a mixture
 density network~\citep{bishop1994mixture}), then $p_{\theta_r}$ can be
-represented e.g. as network whose output $j$ is the estimated value of the
+represented e.g. as a network whose output $j$ is the estimated value of the
 corresponding parameter $\gamma_j$ of that distribution (e.g., the mean,
 variance and mixing coefficients of its components). As in
 \citep{nix1994estimating,bishop1994mixture}, the estimated probability density
@@ -585,7 +586,7 @@ also not be pivotal.
 
 Let us now consider the joint training of $f$ against an adversary $r$
 implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a mixture
-of five gaussians. As for $f$, the network architecture comprises 2 dense hidden
+of five gaussians. Similar to $f$, the network architecture of $r$ comprises 2 dense hidden
 layers of 20 nodes with ReLU activations, but is followed by an output layer of
 15 nodes corresponding to the means, standard deviations and mixture
 coefficients of the five gaussians. Output nodes for the mean values come with
@@ -649,12 +650,14 @@ The $W$ boson is unstable and can decay to
 two quarks, each of which produce collimated sprays of particles known as \textit{jets}
 (collectively denoted $W\to jj$).
 If the exotic particle is heavy, then the $W$ boson will be moving very fast,
-and  relativistic effects will cause the two jets from its decay to merge into a single `fat jet'.
-These fat jets have a rich internal substructure (see e.g.
+and  relativistic effects will cause the two jets from its decay to
+merge into a single `$W$-jet'.
+These  $W$-jets have a rich internal substructure (see e.g.
 \citep{Altheimer:2012mn,Altheimer:2013yza} and references therein).
 However, jets are also produced ubiquitously at high energy colliders through
 more mundane processes in the SM, which leads to a challenging classification problem
 that is beset with a number of sources of systematic uncertainty.
+
 %Distinguishing these ($y=1$) fat jets produced by heavy SM particles from
 %the copious background of normal ($y=0$) jets is a fundamental challenge in searching
 %for signs of new high mass particles.
@@ -704,8 +707,8 @@ that is beset with a number of sources of systematic uncertainty.
 
 The classification challenge used here is common in jet substructure
 studies (see \citep{Khachatryan:2014vla,ATL-PHYS-PUB-2015-033,wbosonATLAS} and
-references therein): we aim to discriminate between  the normal jets produced copiously
-at the LHC ($Y=0$) and  the fat jets coming from an exotic process ($Y=1$).
+references therein): we aim to discriminate between the normal jets produced copiously
+at the LHC ($Y=0$) and the $W$-jets ($Y=1$) potentially coming from an exotic proces.
 We reuse the datasets used in
 \citep{baldi2016jet}.  For completeness, the jets are built with the
 anti-$k_T$ algorithm \citep{Cacciari:2008gp}
@@ -868,7 +871,8 @@ From a theoretical perspective, we motivated the proposed algorithm by showing
 that the minimax value  of its value function corresponds to a predictive model
 that is both optimal and pivotal (if that models exists) or for which one can
 tune the trade-off between power and robustness. From an empirical point of
-view, we confirmed the effectiveness of our method on a toy example and particle physics example.
+view, we confirmed the effectiveness of our method on a toy example
+and a particle physics example.
 
 Despite the theoretical characterization of the minimax solution of Eqn.~\ref{eqn:min_thetaf}
 that motivates this work,
@@ -898,7 +902,9 @@ worth investigating.
 \begin{acknowledgments}
 
     KC and GL are both supported through NSF ACI-1450310, additionally KC is supported
-    through PHY-1505463 and PHY-1205376.
+    through PHY-1505463 and PHY-1205376.  MK is support by the US
+    Department of Energy (DOE) under grant DE-AC02-76SF00515 and by the
+    SLAC Panofsky Fellowship.
 
 \end{acknowledgments}
 
