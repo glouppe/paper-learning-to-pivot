@@ -729,7 +729,7 @@ and $Z=1$ corresponds to events with pileup, for which there are an average  of
 
 We do not expect that we will be able to find a function $f$ that simultaneously
 minimizes the classification loss $L_f$ and is pivotal. Thus, we need to optimize
-the hyperparameter $\lambda$ of Eqn.~\ref{eqn:vf-lambda} with respect to
+the hyper-parameter $\lambda$ of Eqn.~\ref{eqn:vf-lambda} with respect to
 a higher-level objective. In this case, the natural higher-level context is a
 hypothesis test of a null hypothesis with no $Y=1$ events against an
 alternate hypothesis that is a mixture of $Y=0$ and $Y=1$ events.
@@ -787,7 +787,7 @@ benefit in terms of the power of the resulting hypothesis test. Setting $\lambda
 (e.g. $\lambda=500$) results in a decrease of the maximum AMS, by
 focusing the capacity of $f$ too strongly on independence with $Z$, at the expense of
 classification accuracy. As demonstrated in this example, optimizing $\lambda$
-gives us a principled and effective approach to control the tradeoff between
+gives us a principled and effective approach to control the trade-off between
 accuracy and robustness that ultimately maximizes the
 power of the enveloping hypothesis test.
 %significance by desensitizing
@@ -887,7 +887,7 @@ systematic uncertainties (e.g., as in high energy physics), and which would be
 worth revisiting in light of the proposed solution. More generally, the approach
 also extends to cases where independence of the predictive model with respect to
 random variables is desired, as in domain adaptation or fairness in
-classification. Again, trying our algorithm on these use cases is certaintly
+classification. Again, trying our algorithm on these use cases is certainly
 worth investigating.
 
 \bigskip
