@@ -502,7 +502,7 @@ of steps is taken for $r$ remains to be proven.
 On many practical problems, the assumption of existence of an optimal and pivotal classifier may
 not hold because the nuisance parameter directly shapes the decision boundary.
 In this case, the lower bound
-\begin{equation}
+\begin{equation}\label{eqn:lower-bound-strict}
     H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})
 \end{equation} is strict: $f$ can either be an optimal classifier or a
 pivotal quantity, but not both simultaneously. In this situation, it is natural
@@ -515,6 +515,10 @@ the performance of $f$ and its independence with respect to the nuisance
 parameter. Setting $\lambda$ to a large value will preferably enforces $f$ to
 be pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
 optimal.
+When the lower bound is strict, let us note however that there may
+exist distinct but equally good solutions $\theta_f,\theta_r$ minimizing Eqn.~\ref{eqn:vf-lambda}.
+In this zero-sum game, an increase in accuracy would exactly be compensated by a decrease in pivotality and vice-versa.
+How to best navigate this Pareto frontier to maximize a higher-level objective remains a question open for future works.
 
 Interestingly, let us finally emphasize that these results hold using only the (1D) output $s$
 of $f(\cdot;\theta_f)$ (in the case of binary classification) as input to the adversary. We
