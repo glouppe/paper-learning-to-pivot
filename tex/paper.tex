@@ -330,7 +330,7 @@ for one or several specified values $y \in {\cal Y}$.
             \State{Sample minibatch $\{x_m, y_m, z_m, s_m = f(x_m;\theta_f)  \}_{m=1}^M$} of size $M$; \Comment{Update $f$}
             \State{With $\theta_r$ fixed, update $f$ by descending its stochastic gradient $\nabla_{\theta_f} E(\theta_f, \theta_r) :=$
             $$\nabla_{\theta_f}  \sum_{m=1}^M \left[ -\log p_{\theta_f}(y_m|x_m)  +\log p_{\theta_r}(z_m|s_m)  \right],$$
-            \indent where $p_{\theta_f}(y_m|x_m)$ denotes $1(y_m=0)(1-s_m) + 1(y_m=1)s_m$;}
+            \indent where $p_{\theta_f}(y_m|x_m)$ denotes $\mathbf{1}(y_m=0)(1-s_m) + \mathbf{1}(y_m=1)s_m$;}
         \EndFor
     \end{algorithmic}
     \end{algorithm}
@@ -391,7 +391,7 @@ the value function
 \end{equation}
 that we optimize by finding the minimax solution
 \begin{equation}\label{eqn:min_thetaf}
-    \smash{\hat\theta_f, \hat\theta_f} = \arg \min_{\theta_f} \max_{\theta_r} E(\theta_f, \theta_r).
+    \smash{\hat\theta_f, \hat\theta_r} = \arg \min_{\theta_f} \max_{\theta_r} E(\theta_f, \theta_r).
 \end{equation}
 Without loss of generality, the adversarial training procedure to obtain
 $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ is formally presented in
@@ -448,9 +448,9 @@ quantity.
 
 \begin{proof}
 
-For fixed $\theta_f$, the adversary $r$ is optimal at $$\hat\theta_r = \arg
+For fixed $\theta_f$, the adversary $r$ is optimal at $$\hat{\hat\theta}_r = \arg
 \max_{\theta_r} E(\theta_f, \theta_r)  = \arg \min_{\theta_r} {\cal
-L}_r(\theta_f, \theta_r),$$ in which case $p_{\hat\theta_r}(z|f(X;\theta_f)=s) =
+L}_r(\theta_f, \theta_r),$$ in which case $p_{\hat{\hat\theta}_r}(z|f(X;\theta_f)=s) =
 p(z|f(X;\theta_f)=s)$ for all $z$ and all $s$, and ${\cal L}_r$ reduces to the expected entropy
 $\mathbb{E}_{s \sim f(X;\theta_f)} [ H({Z|f(X;\theta_f)=s}) ]$ of the conditional distribution of the nuisance.
 This expectation is nothing else than the conditional entropy of the random variables
@@ -764,9 +764,11 @@ layers of 64 nodes and ReLU activations, each terminated by a single final
 output node with a sigmoid activation. Experiments are performed on a subset of
 150000 samples for training while AMS is evaluated on an independent test set of
 5000000 samples. Both training and testing samples are weighted such that the
-signal-to-background ratio is 1/10, allowing us to probe the efficacy of the
-method proposed here in a background dominated environment. Results reported
-below are averages over 5 runs.
+null hypothesis corresponded to 10,000  of $Y=0$ events and the alternate
+hypothesis included an additional 1,000 $Y=1$ events prior to any thresholding on $f$.
+This allows us to probe the efficacy of the
+method proposed here in a representative background-dominated high energy physics environment. 
+Results reported below are averages over 5 runs.
 
 \begin{figure}
     \includegraphics[width=0.48\textwidth]{figures/ams.pdf}
@@ -897,8 +899,10 @@ worth investigating.
 
 \begin{acknowledgments}
 
+    We would like to thank the authors of Ref.\citep{baldi2016jet} for sharing the data used in their
+    studies.
     KC and GL are both supported through NSF ACI-1450310, additionally KC is supported
-    through PHY-1505463 and PHY-1205376.
+    through PHY-1505463 and PHY-1205376. 
 
 \end{acknowledgments}
 
