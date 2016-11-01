@@ -47,10 +47,10 @@ several plausible data generation processes is often associated to the presence
 of systematic uncertainties. Robust inference is possible if it is based on a
 pivot -- a quantity whose distribution is invariant to the unknown value of the
 (categorical or continuous)
-nuisance parameters that parametrizes the family of data generation processes. In
+nuisance parameters that parametrizes this family of data generation processes. In
 this work, we introduce a flexible adversarial training procedure to enforce the pivotal
-property on a predictive model, which allows one to tune the trade-off between
-power and robustness. We derive theoretical
+property on a predictive model (e.g., a classifier), which allows one to tune the trade-off between
+accuracy and robustness. We derive theoretical
 results proving that the proposed procedure tends towards a minimax solution corresponding to a predictive model
 that is both optimal and independent on the nuisance parameters, and demonstrate
 its effectiveness  with a toy and physics examples.
@@ -467,7 +467,7 @@ E'(\theta_f)$  when:
     minimum value $H({Y|X})$.
 
     \item $\smash{\hat\theta}_f$ maximizes the conditional entropy
-    $H({Z|f(X;\theta_f)})$ since $H(Z|f(X;\theta)) \leq H(Z)$. Note that this
+    $H({Z|f(X;\theta_f)})$, since $H(Z|f(X;\theta)) \leq H(Z)$ from the properties of entropy. Note that this
     latter inequality holds for both the discrete and the differential definitions of entropy.
 \end{itemize}
 When the lower bound is active, we have $H(Z|f(X;\theta_f)) = H(Z)$
@@ -483,10 +483,12 @@ Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
 its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
 updated to improve ${\cal L}_f(\theta_f) -  H({Z|f(X;\theta_f)})$ with
 sufficiently small steps, then $f$ should converge to a classifier which is both
-optimal and pivotal, provided such a classifier exists. A formal proof of
-convergence of the alternating stochastic gradient descent procedure of
+optimal and pivotal, provided such a classifier exists. Let us note however
+that despite the former theoretical characterization of the minimax solution
+of Eqn.~\ref{eqn:min_thetaf}, formal guarantees of
+convergence towards that solution by
 Algorithm~\ref{alg:adversarial-training} in the case where a finite number $K$
-of steps is taken for $r$ remains however to be proven.
+of steps is taken for $r$ remains to be proven.
 
 On many practical problems, the assumption of existence of such a classifier may
 not hold because the nuisance parameter directly shapes the decision boundary.
@@ -813,6 +815,8 @@ adversarial minimax setup composed of a classifier and an adversary
 discriminator.
 Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
 generalization that also supports a continuously parametrized family of domains or as enforcing fairness over continuous attributes.
+In that sense, our work is also original in the theoretical characterization
+of the minimax solution of Eqn.~\ref{eqn:min_thetaf}.
 
 To account for systematic uncertainties, experimentalists in high energy physics
 typically take as fixed a classifier $f$ built from training data for a nominal
@@ -865,16 +869,26 @@ that is both optimal and pivotal (if that models exists) or for which one can
 tune the trade-off between power and robustness. From an empirical point of
 view, we confirmed the effectiveness of our method on a toy example and particle physics example.
 
-As previously discussed, the proposed solution can be used in any situation
+Despite the theoretical characterization of the minimax solution of Eqn.~\ref{eqn:min_thetaf}
+that motivates this work,
+Algorithm~\ref{alg:adversarial-training} remains a heuristic in the sense
+that we do not provide formal guarantees of convergence of the procedure towards
+that solution. Empirical evidence gathered here and in similar minimax-based
+related works (see e.g., \citep{goodfellow2014generative,EdwardsS15}) suggests
+that the alternating optimization algorithm works sufficiently well in practice,
+but further research studying its stability and convergence would certainly
+be beneficial for a large body of works.
+
+In terms of applications, the proposed solution can be used in any situation
 where the training data may not be representative of the real data the
 predictive model will be applied to in practice. In the scientific context, this
 includes situations where the data generation processes are associated to
-systematic uncertainties (e.g., as in high energy physics), and which would certainly be
- interesting to revisit in light of the proposed solution. More generally,
-the approach also extends to cases where independence of the predictive
-model with respect to random variables is desired, as in domain adaptation
-or fairness in classification. Again, trying our algorithm on these
-use cases is certaintly worth investigating.
+systematic uncertainties (e.g., as in high energy physics), and which would be
+worth revisiting in light of the proposed solution. More generally, the approach
+also extends to cases where independence of the predictive model with respect to
+random variables is desired, as in domain adaptation or fairness in
+classification. Again, trying our algorithm on these use cases is certaintly
+worth investigating.
 
 \bigskip
 
