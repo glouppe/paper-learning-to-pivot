@@ -271,7 +271,7 @@ We augment our initial objective so that inference based on $f(X ; \theta_f)$ wi
 robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
 test time. A formal way of enforcing robustness is to require that the distribution of
 $f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant with
- the nuisance parameter $Z$. Thus, we wish find a predictive function $f$ such that
+ the nuisance parameter $Z$. Thus, we wish to find a function $f$ such that
 \begin{equation}\label{eqn:criterion}
     p(f(X ; \theta_f) = s | z ) = p(f(X ; \theta_f) = s | z^\prime )
 \end{equation}
@@ -315,7 +315,8 @@ for one or several specified values $y \in {\cal Y}$.
         {\it Inputs:} training data $\{ x_i, y_i, z_i \}_{i=1}^N$;\\
         {\it Outputs:} $\smash{\hat\theta_f}, \smash{\hat\theta_r}$;\\
         {\it Hyper-parameters:} Number $T$ of training iterations,
-                                Number $K$ of gradient steps to update $r$.
+                                Number $K$ of gradient steps to update $r$,
+                                Size $M$ of the minibatches.
     \end{flushleft}
 
     \label{alg:adversarial-training}
@@ -396,7 +397,7 @@ Without loss of generality, the adversarial training procedure to obtain
 $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ is formally presented in
 Algorithm~\ref{alg:adversarial-training} in the case of a binary classifier $f :
 \mathbb{R}^p \mapsto [0,1]$ modeling $p(Y=1|X)$. For reasons further explained
-in Section~\ref{sec:theory}, ${\cal L}_f$ and ${\cal L}_r$  are respectively set to the
+in Sec.~\ref{sec:theory}, ${\cal L}_f$ and ${\cal L}_r$  are respectively set to the
 expected value of the
 negative log-likelihood of $Y|X$ under $f$ and of $Z|f(X;\theta_f)$ under
 $r$:
@@ -482,15 +483,15 @@ Proposition~\ref{prop:2} suggests that if at each step of
 Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
 its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
 updated to improve ${\cal L}_f(\theta_f) -  H({Z|f(X;\theta_f)})$ with
-sufficiently small steps, then $f$ should converge to a classifier which is both
-optimal and pivotal, provided such a classifier exists. Let us note however
+sufficiently small steps, then $f$ should converge to a classifier that is both
+optimal and pivotal, provided such a classifier exists. Let us note
 that despite the former theoretical characterization of the minimax solution
 of Eqn.~\ref{eqn:min_thetaf}, formal guarantees of
 convergence towards that solution by
 Algorithm~\ref{alg:adversarial-training} in the case where a finite number $K$
 of steps is taken for $r$ remains to be proven.
 
-On many practical problems, the assumption of existence of such a classifier may
+On many practical problems, the assumption of existence of an optimal and pivotal classifier may
 not hold because the nuisance parameter directly shapes the decision boundary.
 In this case, the lower bound $$ H({Y|X}) - H(Z) < {\cal L}_f(\theta_f) - H({Z|f(X;\theta_f)})$$ is strict: $f$ can either be an optimal classifier or a
 pivotal quantity, but not both simultaneously. In this situation, it is natural
@@ -534,7 +535,7 @@ necessary.
        the fact that samples are easier to classify for values of $Z$ above $\sigma$,
        hence partially explaining the dependency.
     (Middle right) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$ when $f$ is
-       built with adversarial training, as outlined in Section~\ref{sec:method}.
+       built with adversarial training, as outlined in Sec.~\ref{sec:method}.
        The resulting densities are now almost identical to each other, indicating only a
        small dependency on $Z$.
     (Right) The corresponding decision surface, illustrating how adversarial
@@ -608,7 +609,7 @@ pivotal, hence the corresponding increase of ${\cal L}_r$ and the total net
 benefit. As learning goes, minimizing $E$ then requires making predictions that
 are more accurate, hence decreasing ${\cal L}_f$, or that are even less dependent on
 $Z$, hence shaping $p_{\theta_r}$ towards the prior $p(z)$. Indeed, ${\cal L}_f$
-eventually starts to slightly decrease, while remaining lower bounded by
+eventually starts to  decrease, while remaining lower bounded by
 $\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed line in the
 first plot. Similarly,  ${\cal L}_r$ tends towards the differential entropy
 $H(Z)$ of the prior (where $H(Z) = \log(\sigma \sqrt{2 \pi e}) = 1.419$ in the
@@ -651,7 +652,7 @@ If the exotic particle is heavy, then the $W$ boson will be moving very fast,
 and  relativistic effects will cause the two jets from its decay to merge into a single `fat jet'.
 These fat jets have a rich internal substructure (see e.g.
 \citep{Altheimer:2012mn,Altheimer:2013yza} and references therein).
-However, jets are produced ubiquitously at high energy colliders through
+However, jets are also produced ubiquitously at high energy colliders through
 more mundane processes in the SM, which leads to a challenging classification problem
 that is beset with a number of sources of systematic uncertainty.
 %Distinguishing these ($y=1$) fat jets produced by heavy SM particles from
@@ -705,15 +706,15 @@ The classification challenge used here is common in jet substructure
 studies (see \citep{Khachatryan:2014vla,ATL-PHYS-PUB-2015-033,wbosonATLAS} and
 references therein): we aim to discriminate between  the normal jets produced copiously
 at the LHC ($Y=0$) and  the fat jets coming from an exotic process ($Y=1$).
-We reuse the datasets used in reference
+We reuse the datasets used in
 \citep{baldi2016jet}.  For completeness, the jets are built with the
 anti-$k_T$ algorithm \citep{Cacciari:2008gp}
 with radius parameter $R=1.2$, and trimmed \citep{Krohn:2009th} with subjets built with
 the $k_T$ algorithm and parameter $f_{cut}=0.2$. The features used
 in the classifiers are: trimmed jet invariant mass, N-subjettiness
 $\tau_{21}^{\beta=1}$ \citep{nsub,Thaler2012}, and the energy correlation
-functions \citep{Larkoski2013} $C_{2}^{\beta=1}$, $C_{2}^{\beta=2}$,
-$D_{2}^{\beta=1}$, $D_{2}^{\beta=2}$.
+functions  $C_{2}^{\beta=1}$, $C_{2}^{\beta=2}$,
+$D_{2}^{\beta=1}$, $D_{2}^{\beta=2}$ \citep{Larkoski2013}.
 
 Challenging in its own right, this classification
 problem is made all the more difficult by the presence of pileup, or multiple
@@ -738,7 +739,7 @@ optimizes the power of a classical hypothesis test in the Neyman-Pearson sense.
 When we include systematic uncertainties we need to balance the
 classification performance against the robustness to uncertainty in $Z$.
 Since we are still performing a hypothesis test against the null, we only
-wish to impose the pivotal property on $Y=0$ events. Furthermore,
+wish to impose the pivotal property on $Y=0$ events. To this end,
 we use the Approximate Median Significance (AMS), that was used
 in the Higgs boson machine learning challenge that is a natural generalization
 of the power of a hypothesis test when systematic uncertainties are taken into account
@@ -772,7 +773,7 @@ below are averages over 5 runs.
     \caption{Physics example. Approximate median significance as a function of the decision threshold
              on the output of $f$.  As shown at $\lambda=10$, trading
              classification accuracy for independence with respect to pileup
-             results in a positive total net benefit in terms of statistical significance.}
+             results in a net benefit in terms of statistical significance.}
     \label{fig:physics-ams}
 \end{figure}
 
@@ -827,7 +828,7 @@ To overcome this issue, the classifier $f$ is sometimes built instead on a mixtu
 of training data generated from several plausible values $z_0, z_1, \dots$ of the nuisance parameter.
 While this certainly improves classification performance with respect to the marginal model $p(X,Y)$,
 there is no reason to expect the resulting classifier to be pivotal, as shown
-previously in Section~\ref{sec:toy}.
+previously in Sec.~\ref{sec:toy}.
 As an alternative, parametrized
 classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
 (nuisance) parameters as additional input variables, hence ultimately providing
@@ -839,12 +840,12 @@ not an issue in the context of parameter
 inference~\citep{cranmer2015approximating}, where nuisance parameters are
 eliminated via optimization or marginalization.
 %, but otherwise often limits the range of their applications.
-In practice, parametrized classifiers  are  computationally expensive to build
+In practice, parametrized classifiers  are also computationally expensive to build
 and evaluate. In particular, calibrating their decision function, i.e.
 approximating $p(f(x,z)|y,z)$ as a continuous function of $z$, remains an open
 challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
 may not be optimal with respect to $Y|X,Z$, as discussed in
-Section~\ref{sec:theory}, but that can otherwise be directly used in a wider range of
+Sec.~\ref{sec:theory}, but that can otherwise be directly used in a wider range of
 applications, since the dependence on the nuisance parameter $Z$ has already been eliminated.
 Moreover, if $f$ is sufficiently close to being pivotal, then calibration only needs to be carried out once.
 
