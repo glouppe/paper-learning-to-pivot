@@ -540,7 +540,7 @@ Assuming a gaussian prior $z \sim {\cal N}(0,1)$, we start by generating
 training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we train a neural
 network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without considering its
 adversary $r$. The network architecture comprises 2 dense hidden layers of 20
-nodes with ReLU activations, followed  by a dense output layer with a single
+nodes respectively with tanh and ReLU activations, followed  by a dense output layer with a single
 node with a sigmoid activation. As shown in Fig.~\ref{fig:toy}, the resulting
 classifier is not pivotal, as the conditional probability densities of its
 decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
@@ -549,8 +549,8 @@ generated at the nominal value $Z=0$ would also not be pivotal.
 
 Let us now consider the joint training of $f$ against an adversary $r$
 implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a mixture
-of five gaussians. Similar to $f$, the network architecture of $r$ comprises 2
-dense hidden layers of 20 nodes with ReLU activations, but is followed by an
+of five gaussians. The network architecture of $r$ comprises 2
+dense hidden layers of 20 nodes with ReLU activations, followed by an
 output layer of 15 nodes corresponding to the means, standard deviations and
 mixture coefficients of the five gaussians. Output nodes for the mean values
 come with linear activations, output nodes for the standard deviations with
@@ -647,9 +647,11 @@ of the power of a hypothesis test when systematic uncertainties are taken into a
 For several values of $\lambda$, we train a classifier
 using  Algorithm~\ref{alg:adversarial-training} but consider the adversarial
 term ${\cal L}_r$ conditioned on $Y=0$ only, as outlined in
-Sec.~\ref{sec:problem}. Both $f$ and $r$ are neural networks with 3 hidden
-layers of 64 nodes and ReLU activations, each terminated by a single final
-output node with a sigmoid activation. As in the previous example, adversarial training is initialized
+Sec.~\ref{sec:problem}. The architecture of $f$ comprises 3 hidden layers of 64 nodes
+respectively with tanh, ReLU and ReLU activations, and is terminated by a single final
+output node with a sigmoid activation. The architecture of $r$ is the same,
+but uses only ReLU activations in its hidden nodes.
+As in the previous example, adversarial training is initialized
 with $f$ pre-trained. Experiments are performed on a subset of
 150000 samples for training while AMS is evaluated on an independent test set of
 5000000 samples. Both training and testing samples are weighted such that the
