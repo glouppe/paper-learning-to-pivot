@@ -459,10 +459,9 @@ Proposition~\ref{prop:2} suggests that if at each step of
 Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
 its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
 updated to improve ${\cal L}_f(\theta_f) -  H({Z|f(X;\theta_f)})$ with
-sufficiently small steps, then $f$ should eventually
-converge to a classifier that is both
-optimal and pivotal. Provided this classifier exists, the adversarial term ${\cal L}_r$
-can therefore be regarded as a way to select among
+sufficiently small steps, then $f$ should converge to a classifier that is both
+optimal and pivotal, provided such a classifier exists. Therefore, the adversarial term ${\cal L}_r$
+can be regarded as a way to select among
 the class of all optimal classifiers a function $f$ that is also pivotal.
 Despite the former theoretical characterization of the minimax solution
 of Eqn.~\ref{eqn:min_thetaf}, let us note that formal guarantees of
