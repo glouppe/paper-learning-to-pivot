@@ -51,7 +51,7 @@ generation processes. In this work,  we introduce a flexible training procedure
 based on adversarial networks for enforcing the pivotal property on a predictive
 model. We derive theoretical results showing that the proposed algorithm tends towards a minimax
 solution corresponding to a predictive model that is both optimal and
-independent on the nuisance parameters (if that models exists) or for which one
+independent of the nuisance parameters (if that models exists) or for which one
 can tune the trade-off between power and robustness. Finally, we demonstrate the
 effectiveness of this approach with a toy example and an example from particle
 physics.
@@ -94,20 +94,20 @@ introduce a learning procedure for enforcing the pivotal property
 \citep{degroot1986probability}  on a
 predictive model by jointly training two neural networks in an adversarial
 fashion. We derive theoretical results proving that the proposed procedure
-converges towards a predictive model that is both optimal and independent on the
+converges towards a predictive model that is both optimal and independent of the
 nuisance parameters (if that models exists) or for which one can tune the
 trade-off between power and robustness. Finally, we demonstrate the
 effectiveness of this approach with a toy example and an example from particle physics.
 
 The remainder of the paper is structured as follows. In Sec.~\ref{sec:problem},
-we first formally define the problem of learning a pivotal predictive model. In
-sections \ref{sec:method} and \ref{sec:theory}, we describe how adversarial
-networks can be trained to obtain predictive models that are independent on
+we first formally define the problem of learning a pivotal, predictive model. In
+Sec. \ref{sec:method} and \ref{sec:theory}, we describe how adversarial
+networks can be trained to obtain predictive models that are independent of
 nuisance parameters and show that the proposed procedure converges
 towards a model that is both optimal and robust. The  effectiveness of the
-approach is then demonstrated empirically in sections \ref{sec:toy} and \ref{sec:hep}.
+approach is then demonstrated empirically in Sec. \ref{sec:toy} and \ref{sec:hep}.
 In Sec.~\ref{sec:related}, we relate our work to
-close contributions from statistical inference, domain adaptation and fairness
+close contributions from statistical inference, domain adaptation, and fairness
 in classification. Finally, we gather our concluding remarks in
 Sec.~\ref{sec:conclusions}.
 
@@ -209,8 +209,8 @@ Sec.~\ref{sec:conclusions}.
     \end{tikzpicture}
 
     \caption{Architecture for the adversarial training of a binary classifier
-    $f$ against a nuisance parameter $Z$. The adversary $r$ models the
-    distribution $p(z|f(X;\theta_f)=s)$ of the nuisance as observed only through the output $f(X;\theta_f)$ of the classifier. By
+    $f$ against a nuisance parameters $Z$. The adversary $r$ models the
+    distribution $p(z|f(X;\theta_f)=s)$ of the nuisance parameters as observed only through the output $f(X;\theta_f)$ of the classifier. By
     maximizing the antagonistic objective ${\cal L}_r(\theta_f, \theta_r)$ (as part of minimizing ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$), the classifier
     $f$ forces $p(z|f(X;\theta_f)=s)$ towards the prior $p(z)$, which happens
     when $f(X;\theta_f)$ is  independent of the nuisance parameter $Z$ and therefore pivotal.}
@@ -224,11 +224,10 @@ Sec.~\ref{sec:conclusions}.
 We begin with a family of data generation processes $p(X,Y,Z)$, where $X \in
 \mathcal{X}$ are the data, $Y\in \mathcal{Y}$ are the target labels, and $Z\in
 \mathcal{Z}$ are the nuisance parameters that can be continuous or categorical.
-We assume training data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both
-$Y$ and $Z$. Let us assume that prior to incorporating the effect of uncertainty
+We assume training data $\{x_i, y_i, z_i\}_{i=1}^N$. Let us assume that prior to incorporating the effect of uncertainty
 in $Z$, our goal is to learn a regression function $f : \mathcal{X} \mapsto
 {\cal S}$ of parameters $\theta_f$ (e.g., a neural network-based probabilistic
-classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the
+classifier) that minimizes a loss ${\cal L}_f(\theta_f)$ (e.g., the
 cross-entropy).
 
 We augment our initial objective so that inference based on $f(X ; \theta_f)$ will be
@@ -242,10 +241,10 @@ $f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant with
 for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
 In words, we are looking for a predictive function $f$
 which is a pivotal quantity \citep{degroot1986probability} with respect to the
-nuisance parameter. This implies that  $f(X; \theta_f)$ and $Z$ are independent random variables.
+nuisance parameters. This implies that  $f(X; \theta_f)$ and $Z$ are independent random variables.
 
 As stated in Eqn.~\ref{eqn:criterion}, the pivotal quantity criterion is
-considered in the case where $Y$ is marginalized out. In some situations
+imposed with respect to the $p(X|Z)$ with $Y$ is marginalized out. In some situations
 however (see e.g., Sec.~\ref{sec:hep}), class conditional independence of $f(X;
 \theta_f)$ on the nuisance $Z$ is preferred, which can then be stated as
 requiring
@@ -294,7 +293,7 @@ for one or several specified values $y \in {\cal Y}$.
 Joint training of adversarial networks was first proposed by \citep{goodfellow2014generative} as a
 way to build a generative model capable of producing samples from random noise
 $z$. More specifically, the authors pit a generative model $g:
-\mathbb{R} \mapsto \mathbb{R}^p$ against an adversary classifier $d :
+\mathbb{R}^n \mapsto \mathbb{R}^p$ against an adversary classifier $d :
 \mathbb{R}^p \mapsto [0, 1]$ whose antagonistic objective is to recognize
 real data $X$ from generated data $g(Z)$. Both models $g$ and $d$ are trained
 simultaneously, in such a way that $g$ learns to produce samples that are
@@ -304,7 +303,7 @@ $d$ only by chance. That is, assuming enough capacity in $d$ and  $g$, the
 distribution of $g(Z)$ eventually converges towards the real distribution
 of $X$.
 
-In this work, we repurpose adversarial networks as a means to constraint the
+In this work, we repurpose adversarial networks as a means to constrain the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
 illustrated in Fig.~\ref{fig:architecture}, we pit $f$ against an adversary
 model $r := p_{\theta_r}(z | f(X;\theta_f)=s)$ of parameters $\theta_r$ and
@@ -337,7 +336,7 @@ take any form, i.e. it does not need to be a neural network, as long as it expos
 differentiable function $p_{\theta_r}(z|f(X;\theta_f)=s)$ of sufficient capacity
 to represent the true distribution.
 
-As for generative adversarial networks, we propose to
+As with generative adversarial networks, we propose to
 train $f$ and $r$ simultaneously, which we carry out by considering
 the value function
 \begin{equation}
@@ -384,7 +383,7 @@ variables.   Importantly, classification of $Y$ with respect to $X$ is
 considered in the context where $Z$ is marginalized out, which means that the
 classifier minimizing ${\cal L}_f$ is optimal with respect to $Y|X$, but not
 necessarily with $Y|X,Z$ (unless $Z$ is made explicit and is included among the
-input variables in $X$). Results hold for a nuisance parameter $Z$ taking either
+input variables in $X$). Results hold for a nuisance parameters $Z$ taking either
 categorical or continuous values. By abuse of notation, $H(Z)$ denotes the
 differential entropy in this latter case. Finally, the  proposition below is
 derived in a non-parametric setting, by assuming that both $f$ and $r$ have
@@ -406,7 +405,7 @@ For fixed $\theta_f$, the adversary $r$ is optimal at
 \end{equation}
 in which case $p_{\hat{\hat\theta}_r}(z|f(X;\theta_f)=s) =
 p(z|f(X;\theta_f)=s)$ for all $z$ and all $s$, and ${\cal L}_r$ reduces to the expected entropy
-$\mathbb{E}_{s \sim f(X;\theta_f)} [ H({Z|f(X;\theta_f)=s}) ]$ of the conditional distribution of the nuisance.
+$\mathbb{E}_{s \sim f(X;\theta_f)} [ H({Z|f(X;\theta_f)=s}) ]$ of the conditional distribution of the nuisance parameters.
 This expectation is nothing else than the conditional entropy of the random variables
 $Z$ and $f(X;\theta_f)$ and can be written as $H(Z|f(X;\theta_f))$.
 Accordingly, the
@@ -430,7 +429,7 @@ E'(\theta_f)$  when:
     $H({Z|f(X;\theta_f)})$, since $H(Z|f(X;\theta)) \leq H(Z)$ from the properties of entropy. Note that this
     latter inequality holds for both the discrete and the differential definitions of entropy.
 \end{itemize}
-When the lower bound is active, we have $H(Z|f(X;\theta_f)) = H(Z)$
+By assumption, the lower bound is active, thus we have $H(Z|f(X;\theta_f)) = H(Z)$
 because of the second condition, which happens exactly when $Z$ and $f(X;\theta_f)$
 are independent variables. In other words,  the
 optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal
@@ -546,7 +545,7 @@ nodes respectively with tanh and ReLU activations, followed  by a dense output l
 node with a sigmoid activation. As shown in Fig.~\ref{fig:toy}, the resulting
 classifier is not pivotal, as the conditional probability densities of its
 decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
-the nuisance. While not shown here, a classifier trained only from data
+the nuisance parameters. While not shown here, a classifier trained only from data
 generated at the nominal value $Z=0$ would also not be pivotal.
 
 Let us now consider the joint training of $f$ against an adversary $r$
@@ -575,13 +574,13 @@ pivotal, hence the corresponding increase of ${\cal L}_r$ and the total net
 benefit. As learning goes, minimizing $E$ then requires making predictions that
 are more accurate, hence decreasing ${\cal L}_f$, or that are even less
 dependent on $Z$, hence shaping $p_{\theta_r}$ towards the prior $p(z)$. Indeed,
-${\cal L}_f$ eventually starts to  decrease, while remaining lower bounded by
+${\cal L}_f$ eventually starts to  decrease, while remaining bounded from below by
 $\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed line in the
 first plot. Similarly,  ${\cal L}_r$ tends towards the differential entropy
 $H(Z)$ of the prior (where $H(Z) = \log(\sigma \sqrt{2 \pi e}) = 1.419$ in the
 case of a gaussian with unit variance), as shown by the dashed line in the
 second plot. Finally, let us note that the ideal situation of a classifier that
-is both optimal and pivotal appears to be unreachable for this problem, as shown
+is both optimal and pivotal is unreachable for this problem, as shown
 in the third plot by the  offset between ${\cal L}_f - \lambda {\cal L}_r$ and
 the dashed line approximating $H({Y|X}) - \lambda H(Z)$.
 
@@ -630,19 +629,19 @@ and $Z=1$ corresponds to events with pileup, for which there are an average  of
 50 independent pileup interactions overlaid.
 
 We do not expect that we will be able to find a function $f$ that simultaneously
-minimizes the classification loss $L_f$ and is pivotal. Thus, we need to optimize
+minimizes the classification loss ${\cal L}_f$ and is pivotal. Thus, we need to optimize
 the hyper-parameter $\lambda$ of Eqn.~\ref{eqn:vf-lambda} with respect to
 a higher-level objective. In this case, the natural higher-level context is a
 hypothesis test of a null hypothesis with no $Y=1$ events against an
 alternate hypothesis that is a mixture of $Y=0$ and $Y=1$ events.
-In the absence of systematic uncertainties, optimizing $L_f$ simultaneously
+In the absence of systematic uncertainties, optimizing ${\cal L}_f$ simultaneously
 optimizes the power of a classical hypothesis test in the Neyman-Pearson sense.
 When we include systematic uncertainties we need to balance the
 classification performance against the robustness to uncertainty in $Z$.
 Since we are still performing a hypothesis test against the null, we only
 wish to impose the pivotal property on $Y=0$ events. To this end,
-we use the Approximate Median Significance (AMS), that was used
-in the Higgs boson machine learning challenge that is a natural generalization
+we use as a higher level objective the Approximate Median Significance (AMS), which was used
+in the Higgs boson machine learning challenge and is a natural generalization
 of the power of a hypothesis test when systematic uncertainties are taken into account
 (see Eqn.~20 of \citep{adam2014higgs}).
 
@@ -712,8 +711,9 @@ prior $p(Z)$, our method can be regarded as a generalization that also supports
 a continuously parametrized family of domains or as enforcing fairness over
 continuous attributes.
 
-To account for systematic uncertainties, experimentalists in high energy physics
-typically take as fixed a classifier $f$ built from training data for a nominal
+A common approach to account for systematic uncertainties in 
+a scientific context (e.g. in high energy physics)
+is to take as fixed a classifier $f$ built from training data for a nominal
 value $z_0$ of the nuisance parameter, and then propagate uncertainty by
 estimating $p(f(x)|z)$ with a parametrized calibration procedure. Clearly, this
 classifier is however not optimal for $z \neq z_0$. To overcome this issue, the
@@ -763,19 +763,19 @@ that motivates this work,
 Algorithm~\ref{alg:adversarial-training} remains a heuristic in the sense
 that we do not provide formal guarantees of convergence of the procedure towards
 that solution. Empirical evidence gathered here and in similar minimax-based
-related works (see e.g., \citep{goodfellow2014generative,EdwardsS15}) suggests
+ works (see e.g., \citep{goodfellow2014generative,EdwardsS15}) suggests
 that the alternating optimization algorithm works sufficiently well in practice,
 but further research studying its stability and convergence would certainly
 be beneficial for a large body of works.
 
 In terms of applications, the proposed solution can be used in any situation
 where the training data may not be representative of the real data the
-predictive model will be applied to in practice. In the scientific context, this
-includes situations where the data generation processes are associated to
-systematic uncertainties (e.g., as in high energy physics), and which would be
-worth revisiting in light of the proposed solution. More generally, the approach
+predictive model will be applied to in practice. In the scientific context, the 
+presence of systematic uncertainty can be incorporated by considering a family
+of data generation processes, and it would be worth revisiting those scientific problems 
+that utilize machine learning in light of this technique. Moreover, the approach
 also extends to cases where independence of the predictive model with respect to
-random variables is desired, as in domain adaptation or fairness in
+observed random variables is desired, as in domain adaptation or fairness in
 classification. Again, trying our algorithm on these use cases is certainly
 worth investigating.
 
