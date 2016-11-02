@@ -564,7 +564,7 @@ necessary.
     \vspace{-1cm}
     \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
              and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
-             Adversarial training was performed for $200$ iterations, mini-batches of size $M=128$, $K=500$ and $\lambda=50$.}
+             Initialized with a pre-trained classifier $f$, adversarial training was performed for $200$ iterations, mini-batches of size $M=128$, $K=500$ and $\lambda=50$.}
     \label{fig:toy-training}
 \end{figure}
 
@@ -778,7 +778,8 @@ using  Algorithm~\ref{alg:adversarial-training} but consider the adversarial
 term ${\cal L}_r$ conditioned on $Y=0$ only, as outlined in
 Sec.~\ref{sec:problem}. Both $f$ and $r$ are neural networks with 3 hidden
 layers of 64 nodes and ReLU activations, each terminated by a single final
-output node with a sigmoid activation. Experiments are performed on a subset of
+output node with a sigmoid activation. As in the previous example, adversarial training is initialized
+with $f$ pre-trained. Experiments are performed on a subset of
 150000 samples for training while AMS is evaluated on an independent test set of
 5000000 samples. Both training and testing samples are weighted such that the
 null hypothesis corresponded to 1000  of $Y=0$ events and the alternate
@@ -835,8 +836,8 @@ adversarial minimax setup composed of a classifier and an adversary
 discriminator.
 Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
 generalization that also supports a continuously parametrized family of domains or as enforcing fairness over continuous attributes.
-In that sense, and to the best of our knowledge, our work is also original in the theoretical characterization
-of the minimax solution of Eqn.~\ref{eqn:min_thetaf}, as well as in how one can trade-off accuracy for robustness through Eqn.~\ref{eqn:vf-lambda}.
+% In that sense, and to the best of our knowledge, our work is also original in the theoretical characterization
+% of the minimax solution of Eqn.~\ref{eqn:min_thetaf}, as well as in how one can trade-off accuracy for robustness through Eqn.~\ref{eqn:vf-lambda}.
 
 To account for systematic uncertainties, experimentalists in high energy physics
 typically take as fixed a classifier $f$ built from training data for a nominal
