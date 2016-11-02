@@ -46,35 +46,21 @@ specified or are uncertain in some way. In a scientific context, the presence of
 several plausible data generation processes is often associated to the presence
 of systematic uncertainties. Robust inference is possible if it is based on a
 pivot -- a quantity whose distribution is invariant to the unknown value of the
-(categorical or continuous)
-nuisance parameters that parametrizes this family of generation processes. In
-this work, we introduce a flexible training procedure based on adversarial networks to enforce the pivotal
-property on a predictive model, which allows one to tune the trade-off between
-accuracy and robustness. We derive theoretical
-results showing that the proposed procedure tends towards a minimax solution corresponding to a predictive model
-that is both optimal and independent on the nuisance parameters, and demonstrate
-its effectiveness  with a toy and a particle physics examples.
+(categorical or continuous) nuisance parameters that parametrizes this family of
+generation processes. In this work, we introduce a flexible training procedure
+based on adversarial networks to enforce the pivotal property on a predictive
+model, which allows one to tune the trade-off between accuracy and robustness.
+We derive theoretical results showing that the proposed procedure tends towards
+a minimax solution corresponding to a predictive model that is both optimal and
+independent on the nuisance parameters, and demonstrate its effectiveness  with
+a toy and a particle physics examples.
 
-%Many inference problems involve data generation processes that are not uniquely specified or uncertain in some way.
-%In a scientific context, the presence of several plausible data generation processes is often
-%associated to the presence of systematic uncertainty.
-%We consider the situation of a
-%family of data generation processes parametrized by nuisance parameters, which can
-%be categorical or continuous. Robust inference is possible if it is based on a pivot -- a quantity whose
-%distribution is invariant to the unknown value of these nuisance parameters.
-%We introduce an adversarial training procedure to enforce the pivotal property and
-%allow one to tune the tradeoff between power and robustness.
-
-%Our goal is to have an inferential procedure that is robust to the uncertainties in the data generation process.
 \end{abstract}
 
 \maketitle
 % ==============================================================================
 
 \section{Introduction}
-
-% \kcnote{ need some text like abstract here before diving into formal statement.}
-
 
 Machine learning techniques have been used to enhance a number of scientific
 disciplines, and they have the potential to transform even more of the
@@ -89,15 +75,14 @@ systematic uncertainty can be associated to the fact that the data generation
 process is not uniquely specified. In other words, the lack of systematic
 uncertainties corresponds to the (rare) case that the process that generates
 training data is unique, fully specified, and an accurate representative of the
-real world data.
-By contrast, a common situation when systematic uncertainty is present is when the training
-data are not representative of the real data that a predictive model will be
-applied to in practice. Several techniques for domain adaptation have been
-developed to create predictive models that are more robust to this type of
-uncertainty.
-A more generic situation is that there are several plausible data generation
-processes, specified as a family of data generation processes
-parametrized by nuisance parameters, which can be categorical or continuous.
+real world data. By contrast, a common situation when systematic uncertainty is
+present is when the training data are not representative of the real data that a
+predictive model will be applied to in practice. Several techniques for domain
+adaptation have been developed to create predictive models that are more robust
+to this type of uncertainty. A more generic situation is that there are several
+plausible data generation processes, specified as a family of data generation
+processes parametrized by nuisance parameters, which can be categorical or
+continuous.
 
 Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
 target labels, and $Z$ are the nuisance parameters, we consider the problem of
@@ -233,40 +218,16 @@ Sec.~\ref{sec:conclusions}.
 
 \section{Problem statement}
 \label{sec:problem}
-%
-%Let assume a probability space $(\Omega, {\cal F}, P)$, where $\Omega$ is a
-%sample space, ${\cal F}$ is a set of events and $P$ is a probability measure.
-%Let consider the multivariate random variables $X_z: \Omega \mapsto
-%\mathbb{R}^p$ and $Y: \Omega \mapsto {\cal Y}$, where $X_z$ denotes a dependence
-%of the functional $X$ on a nuisance parameter $Z$, whose values $z \in {\cal Z}$  define a
-%parameterized family of its systematic uncertainties. That is, $X_z$ and $Y$
-%induce together a joint probability distribution $p(X,Y|Z=z)$, where the
-%conditional denotes $X_z$. For training, let further assume a finite set $\{
-%x_i, y_i, z_i \}_{i=1}^N$ of realizations $X_{z_i}(\omega_i), Y(\omega_i)$, for
-%$\omega_i \in \Omega$ and known values $z_i$ of the nuisance parameter. Our goal
-%is to learn a score function $f(\cdot;\theta_f) : \mathbb{R}^p \mapsto {\cal S}$ of
-%parameters $\theta_f$ (e.g., a neural network-based probabilistic classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g.,
-%the cross-entropy). In addition, we require that $f(X_z ; \theta_f)$ should be
-%robust to the value $z$ of the nuisance parameter  -- which remains unknown at
-%test time. More specifically, we aim at building $f$ such that in the ideal case
-%\begin{equation}\label{eqn:criterion-true}
-%f(X_{z}(\omega) ; \theta_f) = f(X_{z^\prime}(\omega) ; \theta_f)
-%\end{equation} for all
-%samples $\omega \in \Omega$ and all $z, z^\prime$ pairs of values of the
-%nuisance parameter.
-%
-%Since in general we do not have training tuples $(X_{z}(\omega),
-%X_{z^\prime}(\omega))$ (for the same unknown $\omega$),
 
-We begin with a family of data generation processes $p(X,Y,Z)$, where $X \in \mathcal{X}$ are
-the data, $Y\in \mathcal{Y}$ are the target labels, and $Z\in \mathcal{Z}$ are the nuisance parameters that
-can be continuous or categorical. We assume training
-data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both $Y$ and $Z$.
-Let us assume that prior to incorporating the effect of uncertainty in $Z$,
-our goal is to learn a
-regression function $f : \mathcal{X} \mapsto {\cal S}$ of parameters
-$\theta_f$ (e.g., a neural network-based probabilistic classifier) and
-minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the cross-entropy).
+We begin with a family of data generation processes $p(X,Y,Z)$, where $X \in
+\mathcal{X}$ are the data, $Y\in \mathcal{Y}$ are the target labels, and $Z\in
+\mathcal{Z}$ are the nuisance parameters that can be continuous or categorical.
+We assume training data $\{x_i, y_i, z_i\}_{i=1}^N$ for $X$ conditional on both
+$Y$ and $Z$. Let us assume that prior to incorporating the effect of uncertainty
+in $Z$, our goal is to learn a regression function $f : \mathcal{X} \mapsto
+{\cal S}$ of parameters $\theta_f$ (e.g., a neural network-based probabilistic
+classifier) and minimizing  a loss ${\cal L}_f(\theta_f)$ (e.g., the
+cross-entropy).
 
 We augment our initial objective so that inference based on $f(X ; \theta_f)$ will be
 robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
@@ -290,16 +251,6 @@ requiring
     p(f(X ; \theta_f) = s | z, y ) = p(f(X ; \theta_f) = s | z^\prime, y )
 \end{equation}
 for one or several specified values $y \in {\cal Y}$.
-
-%Note that a function
-%$f$ for which Eqn.~\ref{eqn:criterion-true} is true necessarily satisfies
-%Eqn.~\ref{eqn:criterion-measure}. In general, the converse is however not true,
-%since the sets of samples $\{ \omega | f(X_{z}(\omega); \theta_f) = s \}$ and $\{
-%\omega' | f(X_{z^\prime}(\omega'); \theta_f) = s \}$ do not need to be the same
-%for the equality to hold. In order to simplify notations, and as only
-%Eqn.~\ref{eqn:criterion-measure} is of direct interest in this work, we denote
-%from here on the pivotal quantity criterion as
-
 
 
 % ==============================================================================
@@ -412,8 +363,6 @@ Finally, in the case of a class conditional pivot, the settings are the
 same, except that the adversarial term ${\cal L}_r(\theta_f, \theta_r)$ is restricted to $Y=y$.
 
 
-
-
 % ==============================================================================
 
 \section{Theoretical results}
@@ -512,19 +461,20 @@ to rewrite the value function $E$  as
 \end{equation}
 where $\lambda \geq 0$ is a hyper-parameter controlling the trade-off between
 the performance of $f$ and its independence with respect to the nuisance
-parameter. Setting $\lambda$ to a large value will preferably enforces $f$ to
-be pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
-optimal.
-When the lower bound is strict, let us note however that there may
-exist distinct but equally good solutions $\theta_f,\theta_r$ minimizing Eqn.~\ref{eqn:vf-lambda}.
-In this zero-sum game, an increase in accuracy would exactly be compensated by a decrease in pivotality and vice-versa.
-How to best navigate this Pareto frontier to maximize a higher-level objective remains a question open for future works.
+parameter. Setting $\lambda$ to a large value will preferably enforces $f$ to be
+pivotal while setting $\lambda$ close to $0$ will rather constraint $f$ to be
+optimal. When the lower bound is strict, let us note however that there may
+exist distinct but equally good solutions $\theta_f,\theta_r$ minimizing
+Eqn.~\ref{eqn:vf-lambda}. In this zero-sum game, an increase in accuracy would
+exactly be compensated by a decrease in pivotality and vice-versa. How to best
+navigate this Pareto frontier to maximize a higher-level objective remains a
+question open for future works.
 
-Interestingly, let us finally emphasize that these results hold using only the (1D) output $s$
-of $f(\cdot;\theta_f)$ (in the case of binary classification) as input to the adversary. We
-could similarly enforce an intermediate representation of the data to be
-pivotal, e.g. as in \citep{ganin2014unsupervised}, but this is in fact not
-necessary.
+Interestingly, let us finally emphasize that these results hold using only the
+(1D) output $s$ of $f(\cdot;\theta_f)$ (in the case of binary classification) as
+input to the adversary. We could similarly enforce an intermediate
+representation of the data to be pivotal, e.g. as in
+\citep{ganin2014unsupervised}, but this is in fact not necessary.
 
 
 % ==============================================================================
@@ -586,33 +536,32 @@ build a classifier $f(\cdot;\theta_f)$ for predicting $Y$ given $X$, but such th
 the probability distribution of $f(X;\theta_f)$ is invariant with respect to the
 nuisance parameter $Z$.
 
-Assuming a gaussian prior $z \sim {\cal N}(0,1)$, we start by
-generating training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we train a
-neural network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without
-considering its adversary $r$. The network architecture comprises 2 dense hidden layers of 20
+Assuming a gaussian prior $z \sim {\cal N}(0,1)$, we start by generating
+training data $\{ x_i, y_i, z_i \}_{i=1}^N$, from which we train a neural
+network classifier $f$ minimizing ${\cal L}_f(\theta_f)$ without considering its
+adversary $r$. The network architecture comprises 2 dense hidden layers of 20
 nodes with ReLU activations, followed  by a dense output layer with a single
-node with a sigmoid activation. As shown in
-Fig.~\ref{fig:toy}, the resulting classifier is not pivotal, as the
-conditional probability densities of its decision scores $f(X;\theta_f)$ show
-large discrepancies between values $z$ of the nuisance. While not shown here, a
-classifier trained only from data generated at the nominal value $Z=0$ would
-also not be pivotal.
+node with a sigmoid activation. As shown in Fig.~\ref{fig:toy}, the resulting
+classifier is not pivotal, as the conditional probability densities of its
+decision scores $f(X;\theta_f)$ show large discrepancies between values $z$ of
+the nuisance. While not shown here, a classifier trained only from data
+generated at the nominal value $Z=0$ would also not be pivotal.
 
 Let us now consider the joint training of $f$ against an adversary $r$
 implemented as a mixture density network modeling $Z|f(X;\theta_f)$ as a mixture
-of five gaussians. Similar to $f$, the network architecture of $r$ comprises 2 dense hidden
-layers of 20 nodes with ReLU activations, but is followed by an output layer of
-15 nodes corresponding to the means, standard deviations and mixture
-coefficients of the five gaussians. Output nodes for the mean values come with
-linear activations, output nodes for the standard deviations with exponential
-activations to ensure positivity, while output nodes for the mixture coefficients
-implement the softmax function to ensure positivity and normalization. When
-running Algorithm~\ref{alg:adversarial-training} as initialized with the
-classifier $f$ obtained previously, adversarial training effectively reshapes
-the decision function so it that becomes almost independent on the nuisance
-parameter, as shown in Fig.~\ref{fig:toy}. In particular,
-the conditional probability densities of the decision scores $f(X;\theta_f)$ are
-now very similar to each other, indicating only a small residual  dependency on the
+of five gaussians. Similar to $f$, the network architecture of $r$ comprises 2
+dense hidden layers of 20 nodes with ReLU activations, but is followed by an
+output layer of 15 nodes corresponding to the means, standard deviations and
+mixture coefficients of the five gaussians. Output nodes for the mean values
+come with linear activations, output nodes for the standard deviations with
+exponential activations to ensure positivity, while output nodes for the mixture
+coefficients implement the softmax function to ensure positivity and
+normalization. When running Algorithm~\ref{alg:adversarial-training} as
+initialized with the classifier $f$ obtained previously, adversarial training
+effectively reshapes the decision function so it that becomes almost independent
+on the nuisance parameter, as shown in Fig.~\ref{fig:toy}. In particular, the
+conditional probability densities of the decision scores $f(X;\theta_f)$ are now
+very similar to each other, indicating only a small residual  dependency on the
 nuisance, as theoretically expected. The dynamics of adversarial training is
 illustrated in Fig.~\ref{fig:toy-training}, where the losses ${\cal L}_f$,
 ${\cal L}_r$ and ${\cal L}_f - \lambda {\cal L}_r$ are evaluated after each
@@ -622,102 +571,35 @@ minimized by making the classifier less accurate, hence the corresponding
 increase of ${\cal L}_f$, but which results in a classifier that is more
 pivotal, hence the corresponding increase of ${\cal L}_r$ and the total net
 benefit. As learning goes, minimizing $E$ then requires making predictions that
-are more accurate, hence decreasing ${\cal L}_f$, or that are even less dependent on
-$Z$, hence shaping $p_{\theta_r}$ towards the prior $p(z)$. Indeed, ${\cal L}_f$
-eventually starts to  decrease, while remaining lower bounded by
+are more accurate, hence decreasing ${\cal L}_f$, or that are even less
+dependent on $Z$, hence shaping $p_{\theta_r}$ towards the prior $p(z)$. Indeed,
+${\cal L}_f$ eventually starts to  decrease, while remaining lower bounded by
 $\min_{\theta_f} {\cal L}_f(\theta_f)$ as approximated by the dashed line in the
 first plot. Similarly,  ${\cal L}_r$ tends towards the differential entropy
 $H(Z)$ of the prior (where $H(Z) = \log(\sigma \sqrt{2 \pi e}) = 1.419$ in the
 case of a gaussian with unit variance), as shown by the dashed line in the
-second plot.
-Finally, let us note that the ideal situation of a
-classifier that is both optimal and pivotal appears to be unreachable for this
-problem, as shown in the third plot by the  offset between ${\cal L}_f - \lambda
-{\cal L}_r$ and the dashed line approximating $H({Y|X}) -
-\lambda H(Z)$.
+second plot. Finally, let us note that the ideal situation of a classifier that
+is both optimal and pivotal appears to be unreachable for this problem, as shown
+in the third plot by the  offset between ${\cal L}_f - \lambda {\cal L}_r$ and
+the dashed line approximating $H({Y|X}) - \lambda H(Z)$.
 
 \subsection{High energy physics example}
 \label{sec:hep}
 
-%Experiments at high energy colliders like the LHC \citep{LHCMachine}
-%are searching for evidence of new particles beyond the ones
-%described by the so-called Standard Model (SM) of particle physics.
-%A wide array of extended theories predict the existence of new massive
-%particles that would decay to known heavy particles in the Standard Model,
-%like the $W$, $Z$, Higgs boson, or top quark, which subsequently decay to
-%multiple quarks.
-%Finally, those quarks would produce collimated sprays of particles known as \textit{jets}.
-%However, jets are produced ubiquitously at high energy colliders through
-%more mundane processes in the SM, which leads to a challenging classification problem
-%that is beset with a number of sources of systematic uncertainty.
-
-
-Experiments at high energy colliders like the LHC \citep{LHCMachine}
-are searching for evidence of new particles beyond the ones
-described by the well established Standard Model (SM) of particle physics.
-%Searches for these new particles in the LHC data involve a challenging
-%classification problem that is beset with a number of sources of systematic uncertainty.
-%
-A wide array of extended theories predict the existence of new massive
-particles that would decay to known particles in the SM such as the $W$ boson.
-The $W$ boson is unstable and can decay to
-two quarks, each of which produce collimated sprays of particles known as \textit{jets}
-(collectively denoted $W\to jj$).
-If the exotic particle is heavy, then the $W$ boson will be moving very fast,
-and  relativistic effects will cause the two jets from its decay to
-merge into a single `$W$-jet'.
-These  $W$-jets have a rich internal substructure (see e.g.
-\citep{Altheimer:2012mn,Altheimer:2013yza} and references therein).
-However, jets are also produced ubiquitously at high energy colliders through
-more mundane processes in the SM, which leads to a challenging classification problem
+Experiments at high energy colliders like the LHC \citep{LHCMachine} are
+searching for evidence of new particles beyond the ones described by the well
+established Standard Model (SM) of particle physics. A wide array of extended
+theories predict the existence of new massive particles that would decay to
+known particles in the SM such as the $W$ boson. The $W$ boson is unstable and
+can decay to two quarks, each of which produce collimated sprays of particles
+known as \textit{jets} (collectively denoted $W\to jj$). If the exotic particle
+is heavy, then the $W$ boson will be moving very fast, and  relativistic effects
+will cause the two jets from its decay to merge into a single `$W$-jet'. These
+$W$-jets have a rich internal substructure (see e.g.
+\citep{Altheimer:2012mn,Altheimer:2013yza} and references therein). However,
+jets are also produced ubiquitously at high energy colliders through more
+mundane processes in the SM, which leads to a challenging classification problem
 that is beset with a number of sources of systematic uncertainty.
-
-%Distinguishing these ($y=1$) fat jets produced by heavy SM particles from
-%the copious background of normal ($y=0$) jets is a fundamental challenge in searching
-%for signs of new high mass particles.
-
-
-%A wide array of extended theories predict the existence of new massive
-%particles that would decay to known heavy particles in the Standard Model
-%(e.g. the $W$ and $Z$ bosons), which subsequently decay to
-%multiple quarks.
-%Those quarks subsequently produce collimated sprays of particles known as \textit{jets} (denoted $j$).
-%However, jets are produced ubiquitously at high energy colliders through
-%more mundane processes in the SM, which leads to a challenging classification problem
-%that is beset with a number of sources of systematic uncertainty.
-
-%Consider the binary classification problem where $y=0$ corresponds to data produced from the
-%ubiquitous SM process $pp \to jj$ and $y=1$ corresponds to data produced from an exotic
-%process $pp \to W' \to W(\to jj) Z(\to jj)$ predicted by an extended theory.
-%When the mass of the $W'$ is much larger than the mass of the $W$ and $Z$ bosons,
-%then the $W$ and $Z$ particles are moving very fast and the relativistic Lorentz boost
-%causes the two jets from their decay to merge into a single `fat jet',
-
-%Consider the search for an exotic particle whose decay leads to a $W$ boson
-%that subsequently decays to two jets via $W\to jj$.  If the $W$ boson is moving
-%very fast, then the relativistic Lorentz boost
-%causes the two jets from its decay to merge into a single `fat jet',
-%which has a rich internal substructure (see e.g.
-%\citep{Altheimer:2012mn,Altheimer:2013yza} and references therein).
-%%We can cast this as a binary classification problem where $y=0$
-%%corresponds to data produced from the ubiquitous SM process
-%%that produce jets and $y=1$  corresponds to data produced from an exotic
-%%process that gives rise to fat jets from $W\to jj$.
-
-
-%binary classification problem where $y=0$ corresponds to data produced from the
-%ubiquitous SM process $pp \to jj$ and $y=1$ corresponds to data produced from an exotic
-%process $pp \to W' \to W(\to jj) Z(\to jj)$ predicted by an extended theory.
-%When the mass of the $W'$ is much larger than the mass of the $W$ and $Z$ bosons,
-%then the $W$ and $Z$ particles are moving very fast and the relativistic Lorentz boost
-%causes the two jets from their decay to merge into a single `fat jet',
-%which has a rich internal substructure (see e.g.
-%\citep{Altheimer:2012mn,Altheimer:2013yza} and references therein).
-
-%Distinguishing these ($y=1$) fat jets produced by heavy SM particles from
-%the copious background of normal ($y=0$) jets is a fundamental challenge in searching
-%for signs of new high mass particles.
-
 
 The classification challenge used here is common in jet substructure
 studies (see \citep{Khachatryan:2014vla,ATL-PHYS-PUB-2015-033,wbosonATLAS} and
@@ -762,17 +644,6 @@ in the Higgs boson machine learning challenge that is a natural generalization
 of the power of a hypothesis test when systematic uncertainties are taken into account
 (see Eqn.~20 of \citep{adam2014higgs}).
 
-%Our goal is to build an accurate classifier, for which we also want to minimize the effects due to the
-%uncertainties on the nuisance. More specifically, we choose to recast the
-%classification problem as a hypothesis test between signal+background (jets
-%originating from $W$ bosons or from quarks and gluons) and background
-%only (jets originating from quarks and gluons only) and tune the decision
-%threshold of our classifier by maximizing its approximate median significance
-%(AMS), when uncertainties in the background are taken into account (see Eqn.~20
-%of \citep{adam2014higgs}). Our motivation is that reducing the effects of
-%uncertainties by requiring independence of $Z$ with the classifier output $f(X;\theta_f)$ should
-%allow for a larger maximum significance.
-
 For several values of $\lambda$, we train a classifier
 using  Algorithm~\ref{alg:adversarial-training} but consider the adversarial
 term ${\cal L}_r$ conditioned on $Y=0$ only, as outlined in
@@ -811,8 +682,6 @@ classification accuracy. As demonstrated in this example, optimizing $\lambda$
 gives us a principled and effective approach to control the trade-off between
 accuracy and robustness that ultimately maximizes the
 power of the enveloping hypothesis test.
-%significance by desensitizing
-%the classifier output $f(X;\theta_f)$ in the most beneficial way.
 
 
 % ==============================================================================
@@ -825,55 +694,49 @@ of domain adaptation
 \citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ajakan2014domain,ganin2014unsupervised},
 where the goal is often stated as trying to learn a domain-invariant
 representation of the data. Likewise, our method also relates to the problem of
-enforcing fairness in classification \citep{zemel2013learning,feldman2015certifying,EdwardsS15,zafar2015fairness}, which
-is stated as learning a classifier that is independent of some chosen attribute
-such as gender, color or age. For both families of methods, the problem can
-equivalently be stated as learning a classifier which is a pivotal quantity with
-respect to either the domain or the selected feature. In this context,
-\citep{ganin2014unsupervised,EdwardsS15} are certainly among the closest to our
-work, in which domain invariance and fairness are enforced through an
-adversarial minimax setup composed of a classifier and an adversary
-discriminator.
-Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
-generalization that also supports a continuously parametrized family of domains or as enforcing fairness over continuous attributes.
-% In that sense, and to the best of our knowledge, our work is also original in the theoretical characterization
-% of the minimax solution of Eqn.~\ref{eqn:min_thetaf}, as well as in how one can trade-off accuracy for robustness through Eqn.~\ref{eqn:vf-lambda}.
+enforcing fairness in classification
+\citep{zemel2013learning,feldman2015certifying,EdwardsS15,zafar2015fairness},
+which is stated as learning a classifier that is independent of some chosen
+attribute such as gender, color or age. For both families of methods, the
+problem can equivalently be stated as learning a classifier which is a pivotal
+quantity with respect to either the domain or the selected feature. In this
+context, \citep{ganin2014unsupervised,EdwardsS15} are certainly among the
+closest to our work, in which domain invariance and fairness are enforced
+through an adversarial minimax setup composed of a classifier and an adversary
+discriminator. Following this line of work and without making assumptions on the
+prior $p(Z)$, our method can be regarded as a generalization that also supports
+a continuously parametrized family of domains or as enforcing fairness over
+continuous attributes.
 
 To account for systematic uncertainties, experimentalists in high energy physics
 typically take as fixed a classifier $f$ built from training data for a nominal
-value $z_0$ of the nuisance parameter, and then propagate uncertainty
- by estimating $p(f(x)|z)$ with a parametrized calibration
-procedure. Clearly, this classifier is however not optimal for $z \neq z_0$.
-To overcome this issue, the classifier $f$ is sometimes built instead on a mixture
-of training data generated from several plausible values $z_0, z_1, \dots$ of the nuisance parameter.
-While this certainly improves classification performance with respect to the marginal model $p(X,Y)$,
-there is no reason to expect the resulting classifier to be pivotal, as shown
-previously in Sec.~\ref{sec:toy}.
-As an alternative, parametrized
+value $z_0$ of the nuisance parameter, and then propagate uncertainty by
+estimating $p(f(x)|z)$ with a parametrized calibration procedure. Clearly, this
+classifier is however not optimal for $z \neq z_0$. To overcome this issue, the
+classifier $f$ is sometimes built instead on a mixture of training data
+generated from several plausible values $z_0, z_1, \dots$ of the nuisance
+parameter. While this certainly improves classification performance with respect
+to the marginal model $p(X,Y)$, there is no reason to expect the resulting
+classifier to be pivotal, as shown previously in Sec.~\ref{sec:toy}. As an
+alternative, parametrized
 classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
 (nuisance) parameters as additional input variables, hence ultimately providing
 the most statistically powerful approach for incorporating the effect of
 systematics on the underlying classification task.  As argued in
-\citep{Neal:2007zz}, it is not obvious how such classifiers can be used on real data since
-the correct value $z$ of the nuisance often remains unknown. This is
+\citep{Neal:2007zz}, it is not obvious how such classifiers can be used on real
+data since the correct value $z$ of the nuisance often remains unknown. This is
 not an issue in the context of parameter
 inference~\citep{cranmer2015approximating}, where nuisance parameters are
-eliminated via optimization or marginalization.
-%, but otherwise often limits the range of their applications.
-In practice, parametrized classifiers  are also computationally expensive to build
-and evaluate. In particular, calibrating their decision function, i.e.
-approximating $p(f(x,z)|y,z)$ as a continuous function of $z$, remains an open
-challenge. By contrast, constraining $f$ to be pivotal yields a classifier which
-may not be optimal with respect to $Y|X,Z$, as discussed in
-Sec.~\ref{sec:theory}, but that can otherwise be directly used in a wider range of
-applications, since the dependence on the nuisance parameter $Z$ has already been eliminated.
-Moreover, if $f$ is sufficiently close to being pivotal, then calibration only needs to be carried out once.
-
-
-%Following this line of work and without making assumptions on the prior $p(Z)$, our method can be regarded as a
-%generalization that also supports the continuous case, which can be viewed as
-%handling infinitely many domains, provided they can be continuously
-%parametrized, or as enforcing fairness over continuous attributes.
+eliminated via optimization or marginalization. In practice, parametrized
+classifiers  are also computationally expensive to build and evaluate. In
+particular, calibrating their decision function, i.e. approximating
+$p(f(x,z)|y,z)$ as a continuous function of $z$, remains an open challenge. By
+contrast, constraining $f$ to be pivotal yields a classifier which may not be
+optimal with respect to $Y|X,Z$, as discussed in Sec.~\ref{sec:theory}, but that
+can otherwise be directly used in a wider range of applications, since the
+dependence on the nuisance parameter $Z$ has already been eliminated. Moreover,
+if $f$ is sufficiently close to being pivotal, then calibration only needs to be
+carried out once.
 
 
 % ==============================================================================
@@ -911,8 +774,6 @@ also extends to cases where independence of the predictive model with respect to
 random variables is desired, as in domain adaptation or fairness in
 classification. Again, trying our algorithm on these use cases is certainly
 worth investigating.
-
-\bigskip
 
 % ==============================================================================
 
