@@ -224,7 +224,8 @@ Sec.~\ref{sec:conclusions}.
 We begin with a family of data generation processes $p(X,Y,Z)$, where $X \in
 \mathcal{X}$ are the data, $Y\in \mathcal{Y}$ are the target labels, and $Z\in
 \mathcal{Z}$ are the nuisance parameters that can be continuous or categorical.
-We assume training data $\{x_i, y_i, z_i\}_{i=1}^N$. Let us assume that prior to incorporating the effect of uncertainty
+% We assume training data $\{x_i, y_i, z_i\}_{i=1}^N$.
+Let us assume that prior to incorporating the effect of uncertainty
 in $Z$, our goal is to learn a regression function $f : \mathcal{X} \mapsto
 {\cal S}$ of parameters $\theta_f$ (e.g., a neural network-based probabilistic
 classifier) that minimizes a loss ${\cal L}_f(\theta_f)$ (e.g., the
@@ -244,7 +245,7 @@ which is a pivotal quantity \citep{degroot1986probability} with respect to the
 nuisance parameters. This implies that  $f(X; \theta_f)$ and $Z$ are independent random variables.
 
 As stated in Eqn.~\ref{eqn:criterion}, the pivotal quantity criterion is
-imposed with respect to the $p(X|Z)$ with $Y$ is marginalized out. In some situations
+imposed with respect to $p(X|Z)$ where $Y$ is marginalized out. In some situations
 however (see e.g., Sec.~\ref{sec:hep}), class conditional independence of $f(X;
 \theta_f)$ on the nuisance $Z$ is preferred, which can then be stated as
 requiring
@@ -308,7 +309,7 @@ predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
 illustrated in Fig.~\ref{fig:architecture}, we pit $f$ against an adversary
 model $r := p_{\theta_r}(z | f(X;\theta_f)=s)$ of parameters $\theta_r$ and
 associated loss ${\cal L}_r(\theta_f, \theta_r)$. This model takes  as input
-realizations $f(X; \theta_f)$ and produces as output a function 
+realizations $f(X; \theta_f)$ and produces as output a function
 modeling the posterior probability density $p_{\theta_r}(z | f(X;\theta_f)=s)$.
 Intuitively, if $p(f(X; \theta_f)=s|z)$ varies with $z$,
 then the corresponding correlation can be captured by $r$. By contrast, if
@@ -320,15 +321,15 @@ towards Eqn.~\ref{eqn:criterion}.
 If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
 probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
 $j^\textrm{th}$ output (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
-$p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values, 
+$p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values,
 then we can model the posterior probability density $p(z | f(X;\theta_f)=s)$
 with a sufficiently flexible  parametric family of distributions $\mathcal{P}(\gamma_1, \gamma_2, \dots)$,
-where the parameters $\gamma_j$ depend on $f(X, \theta_f)$ and $\theta_r$. 
+where the parameters $\gamma_j$ depend on $f(X, \theta_f)$ and $\theta_r$.
 The adversary $r$ may
 take any form, i.e. it does not need to be a neural network, as long as it exposes a
 differentiable function $p_{\theta_r}(z|f(X;\theta_f)=s)$ of sufficient capacity
-to represent the true distribution. Fig.~\ref{fig:architecture} illustrates 
-a concrete example where $p_{\theta_r}(z | f(X;\theta_f)=s)$ is a mixture of 
+to represent the true distribution. Fig.~\ref{fig:architecture} illustrates
+a concrete example where $p_{\theta_r}(z | f(X;\theta_f)=s)$ is a mixture of
 gaussians, as modeled with a mixture density network~\citep{bishop1994mixture}).
 The $j^\textrm{th}$ output corresponds to the estimated value of the
 corresponding parameter $\gamma_j$ of that distribution (e.g., the mean,
@@ -458,10 +459,13 @@ Proposition~\ref{prop:2} suggests that if at each step of
 Algorithm~\ref{alg:adversarial-training} the adversary $r$ is allowed to reach
 its optimum given $f$ (e.g., by setting $K$ sufficiently high) and if $f$ is
 updated to improve ${\cal L}_f(\theta_f) -  H({Z|f(X;\theta_f)})$ with
-sufficiently small steps, then $f$ should converge to a classifier that is both
-optimal and pivotal, provided such a classifier exists. Let us note
-that despite the former theoretical characterization of the minimax solution
-of Eqn.~\ref{eqn:min_thetaf}, formal guarantees of
+sufficiently small steps, then $f$ should eventually
+converge to a classifier that is both
+optimal and pivotal. Provided this classifier exists, the adversarial term ${\cal L}_r$
+can therefore be regarded as a way to select among
+the class of all optimal classifiers a function $f$ that is also pivotal.
+Despite the former theoretical characterization of the minimax solution
+of Eqn.~\ref{eqn:min_thetaf}, let us note that formal guarantees of
 convergence towards that solution by
 Algorithm~\ref{alg:adversarial-training} in the case where a finite number $K$
 of steps is taken for $r$ remains to be proven.
@@ -719,7 +723,12 @@ enforcing fairness in classification
 which is stated as learning a classifier that is independent of some chosen
 attribute such as gender, color or age. For both families of methods, the
 problem can equivalently be stated as learning a classifier which is a pivotal
-quantity with respect to either the domain or the selected feature. In this
+quantity with respect to either the domain or the selected feature. As an
+example, unsupervised domain adaptation with labeled data from a source domain
+and unlabeled data from a target domain can be recast as learning a predictive
+model $f$ (i.e., trained to minimize ${\cal L}_f$ evaluated on labeled source
+data only) that is also a pivot with respect to the domain $Z$ (i.e., trained to
+maximize ${\cal L}_r$ evaluated on both source and target data). In this
 context, \citep{ganin2014unsupervised,EdwardsS15} are certainly among the
 closest to our work, in which domain invariance and fairness are enforced
 through an adversarial minimax setup composed of a classifier and an adversary
@@ -728,7 +737,7 @@ prior $p(Z)$, our method can be regarded as a generalization that also supports
 a continuously parametrized family of domains or as enforcing fairness over
 continuous attributes.
 
-A common approach to account for systematic uncertainties in 
+A common approach to account for systematic uncertainties in
 a scientific context (e.g. in high energy physics)
 is to take as fixed a classifier $f$ built from training data for a nominal
 value $z_0$ of the nuisance parameter, and then propagate uncertainty by
@@ -787,9 +796,9 @@ be beneficial for a large body of works.
 
 In terms of applications, the proposed solution can be used in any situation
 where the training data may not be representative of the real data the
-predictive model will be applied to in practice. In the scientific context, the 
+predictive model will be applied to in practice. In the scientific context, the
 presence of systematic uncertainty can be incorporated by considering a family
-of data generation processes, and it would be worth revisiting those scientific problems 
+of data generation processes, and it would be worth revisiting those scientific problems
 that utilize machine learning in light of this technique. Moreover, the approach
 also extends to cases where independence of the predictive model with respect to
 observed random variables is desired, as in domain adaptation or fairness in
@@ -807,7 +816,7 @@ worth investigating.
     Department of Energy (DOE) under grant DE-AC02-76SF00515 and by the
     SLAC Panofsky Fellowship.
 
-\vfill
+
 
 
 
