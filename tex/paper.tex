@@ -322,7 +322,8 @@ probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
 $j^\textrm{th}$ output (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 $p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values, 
 then we can model the posterior probability density $p(z | f(X;\theta_f)=s)$
-with a sufficiently flexible  parametric distribution $p_{\theta_r}(z | f(X;\theta_f)=s)$. 
+with a sufficiently flexible  parametric family of distributions $\mathcal{P}(\gamma_1, \gamma_2, \dots)$,
+where the parameters $\gamma_j$ depend on $f(X, \theta_f)$ and $\theta_r$. 
 The adversary $r$ may
 take any form, i.e. it does not need to be a neural network, as long as it exposes a
 differentiable function $p_{\theta_r}(z|f(X;\theta_f)=s)$ of sufficient capacity
