@@ -90,12 +90,12 @@ pivot -- a quantity whose distribution is invariant to the unknown value of the
 (categorical or continuous) nuisance parameters that parametrizes this family of
 generation processes. In this work,  we introduce a flexible training procedure
 based on adversarial networks for enforcing the pivotal property on a predictive
-model. We derive theoretical results showing that the proposed algorithm tends towards a minimax
-solution corresponding to a predictive model that is both optimal and
-independent of the nuisance parameters (if that models exists) or for which one
-can tune the trade-off between power and robustness. Finally, we demonstrate the
-effectiveness of this approach with a toy example and an example from particle
-physics.
+model. We derive theoretical results showing that the proposed algorithm tends
+towards a minimax solution corresponding to a predictive model that is both
+optimal and independent of the nuisance parameters (if that model exists) or
+for which one can tune the trade-off between power and robustness. Finally, we
+demonstrate the effectiveness of this approach with a toy example and an example
+from particle physics.
 
 \end{abstract}
 
@@ -144,7 +144,7 @@ effectiveness of this approach with a toy example and an example from particle p
     \def\layersep{1cm}
 
     \begin{tikzpicture}[shorten >= 1pt, ->, node distance=\layersep,scale=.85]
-    \tikzstyle{neuron} = [circle, minimum size=0.25cm, draw=black!30, line width=0.3mm, fill=white]
+    \tikzstyle{neuron} = [circle, minimum size=0.25cm, draw=black!20, line width=0.3mm, fill=white]
 
     % Classifier f
     \node at (2,0) {Classifier $f$};
@@ -174,12 +174,12 @@ effectiveness of this approach with a toy example and an example from particle p
 
     \foreach \source in {1,...,3}
         \foreach \dest in {1,...,5}
-            \path[black!20] (f-I-\source) edge (f-H1-\dest);
+            \path[black] (f-I-\source) edge (f-H1-\dest);
 
     \foreach \source in {1,...,5}
-        \path[black!30] (f-H2-\source) edge (f-O);
+        \path[black] (f-H2-\source) edge (f-O);
 
-    \node[black!30] at (1.5,-3) {...};
+    \node[black] at (1.5,-3) {...};
 
     % Adversary r
     \node at (11.75,0) {Adversary $r$};
@@ -209,16 +209,16 @@ effectiveness of this approach with a toy example and an example from particle p
 
     \foreach \source in {1,...,1}
         \foreach \dest in {1,...,5}
-            \path[black!20] (r-I-\source) edge (r-H1-\dest);
+            \path[black] (r-I-\source) edge (r-H1-\dest);
 
     \foreach \source in {1,...,5}
-        \path[black!30] (r-H2-\source) edge (r-O1);
+        \path[black] (r-H2-\source) edge (r-O1);
     \foreach \source in {1,...,5}
-        \path[black!30] (r-H2-\source) edge (r-O2);
+        \path[black] (r-H2-\source) edge (r-O2);
     \foreach \source in {1,...,5}
-        \path[black!30] (r-H2-\source) edge (r-O3);
+        \path[black] (r-H2-\source) edge (r-O3);
 
-    \node[black!30] at (9,-3) {...};
+    \node[black] at (9,-3) {...};
 
     \draw (14,-1.5) rectangle (17,-4.5);
     \path[->, shorten >= 0pt] (15.5,-0.5) edge (15.5,-1.5);
