@@ -44,7 +44,7 @@
 % Employ the following version of the ``usepackage'' statement for
 % submitting the draft version of the paper for review.  This will set
 % the note in the first column to ``Under review.  Do not distribute.''
-\usepackage{icml2016}
+\usepackage[accepted]{icml2016}
 
 % Employ this version of the ``usepackage'' statement after the paper has
 % been accepted, when creating the final version.  This will set the
@@ -86,14 +86,14 @@ Many inference problems involve data generation processes that are not uniquely
 specified or are uncertain in some way. In a scientific context, the presence of
 several plausible data generation processes is often associated to the presence
 of systematic uncertainties. Robust inference is possible if it is based on a
-pivot -- a quantity whose distribution is invariant to the unknown value of the
+pivot -- a quantity whose distribution does not depend on the unknown value of the
 (categorical or continuous) nuisance parameters that parametrizes this family of
 generation processes. In this work,  we introduce a flexible training procedure
-based on adversarial networks for enforcing the pivotal property on a predictive
-model. We derive theoretical results showing that the proposed algorithm tends
+based on adversarial networks for enforcing the pivotal property, i.e., the stastistical independence of a predictive
+model with respect to nuisance parameters. We derive theoretical results showing that the proposed algorithm tends
 towards a minimax solution corresponding to a predictive model that is both
 optimal and independent of the nuisance parameters (if that model exists) or
-for which one can tune the trade-off between power and robustness. Finally, we
+for which one can tune a trade-off between power and robustness. Finally, we
 demonstrate the effectiveness of this approach with a toy example and an example
 from particle physics.
 
@@ -127,15 +127,16 @@ continuous.
 
 Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
 target labels, and $Z$ are the nuisance parameters, we consider the problem of
-learning a predictive model for $Y$ conditional on the observed values of $X$
+learning a predictive model $f(X)$ for $Y$ conditional on the observed values of $X$
 that is robust to uncertainty in the unknown value of $Z$. More specifically, we
-introduce a learning procedure for enforcing the pivotal property
-\citep{degroot1986probability}  on a
-predictive model by jointly training two neural networks in an adversarial
-fashion. We derive theoretical results proving that the proposed procedure
-converges towards a predictive model that is both optimal and independent of the
-nuisance parameters (if that models exists) or for which one can tune the
-trade-off between power and robustness. Finally, we demonstrate the
+introduce a learning procedure based on adversarial networks
+for enforcing that  $f(X)$ is a pivot, i.e., a quantity whose distribution
+does not depend on $Z$.
+We derive theoretical results proving that the proposed procedure
+converges towards a predictive model that is both optimal and statistically independent of the
+nuisance parameters (if that model exists) or for which one can tune a
+trade-off between power and robustness, e.g., as driven by the requirements of a higher level statistical analysis.
+Finally, we demonstrate the
 effectiveness of this approach with a toy example and an example from particle physics.
 
 \tikzstyle{every node}=[font=\scriptsize]
@@ -279,7 +280,7 @@ $f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant with
 \end{equation}
 for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
 In words, we are looking for a predictive function $f$
-which is a pivotal quantity \citep{degroot1986probability} with respect to the
+which is a pivotal quantity (see e.g., \citep{degroot1986probability}) with respect to the
 nuisance parameters. This implies that  $f(X; \theta_f)$ and $Z$ are independent random variables.
 
 As stated in Eqn.~\ref{eqn:criterion}, the pivotal quantity criterion is
@@ -316,7 +317,7 @@ predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
 illustrated in Fig.~\ref{fig:architecture}, we pit $f$ against an adversary
 model $r := p_{\theta_r}(z | f(X;\theta_f)=s)$ of parameters $\theta_r$ and
 associated loss ${\cal L}_r(\theta_f, \theta_r)$. This model takes  as input
-realizations $f(X; \theta_f)$ and produces as output a function
+realizations $s$ of $f(X; \theta_f)$ and produces as output a function
 modeling the posterior probability density $p_{\theta_r}(z | f(X;\theta_f)=s)$.
 Intuitively, if $p(f(X; \theta_f)=s|z)$ varies with $z$,
 then the corresponding correlation can be captured by $r$. By contrast, if
@@ -826,7 +827,7 @@ that motivates this work,
 Algorithm~\ref{alg:adversarial-training} remains a heuristic in the sense
 that we do not provide formal guarantees of convergence of the procedure towards
 that solution. Empirical evidence gathered here and in similar minimax-based
- works (see e.g., \citep{goodfellow2014generative,EdwardsS15}) suggests
+ works suggests
 that the alternating optimization algorithm works sufficiently well in practice,
 but further research studying its stability and convergence would certainly
 be beneficial for a large body of works.
