@@ -27,7 +27,6 @@
 \usepackage{amsthm}
 \usepackage{graphicx}
 \usepackage{subfigure}
-\usepackage{natbib}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
@@ -76,7 +75,7 @@
     of systematic uncertainties. Robust inference is possible if it is based on a
     pivot -- a quantity whose distribution does not depend on the unknown value of the
     (categorical or continuous) nuisance parameters that parametrizes this family of
-    generation processes. In this work,  we introduce a flexible training procedure
+    generation processes. In this work,  we introduce a training procedure
     based on adversarial networks for enforcing the pivotal property on a predictive model, i.e., its independence
     with respect to nuisance parameters. We derive theoretical results showing that the proposed algorithm tends
     towards a minimax solution corresponding to a predictive model that is both
@@ -115,7 +114,7 @@ processes parametrized by nuisance parameters, which can be categorical or
 continuous.
 In this broader context, statisticians have for long been working on the development of robust inference techniques
 based on the concept of a pivot -- a quantity whose distribution is invariant
-with the nuisance parameters. Pivotal quantities are e.g. fundamental to the construction
+with the nuisance parameters (see e.g., \citep{degroot1986probability}). Pivotal quantities are e.g. fundamental to the construction
 of test statistics and confidence intervals.
 
 Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
@@ -236,17 +235,18 @@ effectiveness of this approach with a toy example and an example from particle p
     \label{fig:architecture}
 \end{figure*}
 
-The remainder of the paper is structured as follows. In Sec.~\ref{sec:problem},
-we first formally define the problem of learning a pivotal, predictive model. In
-Sec. \ref{sec:method} and \ref{sec:theory}, we describe how adversarial
-networks can be trained to obtain predictive models that are independent of
-nuisance parameters and show that the proposed procedure converges
-towards a model that is both optimal and robust. The  effectiveness of the
-approach is then demonstrated empirically in Sec. \ref{sec:toy} and \ref{sec:hep}.
-In Sec.~\ref{sec:related}, we relate our work to
-close contributions from statistical inference, domain adaptation, and fairness
-in classification. Finally, we gather our concluding remarks in
-Sec.~\ref{sec:conclusions}.
+% % this adds nothing
+% The remainder of the paper is structured as follows. In Sec.~\ref{sec:problem},
+% we first formally define the problem of learning a pivotal, predictive model. In
+% Sec. \ref{sec:method} and \ref{sec:theory}, we describe how adversarial
+% networks can be trained to obtain predictive models that are independent of
+% nuisance parameters and show that the proposed procedure converges
+% towards a model that is both optimal and robust. The  effectiveness of the
+% approach is then demonstrated empirically in Sec. \ref{sec:toy} and \ref{sec:hep}.
+% In Sec.~\ref{sec:related}, we relate our work to
+% close contributions from statistical inference, domain adaptation, and fairness
+% in classification. Finally, we gather our concluding remarks in
+% Sec.~\ref{sec:conclusions}.
 
 % ==============================================================================
 
@@ -261,7 +261,8 @@ Let us assume that prior to incorporating the effect of uncertainty
 in $Z$, our goal is to learn a regression function $f : \mathcal{X} \mapsto
 {\cal S}$ of parameters $\theta_f$ (e.g., a neural network-based probabilistic
 classifier) that minimizes a loss ${\cal L}_f(\theta_f)$ (e.g., the
-cross-entropy).
+cross-entropy). In classification, values $\smash{s \in {\cal S} = \mathbb{R}^{|{\cal Y}|}}$
+correspond to scores used for mapping hard predictions $y \in {\cal Y}$, while ${\cal S} = {\cal Y}$ for regression.
 
 We augment our initial objective so that inference based on $f(X ; \theta_f)$ will be
 robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
@@ -273,7 +274,7 @@ $f(X ; \theta_f)$ conditional on $Z$ (and possibly $Y$) be invariant with
 \end{equation}
 for all $z,z^\prime \in  {\cal Z}$ and all values $s \in {\cal S}$ of $f(X ; \theta_f)$.
 In words, we are looking for a predictive function $f$
-which is a pivotal quantity (see e.g., \citep{degroot1986probability}) with respect to the
+which is a pivotal quantity with respect to the
 nuisance parameters. This implies that  $f(X; \theta_f)$ and $Z$ are independent random variables.
 
 As stated in Eqn.~\ref{eqn:criterion}, the pivotal quantity criterion is
@@ -319,7 +320,7 @@ perform poorly and be close to random guessing. Training $f$ such that it
 additionally minimizes the performance of $r$ therefore acts as a regularization
 towards Eqn.~\ref{eqn:criterion}.
 
-If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
+If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented as a
 probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
 $j^\textrm{th}$ output (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 $p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values,
@@ -334,8 +335,7 @@ a concrete example where $p_{\theta_r}(z | f(X;\theta_f)=s)$ is a mixture of
 gaussians, as modeled with a mixture density network~\citep{bishop1994mixture}).
 The $j^\textrm{th}$ output corresponds to the estimated value of the
 corresponding parameter $\gamma_j$ of that distribution (e.g., the mean,
-variance and mixing coefficients of its components). As in
-\citep{nix1994estimating,bishop1994mixture}, the estimated probability density
+variance and mixing coefficients of its components). The estimated probability density
 $p_{\theta_r}(z|f(X;\theta_f)=s)$ can then be evaluated for any $z \in {\cal Z}$ and any score $s \in {\cal S}$.
 
 %If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
