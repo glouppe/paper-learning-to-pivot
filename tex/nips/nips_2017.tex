@@ -10,7 +10,7 @@
 %\usepackage{nips_2017}
 
 % to compile a camera-ready version, add the [final] option, e.g.:
-\usepackage[final]{nips_2017}
+\usepackage{nips_2017}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -102,7 +102,7 @@ uncertainties, which affect both the
 robustness of inference and the metrics used to evaluate a
 particular analysis strategy.
 
-In this work, we focus on supervised learning where the presence of
+In this work, we focus on supervised learning
 systematic uncertainty can be associated to the fact that the data generation
 process is not uniquely specified. In other words, the lack of systematic
 uncertainties corresponds to the (rare) case that the process that generates
@@ -110,11 +110,11 @@ training data is unique, fully specified, and an accurate representative of the
 real world data. By contrast, a common situation when systematic uncertainty is
 present is when the training data are not representative of the real data.
 Several techniques for domain
-adaptation have been developed to create predictive models that are more robust
+adaptation have been developed to create models that are more robust
 to this binary type of uncertainty.
 A more generic situation is that there are several
-plausible data generation processes, specified as a family of data generation
-processes parametrized by continuous nuisance parameters, as is typically found in scientific domains.
+plausible data generation processes, specified as a family
+parametrized by continuous nuisance parameters, as is typically found in scientific domains.
 In this broader context, statisticians have for long been working on robust inference techniques
 based on the concept of a pivot -- a quantity whose distribution is invariant
 with the nuisance parameters (see e.g., \citep{degroot1986probability}).
@@ -125,14 +125,17 @@ Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
 target labels, and $Z$ are the nuisance parameters, we consider the problem of
 learning a predictive model $f(X)$ for $Y$ conditional on the observed values of $X$
 that is robust to uncertainty in the unknown value of $Z$. We
-introduce a learning procedure based on adversarial networks~\citep{goodfellow2014generative}
+introduce a flexible learning procedure based on adversarial networks~\citep{goodfellow2014generative}
 for enforcing that  $f(X)$ is a pivot with respect to $Z$.
-We derive theoretical results proving that the proposed procedure
-converges towards a predictive model that is both optimal and statistically independent of the
+We derive theoretical results proving that the procedure
+converges towards a model that is both optimal and statistically independent of the
 nuisance parameters (if that model exists) or for which one can tune a
 trade-off between accuracy and robustness (e.g., as driven by a higher level objective).
+In particular, and to the best of our knowledge, our contribution is the first
+working solution for imposing statistical independence on the predictive model, regardless of the type of
+the nuisance parameter (discrete or continuous) or of its prior.
 Finally, we demonstrate the
-effectiveness of this approach with a toy example and an example from particle physics.
+effectiveness of the approach with a toy example and an example from particle physics.
 
 \tikzstyle{every node}=[font=\scriptsize]
 \begin{figure*}
@@ -787,7 +790,7 @@ takes root in the minimization of some form of divergence between the two distri
 $f(X)|Z=0$ and $f(X)|Z=1$. For this reason, and in contrast with our procedure,
 these works cannot intrinsically be generalized to non-binary or
 continuous nuisance parameters, both from a practical and theoretical point of view.
-Of notable interest, \cite{kamishima2012fairness} enforces fairness through
+Of notable interest however, \cite{kamishima2012fairness} enforces fairness through
 a prejudice regularization term based on empirical estimates of $p(f(X)|Z)$.
 While this approach is in principle sufficient for handling non-binary
 nuisance parameters $Z$, it requires accurate
