@@ -30,6 +30,9 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
+\usepackage{color}
+\newcommand{\glnote}[1]{\textcolor{red}{[GL: #1]}}
+
 \usepackage{tikz}
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
@@ -87,6 +90,8 @@
 
 % ==============================================================================
 
+\glnote{improve abstract}
+
 \section{Introduction}
 
 Machine learning techniques have been used to enhance a number of scientific
@@ -121,7 +126,7 @@ Assuming a probability model $p(X,Y,Z)$, where $X$ are the data, $Y$ are the
 target labels, and $Z$ are the nuisance parameters, we consider the problem of
 learning a predictive model $f(X)$ for $Y$ conditional on the observed values of $X$
 that is robust to uncertainty in the unknown value of $Z$. More specifically, we
-introduce a learning procedure based on adversarial networks
+introduce a learning procedure based on adversarial networks~\citep{goodfellow2014generative}
 for enforcing that  $f(X)$ is a pivot, i.e., a quantity whose distribution
 does not depend on $Z$.
 We derive theoretical results proving that the proposed procedure
@@ -258,8 +263,8 @@ We begin with a family of data generation processes $p(X,Y,Z)$, where $X \in
 \mathcal{Z}$ are the nuisance parameters that can be continuous or categorical.
 % We assume training data $\{x_i, y_i, z_i\}_{i=1}^N$.
 Let us assume that prior to incorporating the effect of uncertainty
-in $Z$, our goal is to learn a regression function $f : \mathcal{X} \mapsto
-{\cal S}$ of parameters $\theta_f$ (e.g., a neural network-based probabilistic
+in $Z$, our goal is to learn a regression function $f : \mathcal{X} \to
+{\cal S}$ with parameters $\theta_f$ (e.g., a neural network-based probabilistic
 classifier) that minimizes a loss ${\cal L}_f(\theta_f)$ (e.g., the
 cross-entropy). In classification, values $\smash{s \in {\cal S} = \mathbb{R}^{|{\cal Y}|}}$
 correspond to scores used for mapping hard predictions $y \in {\cal Y}$, while ${\cal S} = {\cal Y}$ for regression.
@@ -296,8 +301,8 @@ for one or several specified values $y \in {\cal Y}$.
 Joint training of adversarial networks was first proposed by \citep{goodfellow2014generative} as a
 way to build a generative model capable of producing samples from random noise
 $z$. More specifically, the authors pit a generative model $g:
-\mathbb{R}^n \mapsto \mathbb{R}^p$ against an adversary classifier $d :
-\mathbb{R}^p \mapsto [0, 1]$ whose antagonistic objective is to recognize
+\mathbb{R}^n \to \mathbb{R}^p$ against an adversarial classifier $d :
+\mathbb{R}^p \to [0, 1]$ whose antagonistic objective is to recognize
 real data $X$ from generated data $g(Z)$. Both models $g$ and $d$ are trained
 simultaneously, in such a way that $g$ learns to produce samples that are
 difficult to identify by $d$, while $d$ incrementally adapts to changes in $g$.
@@ -308,8 +313,8 @@ of $X$.
 
 In this work, we repurpose adversarial networks as a means to constrain the
 predictive model $f$ in order to satisfy Eqn.~\ref{eqn:criterion}. As
-illustrated in Fig.~\ref{fig:architecture}, we pit $f$ against an adversary
-model $r := p_{\theta_r}(z | f(X;\theta_f)=s)$ of parameters $\theta_r$ and
+illustrated in Fig.~\ref{fig:architecture}, we pit $f$ against an adversarial
+model $r := p_{\theta_r}(z | f(X;\theta_f)=s)$ with parameters $\theta_r$ and
 associated loss ${\cal L}_r(\theta_f, \theta_r)$. This model takes  as input
 realizations $s$ of $f(X; \theta_f)$ and produces as output a function
 modeling the posterior probability density $p_{\theta_r}(z | f(X;\theta_f)=s)$.
@@ -321,7 +326,7 @@ additionally minimizes the performance of $r$ therefore acts as a regularization
 towards Eqn.~\ref{eqn:criterion}.
 
 If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented as a
-probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
+probabilistic classifier $\mathbb{R} \to \mathbb{R}^{|{\cal Z|}}$ whose
 $j^\textrm{th}$ output (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 $p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values,
 then we can model the posterior probability density $p(z | f(X;\theta_f)=s)$
@@ -339,7 +344,7 @@ variance and mixing coefficients of its components). The estimated probability d
 $p_{\theta_r}(z|f(X;\theta_f)=s)$ can then be evaluated for any $z \in {\cal Z}$ and any score $s \in {\cal S}$.
 
 %If $Z$ takes discrete values, then $p_{\theta_r}$ can be represented e.g. as a
-%probabilistic classifier $\mathbb{R} \mapsto \mathbb{R}^{|{\cal Z|}}$ whose
+%probabilistic classifier $\mathbb{R} \to \mathbb{R}^{|{\cal Z|}}$ whose
 %output $j$ (for $j=1, \dots, |{\cal Z}|$) is the estimated probability mass
 %$p_{\theta_r}(z_j|f(X;\theta_f)=s)$. Similarly, if $Z$ takes continuous values and
 %if we assume a flexible enough parametric distribution ${\cal P}$ for $Z|f(X;\theta_f)=s$
@@ -368,7 +373,7 @@ that we optimize by finding the minimax solution
 Without loss of generality, the adversarial training procedure to obtain
 $(\smash{\hat\theta_f}, \smash{\hat\theta_r})$ is formally presented in
 Algorithm~\ref{alg:adversarial-training} in the case of a binary classifier $f :
-\mathbb{R}^p \mapsto [0,1]$ modeling $p(Y=1|X)$. For reasons further explained
+\mathbb{R}^p \to [0,1]$ modeling $p(Y=1|X)$. For reasons further explained
 in Sec.~\ref{sec:theory}, ${\cal L}_f$ and ${\cal L}_r$  are respectively set to the
 expected value of the
 negative log-likelihood of $Y|X$ under $f$ and of $Z|f(X;\theta_f)$ under
@@ -544,7 +549,7 @@ data drawn from multivariate gaussians with equal priors, such that
                               1 & -0.5 \\
                               -0.5 & 1
                             \end{bmatrix}\right) &\text{ when } Y=0, \\
-    x &\sim {\cal N}\left ((1,1+Z),  \begin{bmatrix}
+    x|Z=z &\sim {\cal N}\left ((1,1+z),  \begin{bmatrix}
                               1 & 0 \\
                               0 & 1
                              \end{bmatrix}\right) &\text{ when } Y=1.
@@ -769,7 +774,7 @@ data only) that is also a pivot with respect to the domain $Z$ (i.e., trained to
 maximize ${\cal L}_r$ evaluated on both source and target data). In this
 context, \citep{ganin2014unsupervised,EdwardsS15} are certainly among the
 closest to our work, in which domain invariance and fairness are enforced
-through an adversarial minimax setup composed of a classifier and an adversary
+through an adversarial minimax setup composed of a classifier and an adversarial
 discriminator. Following this line of work and without making assumptions on the
 prior $p(Z)$, our method can be regarded as a generalization that also supports
 a continuously parametrized family of domains or as enforcing fairness over
