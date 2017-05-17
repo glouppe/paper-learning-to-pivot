@@ -132,7 +132,8 @@ converges towards a model that is both optimal and statistically independent of 
 nuisance parameters (if that model exists) or for which one can tune a
 trade-off between accuracy and robustness (e.g., as driven by a higher level objective).
 In particular, and to the best of our knowledge, our contribution is the first
-working solution for imposing statistical independence on the predictive model, regardless of the type of
+solution for imposing pivotal constraints on a predictive model,
+working regardless of the type of
 the nuisance parameter (discrete or continuous) or of its prior.
 Finally, we demonstrate the
 effectiveness of the approach with a toy example and an example from particle physics.
@@ -784,9 +785,8 @@ continuous attributes.
 While our contribution may first appear as a minor extension, most previous
 works are based on the strong and limiting assumption that $Z$ is a binary
 random variable (e.g., $Z=0$ for the source domain, and
-$Z=1$ for the discrete domain). For
-instance, the motivation behind \citep{pan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,zemel2013learning,ganin2014unsupervised,ajakan2014domain,EdwardsS15,louizos2015variational}
-takes root in the minimization of some form of divergence between the two distributions of
+$Z=1$ for the target domain). In particular, \citep{pan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,zemel2013learning,ganin2014unsupervised,ajakan2014domain,EdwardsS15,louizos2015variational}
+are all based on the minimization of some form of divergence between the two distributions of
 $f(X)|Z=0$ and $f(X)|Z=1$. For this reason, and in contrast with our procedure,
 these works cannot intrinsically be generalized to non-binary or
 continuous nuisance parameters, both from a practical and theoretical point of view.
