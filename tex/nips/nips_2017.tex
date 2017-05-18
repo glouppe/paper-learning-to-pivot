@@ -56,7 +56,7 @@
 
 \author{
   Gilles Louppe\\
-  New York Univeristy\\
+  New York University\\
   \texttt{g.louppe@nyu.edu}\\
   \And
   Michael Kagan\\
@@ -64,7 +64,7 @@
   \texttt{makagan@slac.stanford.edu}\\
   \And
   Kyle Cranmer\\
-  New York Univeristy\\
+  New York University\\
   \texttt{kyle.cranmer@nyu.edu}
 }
 
@@ -79,7 +79,7 @@
     In a scientific context, the presence of
     several plausible data generation processes is often associated to systematic uncertainties. Robust inference is possible if it is based on a
     pivot -- a quantity whose distribution does not depend on the unknown value of the
-    (typically continuous) nuisance parameters that parametrizes this family of
+    (typically continuous) nuisance parameters that parametrize this family of
     generation processes. In this work,  we introduce a training procedure
     based on adversarial networks for enforcing the pivotal property on a predictive model.
     We derive theoretical results showing that the procedure tends
@@ -493,7 +493,6 @@ because of the second condition, which happens exactly when $Z$ and $f(X;\theta_
 are independent variables. In other words,  the
 optimal classifier $f(\cdot;\smash{\hat\theta}_f)$ is also a pivotal
 quantity.
-
 \end{proof}
 
 Proposition~\ref{prop:2} suggests that if at each step of
@@ -543,7 +542,7 @@ representation of the data to be pivotal, e.g. as in
 
 \section{Experiments}
 
-\subsection{Toy example}
+\subsection{A toy example with a continous nuisance parameter}
 \label{sec:toy}
 
 \begin{figure*}
@@ -640,7 +639,7 @@ the dashed line approximating $H({Y|X}) - \lambda H(Z)$.
 \centering
 \begin{minipage}{.46\linewidth}
     \centering
-        \includegraphics[width=\textwidth]{../figures/training.pdf}
+        \includegraphics[width=\textwidth]{../figures/training.pdf}\vspace{-1em}
         \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
                  and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
                  Initialized with a pre-trained classifier $f$, adversarial training was performed for $200$ iterations, mini-batches of size $M=128$, $K=500$ and $\lambda=50$.}
@@ -649,7 +648,7 @@ the dashed line approximating $H({Y|X}) - \lambda H(Z)$.
 \hspace{.05\linewidth}
 \begin{minipage}{.46\linewidth}
     \centering
-        \includegraphics[width=\textwidth]{../figures/ams.pdf}
+        \includegraphics[width=\textwidth]{../figures/ams.pdf}\vspace{-1em}
         \caption{Physics example. Approximate median significance as a function of the decision threshold
                  on the output of $f$. At $\lambda=10$, trading
                  accuracy for independence to pileup
@@ -658,10 +657,10 @@ the dashed line approximating $H({Y|X}) - \lambda H(Z)$.
 \end{minipage}
 \end{figure}
 
-\subsection{High energy physics example}
+\subsection{High energy physics examples}
 \label{sec:hep}
 
-Experiments at high energy colliders like the LHC \citep{LHCMachine} are
+\paragraph{Binary Case} Experiments at high energy colliders like the LHC \citep{LHCMachine} are
 searching for evidence of new particles beyond those described by the
 Standard Model (SM) of particle physics. A wide array of
 theories predict the existence of new massive particles that would decay to
@@ -717,7 +716,7 @@ Since we are still performing a hypothesis test against the null, we only
 wish to impose the pivotal property on $Y=0$ events. To this end,
 we use as a higher level objective the Approximate Median Significance (AMS), which is a natural generalization
 of the power of a hypothesis test when systematic uncertainties are taken into account
-(see Eqn.~20 of \citep{adam2014higgs}).
+(see Eqn.~20 of \cite{adam2014higgs}).
 
 For several values of $\lambda$, we train a classifier
 using  Algorithm~\ref{alg:adversarial-training} but consider the adversarial
@@ -754,6 +753,18 @@ accuracy and robustness that ultimately maximizes the
 power of the enveloping hypothesis test.
 
 
+\paragraph{Continous Case} 
+%Our method also applies to cases where one desires the predictive model to be independent of 
+%some other observed random variables, as in domain adaptation or fairness in
+%classification. Importantly, our approach is able to enforce fairness over
+%continuous attributes.
+Recently, an independent group has used our approach to learn jet classifiers 
+that are independent of the jet mass, which is a continuous attribute~\citep{Shimmin:2017mfk}. 
+The results of their studies show that the adversarial training strategy works very well for 
+real-world problems with continuous attributes, thus enhancing the sensitivity of searches for 
+new physics at the LHC.
+
+
 % ==============================================================================
 
 \section{Related work}
@@ -782,15 +793,17 @@ discriminator. Following this line of work, our method can be regarded as a unif
 a continuously parametrized family of domains or as enforcing fairness over
 continuous attributes.
 
-While our contribution may first appear as a minor extension, most previous
-works are based on the strong and limiting assumption that $Z$ is a binary
+%While our contribution may first appear as a minor extension, most
+Most related
+work is based on the strong and limiting assumption that $Z$ is a binary
 random variable (e.g., $Z=0$ for the source domain, and
 $Z=1$ for the target domain). In particular, \citep{pan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,zemel2013learning,ganin2014unsupervised,ajakan2014domain,EdwardsS15,louizos2015variational}
 are all based on the minimization of some form of divergence between the two distributions of
-$f(X)|Z=0$ and $f(X)|Z=1$. For this reason, and in contrast with our procedure,
-these works cannot intrinsically be generalized to non-binary or
+$f(X)|Z=0$ and $f(X)|Z=1$. For this reason, 
+%and in contrast with our procedure,
+these works cannot directly be generalized to non-binary or
 continuous nuisance parameters, both from a practical and theoretical point of view.
-Of notable interest however, \cite{kamishima2012fairness} enforces fairness through
+Notably, \cite{kamishima2012fairness} enforces fairness through
 a prejudice regularization term based on empirical estimates of $p(f(X)|Z)$.
 While this approach is in principle sufficient for handling non-binary
 nuisance parameters $Z$, it requires accurate
@@ -815,21 +828,26 @@ alternative, parametrized
 classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
 (nuisance) parameters as additional input variables, hence ultimately providing
 the most statistically powerful approach for incorporating the effect of
-systematics on the underlying classification task.  As argued in
-\citep{Neal:2007zz}, it is not obvious how such classifiers can be used on real
-data since the correct value $z$ of the nuisance often remains unknown. This is
-not an issue in the context of parameter
-inference~\citep{cranmer2015approximating}, where nuisance parameters are
-eliminated via optimization or marginalization. In practice, parametrized
+systematics on the underlying classification task.  
+%As argued in
+%\citep{Neal:2007zz}, it is not obvious how such classifiers can be used on real
+%data since the correct value $z$ of the nuisance often remains unknown. This is
+%not an issue in the context of parameter
+%inference~\citep{cranmer2015approximating}, where nuisance parameters are
+%eliminated via optimization or marginalization. 
+In practice, parametrized
 classifiers  are also computationally expensive to build and evaluate. In
 particular, calibrating their decision function, i.e. approximating
 $p(f(x,z)|y,z)$ as a continuous function of $z$, remains an open challenge. By
-contrast, constraining $f$ to be pivotal yields a classifier which may not be
-optimal with respect to $Y|X,Z$, as discussed in Sec.~\ref{sec:theory}, but that
-can otherwise be directly used in a wider range of applications, since the
-dependence on the nuisance parameter $Z$ has already been eliminated. Moreover,
-if $f$ is sufficiently close to being pivotal, then calibration only needs to be
-carried out once.
+contrast, constraining $f$ to be pivotal yields a classifier 
+%which may not be
+%optimal with respect to $Y|X,Z$, as discussed in Sec.~\ref{sec:theory}, but 
+that can 
+%otherwise 
+be directly used in a wider range of applications, since the
+dependence on the nuisance parameter $Z$ has already been eliminated. 
+%Moreover, if $f$ is sufficiently close to being pivotal, then calibration only needs to be
+%carried out once.
 
 
 % ==============================================================================
@@ -865,8 +883,10 @@ of data generation processes, and it would be worth revisiting those scientific 
 that utilize machine learning in light of this technique. Moreover, the approach
 also extends to cases where independence of the predictive model with respect to
 observed random variables is desired, as in domain adaptation or fairness in
-classification. Again, trying our algorithm on these use cases is certainly
-worth investigating.
+classification (e.g. \citep{Shimmin:2017mfk}).
+% not sure this is a great sentence to end with, sounds like a sales pitch
+% Again, trying our algorithm on these use cases is certainly
+%worth investigating.
 
 % ==============================================================================
 
