@@ -74,21 +74,38 @@
 \maketitle
 
 \begin{abstract}
-    % Many inference problems involve data generation processes that are not uniquely
-    % specified or are uncertain in some way.
-    In a scientific context, the presence of
-    several plausible data generation processes is often associated to systematic uncertainties. Robust inference is possible if it is based on a
+Several techniques for domain adaptation have been proposed to account for differences in the
+distribution of the data used for training and testing. The majority of this work focuses on
+a binary domain label. Similar problems occur in a scientific context where there may be a continuous family of
+plausible data generation processes associated to the presence of systematic uncertainties. 
+Robust inference is possible if it is based on a
     pivot -- a quantity whose distribution does not depend on the unknown value of the
-    (typically continuous) nuisance parameters that parametrize this family of
-    generation processes. In this work,  we introduce a training procedure
-    based on adversarial networks for enforcing the pivotal property on a predictive model.
-    We derive theoretical results showing that the procedure tends
-    towards a minimax solution corresponding to a predictive model that is both
-    optimal and independent of the nuisance parameters (if that model exists) or
-    for which one can tune a trade-off between accuracy and robustness. We
-    demonstrate the effectiveness of this approach with a toy example and an example
+    nuisance parameters that parametrize this family of
+    data generation processes. In this work,  we introduce and derive theoretical results
+     for ta training procedure
+    based on adversarial networks for enforcing the pivotal property (or, equivalently, fairness with respect to continuous attributes) on a predictive model.
+    The method includes a hyperparameter, which one can tune a trade-off between accuracy and robustness. We
+    demonstrate the effectiveness of this approach with a toy example and an examples
     from particle physics.
 \end{abstract}
+
+
+%\begin{abstract}
+%    % Many inference problems involve data generation processes that are not uniquely
+%    % specified or are uncertain in some way.
+%    In a scientific context, the presence of
+%    several plausible data generation processes is often associated to systematic uncertainties. Robust inference is possible if it is based on a
+%    pivot -- a quantity whose distribution does not depend on the unknown value of the
+%    (typically continuous) nuisance parameters that parametrize this family of
+%    generation processes. In this work,  we introduce a training procedure
+%    based on adversarial networks for enforcing the pivotal property on a predictive model.
+%    We derive theoretical results showing that the procedure tends
+%    towards a minimax solution corresponding to a predictive model that is both
+%    optimal and independent of the nuisance parameters (if that model exists) or
+%    for which one can tune a trade-off between accuracy and robustness. We
+%    demonstrate the effectiveness of this approach with a toy example and an example
+%    from particle physics.
+%\end{abstract}
 
 % ==============================================================================
 
