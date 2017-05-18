@@ -74,19 +74,22 @@
 \maketitle
 
 \begin{abstract}
-Several techniques for domain adaptation have been proposed to account for differences in the
-distribution of the data used for training and testing. The majority of this work focuses on
-a binary domain label. Similar problems occur in a scientific context where there may be a continuous family of
-plausible data generation processes associated to the presence of systematic uncertainties. 
-Robust inference is possible if it is based on a
-    pivot -- a quantity whose distribution does not depend on the unknown value of the
-    nuisance parameters that parametrize this family of
-    data generation processes. In this work,  we introduce and derive theoretical results
-     for ta training procedure
-    based on adversarial networks for enforcing the pivotal property (or, equivalently, fairness with respect to continuous attributes) on a predictive model.
-    The method includes a hyperparameter to the trade-off between accuracy and robustness. We
-    demonstrate the effectiveness of this approach with a toy example and an examples
-    from particle physics.
+
+Several techniques for domain adaptation have been proposed to account for
+differences in the distribution of the data used for training and testing. The
+majority of this work focuses on a binary domain label. Similar problems occur
+in a scientific context where there may be a continuous family of plausible data
+generation processes associated to the presence of systematic uncertainties.
+Robust inference is possible if it is based on a pivot -- a quantity whose
+distribution does not depend on the unknown value of the nuisance parameters
+that parametrize this family of data generation processes. In this work,  we
+introduce and derive theoretical results for a training procedure based on
+adversarial networks for enforcing the pivotal property (or, equivalently,
+fairness with respect to continuous attributes) on a predictive model. The
+method includes a hyperparameter to control the trade-off between accuracy and
+robustness. We demonstrate the effectiveness of this approach with a toy example
+and an examples from particle physics.
+
 \end{abstract}
 
 
@@ -119,7 +122,7 @@ uncertainties, which affect both the
 robustness of inference and the metrics used to evaluate a
 particular analysis strategy.
 
-In this work, we focus on supervised learning techniques where 
+In this work, we focus on supervised learning techniques where
 systematic uncertainties can be associated to a data generation
 process that is not uniquely specified. In other words, the lack of systematic
 uncertainties corresponds to the (rare) case that the process that generates
@@ -770,15 +773,15 @@ accuracy and robustness that ultimately maximizes the
 power of the enveloping hypothesis test.
 
 
-\paragraph{Continous Case} 
-%Our method also applies to cases where one desires the predictive model to be independent of 
+\paragraph{Continous Case}
+%Our method also applies to cases where one desires the predictive model to be independent of
 %some other observed random variables, as in domain adaptation or fairness in
 %classification. Importantly, our approach is able to enforce fairness over
 %continuous attributes.
-Recently, an independent group has used our approach to learn jet classifiers 
-that are independent of the jet mass, which is a continuous attribute~\citep{Shimmin:2017mfk}. 
-The results of their studies show that the adversarial training strategy works very well for 
-real-world problems with continuous attributes, thus enhancing the sensitivity of searches for 
+Recently, an independent group has used our approach to learn jet classifiers
+that are independent of the jet mass, which is a continuous attribute~\citep{Shimmin:2017mfk}.
+The results of their studies show that the adversarial training strategy works very well for
+real-world problems with continuous attributes, thus enhancing the sensitivity of searches for
 new physics at the LHC.
 
 
@@ -816,7 +819,7 @@ work is based on the strong and limiting assumption that $Z$ is a binary
 random variable (e.g., $Z=0$ for the source domain, and
 $Z=1$ for the target domain). In particular, \citep{pan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,zemel2013learning,ganin2014unsupervised,ajakan2014domain,EdwardsS15,louizos2015variational}
 are all based on the minimization of some form of divergence between the two distributions of
-$f(X)|Z=0$ and $f(X)|Z=1$. For this reason, 
+$f(X)|Z=0$ and $f(X)|Z=1$. For this reason,
 %and in contrast with our procedure,
 these works cannot directly be generalized to non-binary or
 continuous nuisance parameters, both from a practical and theoretical point of view.
@@ -845,24 +848,24 @@ alternative, parametrized
 classifiers~\citep{cranmer2015approximating,Baldi:2016fzo} directly take
 (nuisance) parameters as additional input variables, hence ultimately providing
 the most statistically powerful approach for incorporating the effect of
-systematics on the underlying classification task.  
+systematics on the underlying classification task.
 %As argued in
 %\citep{Neal:2007zz}, it is not obvious how such classifiers can be used on real
 %data since the correct value $z$ of the nuisance often remains unknown. This is
 %not an issue in the context of parameter
 %inference~\citep{cranmer2015approximating}, where nuisance parameters are
-%eliminated via optimization or marginalization. 
+%eliminated via optimization or marginalization.
 In practice, parametrized
 classifiers  are also computationally expensive to build and evaluate. In
 particular, calibrating their decision function, i.e. approximating
 $p(f(x,z)|y,z)$ as a continuous function of $z$, remains an open challenge. By
-contrast, constraining $f$ to be pivotal yields a classifier 
+contrast, constraining $f$ to be pivotal yields a classifier
 %which may not be
-%optimal with respect to $Y|X,Z$, as discussed in Sec.~\ref{sec:theory}, but 
-that can 
-%otherwise 
+%optimal with respect to $Y|X,Z$, as discussed in Sec.~\ref{sec:theory}, but
+that can
+%otherwise
 be directly used in a wider range of applications, since the
-dependence on the nuisance parameter $Z$ has already been eliminated. 
+dependence on the nuisance parameter $Z$ has already been eliminated.
 %Moreover, if $f$ is sufficiently close to being pivotal, then calibration only needs to be
 %carried out once.
 
@@ -900,7 +903,7 @@ of data generation processes, and it would be worth revisiting those scientific 
 that utilize machine learning in light of this technique. Moreover, the approach
 also extends to cases where independence of the predictive model with respect to
 observed random variables is desired, as in domain adaptation or fairness in
-classification (e.g. \citep{Shimmin:2017mfk}).
+classification (e.g. \cite{Shimmin:2017mfk}).
 % not sure this is a great sentence to end with, sounds like a sales pitch
 % Again, trying our algorithm on these use cases is certainly
 %worth investigating.
