@@ -160,97 +160,99 @@ effectiveness of the approach with a toy example and an example from particle ph
 
 \tikzstyle{every node}=[font=\scriptsize]
 \begin{figure*}
-    \usetikzlibrary{arrows}
-    \def\layersep{1cm}
+%    \usetikzlibrary{arrows}
+%    \def\layersep{1cm}
+%
+%    \begin{tikzpicture}[shorten >= 1pt, ->, node distance=\layersep,scale=.65]
+%    \tikzstyle{neuron} = [circle, minimum size=0.25cm, draw=black!20, line width=0.3mm, fill=white]
+%
+%    % Classifier f
+%    \node at (2,0) {Classifier $f$};
+%    \draw (-1,-0.5) rectangle (4,-5.5);
+%
+%    \path[->, shorten >= 0pt] (-2,-3) edge (-1,-3);
+%    \node[left] at (-2,-3) {$X$};
+%
+%    \path[-o, shorten >= 0pt] (1.5,-6.5) edge (1.5,-5.5);
+%    \node[below] at (1.5,-6.5) {$\theta_f$};
+%
+%    \path[->, shorten >= 0pt] (3.5,-3) edge (6.5,-3);
+%    \node[above] at (5.25,-3) {$f(X;\theta_f)$};
+%
+%    \path[dashed,-] (5.25,-3) edge (5.25,-6.5);
+%    \node[below] at (5.25,-6.5) {${\cal L}_f(\theta_f)$};
+%
+%    \foreach \name / \y in {1,...,3}
+%        \node[neuron] (f-I-\name) at (-0.5,-1-\y) {};
+%
+%    \foreach \name / \y in {1,...,5}
+%        \node[neuron] (f-H1-\name) at (-0.5cm+\layersep,-\y cm) {};
+%    \foreach \name / \y in {1,...,5}
+%        \node[neuron] (f-H2-\name) at (-0.5cm+3*\layersep,-\y cm) {};
+%
+%    \node[neuron] (f-O) at (-0.5cm+4*\layersep,-3cm) {};
+%
+%    \foreach \source in {1,...,3}
+%        \foreach \dest in {1,...,5}
+%            \path[black] (f-I-\source) edge (f-H1-\dest);
+%
+%    \foreach \source in {1,...,5}
+%        \path[black] (f-H2-\source) edge (f-O);
+%
+%    \node[black] at (1.5,-3) {...};
+%
+%    % Adversary r
+%    \node at (11.75,0) {Adversary $r$};
+%    \draw (6.5,-0.5) rectangle (11.5,-5.5);
+%
+%    \node[above] at (12.75,-2) {$\gamma_1(f(X;\theta_f);\theta_r)$};
+%    \path[-o, shorten >= 0pt] (11,-2.0) edge (14,-2.0);
+%    \node[above] at (12.75,-3) {$\gamma_2(f(X;\theta_f);\theta_r)$};
+%    \path[-o, shorten >= 0pt] (11,-3) edge (14,-3);
+%    \node[above] at (12.75,-4) {$\dots$};
+%    \path[-o, shorten >= 0pt] (11,-4) edge (14,-4);
+%
+%    \path[-o, shorten >= 0pt] (9,-6.5) edge (9,-5.5);
+%    \node[below] at (9,-6.5) {$\theta_r$};
+%
+%    \foreach \name / \y in {1,...,1}
+%        \node[neuron] (r-I-\name) at (7,-2-\y) {};
+%
+%    \foreach \name / \y in {1,...,5}
+%        \node[neuron] (r-H1-\name) at (7cm+\layersep,-\y cm) {};
+%    \foreach \name / \y in {1,...,5}
+%        \node[neuron] (r-H2-\name) at (7cm+3*\layersep,-\y cm) {};
+%
+%    \node[neuron] (r-O1) at (7cm+4*\layersep,-2cm) {};
+%    \node[neuron] (r-O2) at (7cm+4*\layersep,-3cm) {};
+%    \node[neuron] (r-O3) at (7cm+4*\layersep,-4cm) {};
+%
+%    \foreach \source in {1,...,1}
+%        \foreach \dest in {1,...,5}
+%            \path[black] (r-I-\source) edge (r-H1-\dest);
+%
+%    \foreach \source in {1,...,5}
+%        \path[black] (r-H2-\source) edge (r-O1);
+%    \foreach \source in {1,...,5}
+%        \path[black] (r-H2-\source) edge (r-O2);
+%    \foreach \source in {1,...,5}
+%        \path[black] (r-H2-\source) edge (r-O3);
+%
+%    \node[black] at (9,-3) {...};
+%
+%    \draw (14,-1.5) rectangle (17,-4.5);
+%    \path[->, shorten >= 0pt] (15.5,-0.5) edge (15.5,-1.5);
+%    \node[above] at (15.5,-0.5) {$Z$};
+%    \path[->, shorten >= 0pt] (15.5,-4.5) edge (15.5,-5.5);
+%    \node[below] at (15.5,-5.5) {$p_{\theta_r}(Z|f(X;\theta_f))$};
+%    \node at (15.5,-3) {${\cal P}(\gamma_1, \gamma_2, \dots)$};
+%
+%    \draw[dashed,-] (15.5,-5) -| (12.75,-6.5);
+%    \node[below] at (12.75,-6.5) {${\cal L}_r(\theta_f, \theta_r)$};
+%
+%    \end{tikzpicture}
 
-    \begin{tikzpicture}[shorten >= 1pt, ->, node distance=\layersep,scale=.65]
-    \tikzstyle{neuron} = [circle, minimum size=0.25cm, draw=black!20, line width=0.3mm, fill=white]
-
-    % Classifier f
-    \node at (2,0) {Classifier $f$};
-    \draw (-1,-0.5) rectangle (4,-5.5);
-
-    \path[->, shorten >= 0pt] (-2,-3) edge (-1,-3);
-    \node[left] at (-2,-3) {$X$};
-
-    \path[-o, shorten >= 0pt] (1.5,-6.5) edge (1.5,-5.5);
-    \node[below] at (1.5,-6.5) {$\theta_f$};
-
-    \path[->, shorten >= 0pt] (3.5,-3) edge (6.5,-3);
-    \node[above] at (5.25,-3) {$f(X;\theta_f)$};
-
-    \path[dashed,-] (5.25,-3) edge (5.25,-6.5);
-    \node[below] at (5.25,-6.5) {${\cal L}_f(\theta_f)$};
-
-    \foreach \name / \y in {1,...,3}
-        \node[neuron] (f-I-\name) at (-0.5,-1-\y) {};
-
-    \foreach \name / \y in {1,...,5}
-        \node[neuron] (f-H1-\name) at (-0.5cm+\layersep,-\y cm) {};
-    \foreach \name / \y in {1,...,5}
-        \node[neuron] (f-H2-\name) at (-0.5cm+3*\layersep,-\y cm) {};
-
-    \node[neuron] (f-O) at (-0.5cm+4*\layersep,-3cm) {};
-
-    \foreach \source in {1,...,3}
-        \foreach \dest in {1,...,5}
-            \path[black] (f-I-\source) edge (f-H1-\dest);
-
-    \foreach \source in {1,...,5}
-        \path[black] (f-H2-\source) edge (f-O);
-
-    \node[black] at (1.5,-3) {...};
-
-    % Adversary r
-    \node at (11.75,0) {Adversary $r$};
-    \draw (6.5,-0.5) rectangle (11.5,-5.5);
-
-    \node[above] at (12.75,-2) {$\gamma_1(f(X;\theta_f);\theta_r)$};
-    \path[-o, shorten >= 0pt] (11,-2.0) edge (14,-2.0);
-    \node[above] at (12.75,-3) {$\gamma_2(f(X;\theta_f);\theta_r)$};
-    \path[-o, shorten >= 0pt] (11,-3) edge (14,-3);
-    \node[above] at (12.75,-4) {$\dots$};
-    \path[-o, shorten >= 0pt] (11,-4) edge (14,-4);
-
-    \path[-o, shorten >= 0pt] (9,-6.5) edge (9,-5.5);
-    \node[below] at (9,-6.5) {$\theta_r$};
-
-    \foreach \name / \y in {1,...,1}
-        \node[neuron] (r-I-\name) at (7,-2-\y) {};
-
-    \foreach \name / \y in {1,...,5}
-        \node[neuron] (r-H1-\name) at (7cm+\layersep,-\y cm) {};
-    \foreach \name / \y in {1,...,5}
-        \node[neuron] (r-H2-\name) at (7cm+3*\layersep,-\y cm) {};
-
-    \node[neuron] (r-O1) at (7cm+4*\layersep,-2cm) {};
-    \node[neuron] (r-O2) at (7cm+4*\layersep,-3cm) {};
-    \node[neuron] (r-O3) at (7cm+4*\layersep,-4cm) {};
-
-    \foreach \source in {1,...,1}
-        \foreach \dest in {1,...,5}
-            \path[black] (r-I-\source) edge (r-H1-\dest);
-
-    \foreach \source in {1,...,5}
-        \path[black] (r-H2-\source) edge (r-O1);
-    \foreach \source in {1,...,5}
-        \path[black] (r-H2-\source) edge (r-O2);
-    \foreach \source in {1,...,5}
-        \path[black] (r-H2-\source) edge (r-O3);
-
-    \node[black] at (9,-3) {...};
-
-    \draw (14,-1.5) rectangle (17,-4.5);
-    \path[->, shorten >= 0pt] (15.5,-0.5) edge (15.5,-1.5);
-    \node[above] at (15.5,-0.5) {$Z$};
-    \path[->, shorten >= 0pt] (15.5,-4.5) edge (15.5,-5.5);
-    \node[below] at (15.5,-5.5) {$p_{\theta_r}(Z|f(X;\theta_f))$};
-    \node at (15.5,-3) {${\cal P}(\gamma_1, \gamma_2, \dots)$};
-
-    \draw[dashed,-] (15.5,-5) -| (12.75,-6.5);
-    \node[below] at (12.75,-6.5) {${\cal L}_r(\theta_f, \theta_r)$};
-
-    \end{tikzpicture}
+\includegraphics[width=\linewidth]{pivot-figure}
 
     \caption{Architecture for the adversarial training of a binary classifier
     $f$ against a nuisance parameters $Z$. The adversary $r$ models the
