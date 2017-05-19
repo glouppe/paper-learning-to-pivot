@@ -81,14 +81,14 @@ majority of this work focuses on a binary domain label. Similar problems occur
 in a scientific context where there may be a continuous family of plausible data
 generation processes associated to the presence of systematic uncertainties.
 Robust inference is possible if it is based on a pivot -- a quantity whose
-distribution does not depend on the unknown value of the nuisance parameters
+distribution does not depend on the unknown values of the nuisance parameters
 that parametrize this family of data generation processes. In this work,  we
 introduce and derive theoretical results for a training procedure based on
 adversarial networks for enforcing the pivotal property (or, equivalently,
 fairness with respect to continuous attributes) on a predictive model. The
 method includes a hyperparameter to control the trade-off between accuracy and
 robustness. We demonstrate the effectiveness of this approach with a toy example
-and an examples from particle physics.
+and examples from particle physics.
 
 \end{abstract}
 
@@ -156,7 +156,7 @@ solution for imposing pivotal constraints on a predictive model,
 working regardless of the type of
 the nuisance parameter (discrete or continuous) or of its prior.
 Finally, we demonstrate the
-effectiveness of the approach with a toy example and an example from particle physics.
+effectiveness of the approach with a toy example and examples from particle physics.
 
 \tikzstyle{every node}=[font=\scriptsize]
 \begin{figure*}
@@ -291,7 +291,7 @@ in $Z$, our goal is to learn a regression function $f : \mathcal{X} \to
 {\cal S}$ with parameters $\theta_f$ (e.g., a neural network-based probabilistic
 classifier) that minimizes a loss ${\cal L}_f(\theta_f)$ (e.g., the
 cross-entropy). In classification, values $\smash{s \in {\cal S} = \mathbb{R}^{|{\cal Y}|}}$
-correspond to scores used for mapping hard predictions $y \in {\cal Y}$, while ${\cal S} = {\cal Y}$ for regression.
+correspond to the classifier scores used for mapping hard predictions $y \in {\cal Y}$, while ${\cal S} = {\cal Y}$ for regression.
 
 We augment our initial objective so that inference based on $f(X ; \theta_f)$ will be
 robust to the value $z \in {\cal Z}$ of the nuisance parameter $Z$  -- which remains unknown at
@@ -463,8 +463,10 @@ $f(\cdot;\theta_f)$ such that $f(X;\theta_f)$ and $Z$ are independent random
 variables.   Importantly, classification of $Y$ with respect to $X$ is
 considered in the context where $Z$ is marginalized out, which means that the
 classifier minimizing ${\cal L}_f$ is optimal with respect to $Y|X$, but not
-necessarily with $Y|X,Z$ (unless $Z$ is made explicit and is included among the
-input variables in $X$). Results hold for a nuisance parameters $Z$ taking either
+necessarily with $Y|X,Z$.
+% (unless $Z$ is made explicit and is included among the
+% input variables in $X$).
+Results hold for a nuisance parameters $Z$ taking either
 categorical or continuous values. By abuse of notation, $H(Z)$ denotes the
 differential entropy in this latter case. Finally, the  proposition below is
 derived in a non-parametric setting, by assuming that both $f$ and $r$ have
@@ -487,7 +489,7 @@ For fixed $\theta_f$, the adversary $r$ is optimal at
 in which case $p_{\hat{\hat\theta}_r}(z|f(X;\theta_f)=s) =
 p(z|f(X;\theta_f)=s)$ for all $z$ and all $s$, and ${\cal L}_r$ reduces to the expected entropy
 $\mathbb{E}_{s \sim f(X;\theta_f)} [ H({Z|f(X;\theta_f)=s}) ]$ of the conditional distribution of the nuisance parameters.
-This expectation is nothing else than the conditional entropy of the random variables
+This expectation corresponds to the conditional entropy of the random variables
 $Z$ and $f(X;\theta_f)$ and can be written as $H(Z|f(X;\theta_f))$.
 Accordingly, the
 value function $E$ can be restated as a function depending on $\theta_f$ only:
@@ -564,6 +566,13 @@ representation of the data to be pivotal, e.g. as in
 
 \section{Experiments}
 
+In this section, we empirically demonstrate the effectiveness of the approach
+with a toy example and examples from particle physics. Notably,
+there are no other other approaches to compare to in the case of continuous
+nuisance parameters, as further explained in Sec.~\ref{sec:related}. In the case
+of binary parameters, we do not expect results to be much different from
+previous works.
+
 \subsection{A toy example with a continous nuisance parameter}
 \label{sec:toy}
 
@@ -574,6 +583,7 @@ representation of the data to be pivotal, e.g. as in
         \includegraphics[width=0.245\textwidth]{../figures/f-adversary.pdf}
         \includegraphics[width=0.245\textwidth]{../figures/surface-adversary.pdf}
     \end{center}
+
     \caption{Toy example.
     (Left) Conditional probability densities of the decision scores at $Z=-\sigma, 0, \sigma$
         without adversarial training. The resulting densities
@@ -693,8 +703,9 @@ known as jets.
 If the exotic particle
 is heavy, then the $W$ boson will be moving very fast, and  relativistic effects
 will cause the two jets from its decay to merge into a single `$W$-jet'. These
-$W$-jets have a rich internal substructure (see e.g.
-\citep{Altheimer:2012mn,Altheimer:2013yza}). However,
+$W$-jets have a rich internal substructure.
+% (see e.g.\citep{Altheimer:2012mn,Altheimer:2013yza}).
+However,
 jets are also produced ubiquitously at high energy colliders through more
 mundane processes in the SM, which leads to a challenging classification problem
 that is beset with a number of sources of systematic uncertainty.
@@ -781,7 +792,7 @@ power of the enveloping hypothesis test.
 %classification. Importantly, our approach is able to enforce fairness over
 %continuous attributes.
 Recently, an independent group has used our approach to learn jet classifiers
-that are independent of the jet mass, which is a continuous attribute~\citep{Shimmin:2017mfk}.
+that are independent of the jet mass~\citep{Shimmin:2017mfk}, which is a continuous attribute.
 The results of their studies show that the adversarial training strategy works very well for
 real-world problems with continuous attributes, thus enhancing the sensitivity of searches for
 new physics at the LHC.
@@ -792,7 +803,7 @@ new physics at the LHC.
 \section{Related work}
 \label{sec:related}
 
-Learning a pivotal quantity can be related to the problem
+Learning to pivot can be related to the problem
 of domain adaptation
 \citep{blitzer2006domain,pan2011domain,gopalan2011domain,gong2013connecting,baktashmotlagh2013unsupervised,ajakan2014domain,ganin2014unsupervised},
 where the goal is often stated as trying to learn a domain-invariant
@@ -897,15 +908,15 @@ and a particle physics example.
 % but further research studying its stability and convergence would certainly
 % be beneficial for a large body of works.
 
-In terms of applications, the proposed solution can be used in any situation
+In terms of applications, our solution can be used in any situation
 where the training data may not be representative of the real data the
 predictive model will be applied to in practice. In the scientific context, the
 presence of systematic uncertainty can be incorporated by considering a family
 of data generation processes, and it would be worth revisiting those scientific problems
 that utilize machine learning in light of this technique. Moreover, the approach
 also extends to cases where independence of the predictive model with respect to
-observed random variables is desired, as in domain adaptation or fairness in
-classification (e.g. \cite{Shimmin:2017mfk}).
+observed random variables is desired, as in fairness for
+classification.
 % not sure this is a great sentence to end with, sounds like a sales pitch
 % Again, trying our algorithm on these use cases is certainly
 %worth investigating.
