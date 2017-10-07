@@ -10,7 +10,7 @@
 %\usepackage{nips_2017}
 
 % to compile a camera-ready version, add the [final] option, e.g.:
-\usepackage{nips_2017}
+\usepackage[final]{nips_2017}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -571,17 +571,17 @@ with a toy example and examples from particle physics. Notably,
 there are no other other approaches to compare to in the case of continuous
 nuisance parameters, as further explained in Sec.~\ref{sec:related}. In the case
 of binary parameters, we do not expect results to be much different from
-previous works.
+previous works. The source code to reproduce the experiments is available online~\footnote{\url{https://github.com/glouppe/paper-learning-to-pivot}}.
 
 \subsection{A toy example with a continous nuisance parameter}
 \label{sec:toy}
 
 \begin{figure*}
     \begin{center}
-        \includegraphics[width=0.245\textwidth]{../figures/f-plain.pdf}
-        \includegraphics[width=0.245\textwidth]{../figures/surface-plain.pdf}
-        \includegraphics[width=0.245\textwidth]{../figures/f-adversary.pdf}
-        \includegraphics[width=0.245\textwidth]{../figures/surface-adversary.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/f-plain.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/surface-plain.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/f-adversary.pdf}
+        \includegraphics[width=0.245\textwidth]{figures/surface-adversary.pdf}
     \end{center}
 
     \caption{Toy example.
@@ -671,7 +671,7 @@ the dashed line approximating $H({Y|X}) - \lambda H(Z)$.
 \centering
 \begin{minipage}{.46\linewidth}
     \centering
-        \includegraphics[width=\textwidth]{../figures/training.pdf}\vspace{-1em}
+        \includegraphics[width=\textwidth]{figures/training.pdf}\vspace{-1em}
         \caption{Toy example. Training curves for ${\cal L}_f(\theta_f)$, ${\cal L}_r(\theta_f, \theta_r)$
                  and ${\cal L}_f(\theta_f) - \lambda {\cal L}_r(\theta_f, \theta_r)$.
                  Initialized with a pre-trained classifier $f$, adversarial training was performed for $200$ iterations, mini-batches of size $M=128$, $K=500$ and $\lambda=50$.}
@@ -680,7 +680,7 @@ the dashed line approximating $H({Y|X}) - \lambda H(Z)$.
 \hspace{.05\linewidth}
 \begin{minipage}{.46\linewidth}
     \centering
-        \includegraphics[width=\textwidth]{../figures/ams.pdf}\vspace{-1em}
+        \includegraphics[width=\textwidth]{figures/ams.pdf}\vspace{-1em}
         \caption{Physics example. Approximate median significance as a function of the decision threshold
                  on the output of $f$. At $\lambda=10$, trading
                  accuracy for independence to pileup
@@ -843,7 +843,7 @@ nuisance parameters $Z$, it requires accurate
 empirical estimates of $p(f(X)|Z=z)$ for all values $z$, which quickly becomes
 impractical as the cardinality of $Z$ increases. By contrast, our approach models the conditional
 dependence through an adversarial network, which allows for generalization without
-necessarily requiring a growing number of training examples.
+necessarily requiring an exponentially growing number of training examples.
 
 
 A common approach to account for systematic uncertainties in
@@ -913,7 +913,7 @@ where the training data may not be representative of the real data the
 predictive model will be applied to in practice. In the scientific context, the
 presence of systematic uncertainty can be incorporated by considering a family
 of data generation processes, and it would be worth revisiting those scientific problems
-that utilize machine learning in light of this technique. Moreover, the approach
+that utilize machine learning in light of this technique. The approach
 also extends to cases where independence of the predictive model with respect to
 observed random variables is desired, as in fairness for
 classification.
@@ -922,6 +922,15 @@ classification.
 %worth investigating.
 
 % ==============================================================================
+
+\section*{Acknowledgements}
+
+We would like to thank the authors of \citep{baldi2016jet} for sharing the data used in their
+studies.
+KC and GL are both supported through NSF ACI-1450310, additionally KC is supported
+through PHY-1505463 and PHY-1205376.  MK is supported by the US
+Department of Energy (DOE) under grant DE-AC02-76SF00515 and by the
+SLAC Panofsky Fellowship.
 
 \bibliography{bibliography}
 \bibliographystyle{apalike}
