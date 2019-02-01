@@ -1,0 +1,2 @@
+# Avoids theano.tensor.blas warning
+libblas-dev

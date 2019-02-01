@@ -1,5 +1,5 @@
 # Learning to Pivot with Adversarial Networks
-https://arxiv.org/abs/1611.01046
+https://arxiv.org/abs/1611.01046 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/glouppe/paper-learning-to-pivot/master?filepath=code%2FToy.ipynb)
 
 * Gilles Louppe
 * Michael Kagan

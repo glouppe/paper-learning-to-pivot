@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Download Jet Substructure data for 'Jet Substructure Classification in High-Energy Physics with Deep Neural Networks'
+# https://stackoverflow.com/a/26269730/8931942
+wget \
+    --execute robots=off \
+    --recursive \
+    --no-parent \
+    --no-host-directories \
+    --cut-dirs=5 \
+    --reject index.html* \
+    --directory-prefix code/hepjets \
+    http://www.igb.uci.edu/~pfbaldi/physics/data/hepjets/highlevel/
+
+# Run Keras to generate its config file at ~/.keras/keras.json
+KERAS_BACKEND=theano python -c "from keras import backend"
+# Patch ~/.keras/keras.json to use Theano backend
+if [[ -f ~/.keras/keras.json ]]; then
+    jsonpatch ~/.keras/keras.json binder/theano_backend_patch.json --indent 4 > patched_keras.json
+    mv patched_keras.json ~/.keras/keras.json
+else
+    echo "No file ${HOME}/.keras/keras.json exists"
+    exit 1
+fi

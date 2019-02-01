@@ -1,0 +1,21 @@
+name: learning-to-pivot
+dependencies:
+  - python
+  - pip
+  - mkl-service # Avoids theano.configdefaults warning
+  - pip:
+    # Libraries pinned temporarily with '==' to ensure future changes don't break Binder
+    # Only requirements with '<' are required for code to work
+    - setuptools
+    - wheel
+    - numpy==1.16.0
+    - matplotlib==3.0.2
+    - h5py==2.9.0
+    # sklearn.cross_validation is deprecated and removed for sklearn.model_selection in v0.20
+    - scikit-learn<0.20
+    - Theano==1.0.4
+    # As of v2.0, the module keras.layers.merge doesn't have a generic public Merge-Layer
+    - keras<2.0
+    - git+https://github.com/diana-hep/carl.git
+    # To patch ~/.keras/keras.json for Theano Keras backend
+    - jsonpatch

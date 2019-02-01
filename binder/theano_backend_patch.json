@@ -1,0 +1,4 @@
+[
+    { "op": "replace", "path": "/backend", "value": "theano" },
+    { "op": "replace", "path": "/image_dim_ordering", "value": "th" }
+]
