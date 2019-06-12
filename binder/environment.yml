@@ -15,7 +15,7 @@ dependencies:
     - scikit-learn<0.20
     - Theano==1.0.4
     # As of v2.0, the module keras.layers.merge doesn't have a generic public Merge-Layer
-    - keras<2.0
+    - keras==1.0
     - git+https://github.com/diana-hep/carl.git
     # To patch ~/.keras/keras.json for Theano Keras backend
     - jsonpatch
